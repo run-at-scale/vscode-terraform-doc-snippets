@@ -1,0 +1,20 @@
+{
+  "providers": {
+    "aws": {},
+    "google": {},
+    "azurerm": {},
+    "ocp": {},
+    "vsphere": {},
+    "template": {},
+    "github": {},
+    "vault": {},
+    "kubernetes": {},
+    "digitalocean": {},
+    "consul": {},
+    "archive": {},
+    "random": {},
+    "chef": {},
+    "null": {},
+    "terraform": {}
+  }
+}

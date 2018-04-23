@@ -1,0 +1,64 @@
+{
+    "tf-var": {
+        "prefix": "tf-var",
+        "body": [
+            "variable \"${1:variable}\" {",
+            "  description = \"${2:description}\"",
+            "  default     = \"${3:default}\"",
+            "}",
+            ""
+        ],
+        "description": "A terraform variable with a default and description."
+    },
+    "tf-out": {
+        "prefix": "tf-out",
+        "body": [
+            "output \"${1:output}\" {",
+            "  description = \"${2:description}\"",
+            "  value       = \"${${3:value}}\"",
+            "}",
+            ""
+        ],
+        "description": "A terraform output with a description."
+    },
+    "tf-locals": {
+        "prefix": "tf-locals",
+        "body": [
+            "locals {",
+            "  ${1:key}  = \"${2:value}\"",
+            "}",
+            ""
+        ],
+        "description": "An empty definition of locals."
+    },
+    "tf-aws": {
+        "prefix": "tf-aws",
+        "body": [
+            "/**",
+            "# tf_aws_${1:module_name}",
+            "",
+            "A terraform module to ${2:describe a thing}",
+            "*/",
+            "",
+            "provider \"aws\" {",
+            "  version = \">~ ${3:1.6.0}\"",
+            "}",
+            ""
+        ],
+        "description": "The beginnings of a main.tf"
+    },
+    "tf-conditional": {
+        "prefix": "tf-conditional",
+        "body": [
+            "${var.${1:if_this} == \"${2:equals}\" ? ${3:then} : ${4:else}}"
+        ],
+        "description": "A terraform conditional."
+    },
+    "tf-foo": {
+        "prefix": "tf-foo",
+        "body": [
+            "${var.${1:if_this} == \"${2:equals}\" ? ${3:then} : ${4:else}}"
+        ],
+        "description": "A terraform conditional."
+    }
+}
