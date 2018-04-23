@@ -2,8 +2,8 @@
   "name": "terraform-doc-snippets",
   "displayName": "terraform-doc-snippets",
   "description": "Get terraform code snippets straight from the provider docs.",
-  "version": "0.0.2",
-  "publisher": "Run at Scale",
+  "version": "0.0.3",
+  "publisher": "run-at-scale",
   "engines": {
     "vscode": "^1.19.0"
   },
@@ -11,7 +11,9 @@
     "name": "Brandon O'Connor",
     "email": "brandon@atscale.run"
   },
-  "categories": ["Snippets"],
+  "categories": [
+    "Snippets"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/run-at-scale/terraform-doc-snippets.git"
@@ -28,12 +30,11 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "npm run compile && node ./node_modules/vscode/bin/test",
-    "postversion": "npm run publish:release",
-    "publish:vsce": "vsce publish",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "release": "standard-version",
     "build:snippets": "ts-node ./src/main.ts",
-    "build:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -a"
+    "build:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -a",
+    "publish:vsce": "vsce publish",
+    "release": "standard-version"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
@@ -44,6 +45,7 @@
     "standard-version": "^4.3.0",
     "tslint": "^5.9.1",
     "typescript": "^2.6.1",
+    "vsce": "^1.39.0",
     "vscode": "^1.1.6"
   },
   "dependencies": {
