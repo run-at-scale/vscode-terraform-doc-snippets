@@ -2,7 +2,7 @@
   "name": "terraform-doc-snippets",
   "displayName": "terraform-doc-snippets",
   "description": "Get terraform code snippets straight from the provider docs.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "Run at Scale",
   "engines": {
     "vscode": "^1.19.0"
@@ -11,7 +11,9 @@
     "name": "Brandon O'Connor",
     "email": "brandon@atscale.run"
   },
-  "categories": ["Snippets"],
+  "categories": [
+    "Snippets"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/run-at-scale/terraform-doc-snippets.git"
@@ -25,21 +27,25 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./src",
-    "watch": "tsc -watch -p ./src",
-    "postinstall": "node ./node_modules/vscode/bin/install",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
     "test": "npm run compile && node ./node_modules/vscode/bin/test",
     "postversion": "npm run publish:release",
     "publish:vsce": "vsce publish",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "release": "standard-version",
     "publish:release": "conventional-github-releaser -p angular -r 0",
     "build:snippets": "ts-node ./src/main.ts",
-    "build:changelog":
-      "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+    "build:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -a"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
     "@types/node": "^7.0.43",
+    "conventional-changelog": "^1.1.24",
+    "conventional-github-releaser": "^2.0.2",
+    "eslint": "^4.19.1",
+    "standard-version": "^4.3.0",
+    "tslint": "^5.9.1",
     "typescript": "^2.6.1",
     "vscode": "^1.1.6"
   },
@@ -49,15 +55,10 @@
     "@types/tmp": "0.0.33",
     "@types/underscore": "^1.8.8",
     "async": "^2.6.0",
-    "conventional-changelog": "^1.1.7",
-    "conventional-github-releaser": "^2.0.0",
-    "eslint": "^4.19.1",
     "gfm-code-blocks": "^1.0.0",
     "lockfile": "^1.0.4",
-    "markdown": "^0.5.0",
     "nodegit": "^0.20.3",
     "tmp": "0.0.33",
-    "tslint": "^5.9.1",
     "underscore": "^1.9.0"
   }
 }

@@ -1,8 +1,14 @@
 # Change Log
-All notable changes to the "terraform-doc-snippets" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.1.0] - 01.xx.2018
+<a name="0.0.2"></a>
+## 0.0.2 (2018-04-23)
 
-- Initial release
+
+
+<a name="0.0.1"></a>
+
+## 0.0.1 (2018-04-23)
+
+* Initial release
