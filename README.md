@@ -6,11 +6,14 @@ A vscode extension that yanks resource and data source documentation from Terraf
 
 ## Features
 
-* All providers listed in the terraform-providers project are covered.
 * All resources and data source snippets gathered from documentation. As docs improve, so do the snippets.
-* Ability to override or add additional snippets through configuration.
 * All snippets are delivered as a precompiled bundle - your editor stays speedy.
 * Resource and data source name collisions avoided by including `data` or `resource` in each snippet prefix.
+
+## Features (to come)
+
+* All providers listed in the terraform-providers project are covered.
+* Ability to override or add additional snippets through configuration.
 
 ## Known Issues
 
