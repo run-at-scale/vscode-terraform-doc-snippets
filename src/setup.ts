@@ -1,7 +1,8 @@
-import tmp = require("tmp");
+import async = require("async");
 import fs = require("fs");
+import tmp = require("tmp");
 
-function setupWorkspace() {
+export function setupWorkspace() {
   const tmpobj = tmp.dirSync();
   const tmpDir = tmpobj.name;
   const outfile = "snippets/terraform.json";
@@ -13,4 +14,7 @@ function setupWorkspace() {
   return tmpDir;
 }
 
-export = setupWorkspace;
+export const createQueue = async.queue((task, callback) => {
+  // console.log('hello ' + task.name);
+  callback();
+}, 1);
