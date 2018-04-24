@@ -13,6 +13,6 @@ const main = () => {
   });
 };
 
-// XXX need to clean up when all writes are complete
+// XXX need to clean up local files when all writes are complete
 
 main();

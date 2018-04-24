@@ -1,20 +1,38 @@
 # vscode-terraform-doc-snippets
 
-A vscode extension that yanks resource and data source documentation from Terraform providers and transforms them into usable vscode snippets.
+![Terraform](https://github.com/run-at-scale/vscode-terraform-doc-snippets/raw/master/assets/terraform_logo.png "Terraform doc snippets")
+
+A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured vscode snippets.
 
 ## Features
 
-TODO: include a gif of the snippets in action
-
-## Extension Settings
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* All providers listed in the terraform-providers project are covered.
+* All resources and data source snippets gathered from documentation. As docs improve, so do the snippets.
+* Ability to override or add additional snippets through configuration.
+* All snippets are delivered as a precompiled bundle - your editor stays speedy.
+* Resource and data source name collisions avoided by including `data` or `resource` in each snippet prefix.
 
 ## Known Issues
 
-Temp files are not yet cleaned up after running the code.
+* Temporary files/directories are not cleaned up after building the snippets file.
+* Repos are pulled from master but could/should be done from latest release.
+* tests? What tests?
+* Issue #1 is probably that this is my first node project and I'm not to be trusted with the language. Help and review wanted!
+
+## Contributing
+
+Report issues/questions/feature requests on in the [issues](https://github.com/run-at-scale/vscode-terraform-doc-snippets/issues/new) section.
+
+Full contributing [guidelines are covered here](https://github.com/run-at-scale/vscode-terraform-doc-snippets/blob/master/CONTRIBUTING.md).
+
+## Changelog
+
+The [changelog](https://github.com/run-at-scale/vscode-terraform-doc-snippets/blob/master/CHANGELOG.md) captures all important release notes.
+
+## Authors
+
+Created and maintained by [Brandon O'Connor](https://github.com/brandoconnor) - brandon@atscale.run.
+
+## License
+
+MIT Licensed. See [LICENSE](https://github.com/run-at-scale/vscode-terraform-doc-snippets/blob/master/LICENSE) for full details.

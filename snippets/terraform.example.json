@@ -1,64 +1,75 @@
 {
-    "tf-var": {
-        "prefix": "tf-var",
-        "body": [
-            "variable \"${1:variable}\" {",
-            "  description = \"${2:description}\"",
-            "  default     = \"${3:default}\"",
-            "}",
-            ""
-        ],
-        "description": "A terraform variable with a default and description."
-    },
-    "tf-out": {
-        "prefix": "tf-out",
-        "body": [
-            "output \"${1:output}\" {",
-            "  description = \"${2:description}\"",
-            "  value       = \"${${3:value}}\"",
-            "}",
-            ""
-        ],
-        "description": "A terraform output with a description."
-    },
-    "tf-locals": {
-        "prefix": "tf-locals",
-        "body": [
-            "locals {",
-            "  ${1:key}  = \"${2:value}\"",
-            "}",
-            ""
-        ],
-        "description": "An empty definition of locals."
-    },
-    "tf-aws": {
-        "prefix": "tf-aws",
-        "body": [
-            "/**",
-            "# tf_aws_${1:module_name}",
-            "",
-            "A terraform module to ${2:describe a thing}",
-            "*/",
-            "",
-            "provider \"aws\" {",
-            "  version = \">~ ${3:1.6.0}\"",
-            "}",
-            ""
-        ],
-        "description": "The beginnings of a main.tf"
-    },
-    "tf-conditional": {
-        "prefix": "tf-conditional",
-        "body": [
-            "${var.${1:if_this} == \"${2:equals}\" ? ${3:then} : ${4:else}}"
-        ],
-        "description": "A terraform conditional."
-    },
-    "tf-foo": {
-        "prefix": "tf-foo",
-        "body": [
-            "${var.${1:if_this} == \"${2:equals}\" ? ${3:then} : ${4:else}}"
-        ],
-        "description": "A terraform conditional."
-    }
+  "digitalocean-resource-droplet": {
+    "prefix": "tf-digitalocean-resource-droplet",
+    "description": "Defines droplet",
+    "body": [
+      "# Create a new Web Droplet in the nyc2 region",
+      "resource \"digitalocean_droplet\" \"web\" {",
+      "  image  = \"ubuntu-14-04-x64\"",
+      "  name   = \"web-1\"",
+      "  region = \"nyc2\"",
+      "  size   = \"s-1vcpu-1gb\"",
+      "}"
+    ]
+  },
+  "digitalocean-resource-domain": {
+    "prefix": "tf-digitalocean-resource-domain",
+    "description": "Defines domain",
+    "body": [
+      "# Create a new domain",
+      "resource \"digitalocean_domain\" \"default\" {",
+      "  name       = \"example.com\"",
+      "  ip_address = \"${digitalocean_droplet.foo.ipv4_address}\"",
+      "}"
+    ]
+  },
+  "digitalocean-resource-firewall": {
+    "prefix": "tf-digitalocean-resource-firewall",
+    "description": "Defines firewall",
+    "body": [
+      "resource \"digitalocean_droplet\" \"web\" {",
+      "  name      = \"web-1\"",
+      "  size      = \"s-1vcpu-1gb\"",
+      "  image     = \"centos-7-x64\"",
+      "  region    = \"nyc3\"",
+      "}",
+      "",
+      "resource \"digitalocean_firewall\" \"web\" {",
+      "  name = \"only-22-80-and-443\"",
+      "",
+      "  droplet_ids = [\"${digitalocean_droplet.web.id}\"]",
+      "",
+      "  inbound_rule = [",
+      "    {",
+      "      protocol           = \"tcp\"",
+      "      port_range         = \"22\"",
+      "      source_addresses   = [\"192.168.1.0/24\", \"2002:1:2::/48\"]",
+      "    },",
+      "    {",
+      "      protocol           = \"tcp\"",
+      "      port_range         = \"80\"",
+      "      source_addresses   = [\"0.0.0.0/0\", \"::/0\"]",
+      "    },",
+      "    {",
+      "      protocol           = \"tcp\"",
+      "      port_range         = \"443\"",
+      "      source_addresses   = [\"0.0.0.0/0\", \"::/0\"]",
+      "    },",
+      "  ]",
+      "",
+      "  outbound_rule = [",
+      "    {",
+      "      protocol                = \"tcp\"",
+      "      port_range              = \"53\"",
+      "      destination_addresses   = [\"0.0.0.0/0\", \"::/0\"]",
+      "    },",
+      "    {",
+      "      protocol                = \"udp\"",
+      "      port_range              = \"53\"",
+      "      destination_addresses   = [\"0.0.0.0/0\", \"::/0\"]",
+      "    },",
+      "  ]",
+      "}"
+    ]
+  }
 }

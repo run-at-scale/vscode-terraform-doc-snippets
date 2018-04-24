@@ -1,22 +1,41 @@
 {
   "name": "terraform-doc-snippets",
-  "displayName": "terraform-doc-snippets",
-  "description": "Get terraform code snippets straight from the provider docs.",
+  "displayName": "Terraform doc snippets",
+  "description": "Get Terraform code snippets from all providers/resources/data sources as yanked from the provider repo docs.",
   "version": "0.0.3",
+  "icon": "assets/terraform_logo.png",
   "publisher": "run-at-scale",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.19.0"
   },
+  "preview": true,
   "author": {
     "name": "Brandon O'Connor",
-    "email": "brandon@atscale.run"
+    "email": "brandon@atscale.run",
+    "url": "https://github.com/run-at-scale"
   },
   "categories": [
     "Snippets"
   ],
+  "keywords": [
+        "vscode",
+        "Visual studio code",
+        "devops",
+        "infrastructure as code",
+        "terraform",
+        "Amazon Web Services",
+        "AWS",
+        "GCP",
+        "Google Cloud Platform",
+        "Azure",
+        "Microsoft Azure",
+        "cloud",
+        "automation"
+    ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-at-scale/terraform-doc-snippets.git"
+    "url": "https://github.com/run-at-scale/vscode-terraform-doc-snippets"
   },
   "contributes": {
     "snippets": [
@@ -37,6 +56,10 @@
     "release": "standard-version"
   },
   "devDependencies": {
+    "@types/fs-extra": "^5.0.2",
+    "@types/lockfile": "^1.0.0",
+    "@types/tmp": "0.0.33",
+    "@types/underscore": "^1.8.8",
     "@types/mocha": "^2.2.42",
     "@types/node": "^7.0.43",
     "conventional-changelog": "^1.1.24",
@@ -49,10 +72,6 @@
     "vscode": "^1.1.6"
   },
   "dependencies": {
-    "@types/fs-extra": "^5.0.2",
-    "@types/lockfile": "^1.0.0",
-    "@types/tmp": "0.0.33",
-    "@types/underscore": "^1.8.8",
     "async": "^2.6.0",
     "gfm-code-blocks": "^1.0.0",
     "lockfile": "^1.0.4",

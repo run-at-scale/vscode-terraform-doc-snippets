@@ -5,7 +5,7 @@ import codeBlocks = require("gfm-code-blocks");
 // const providersConfig = require('./config.json');
 
 function getCodeBlock(docPath, codeBlockIndex = 0) {
-  let blocks = codeBlocks(fs.readFileSync(docPath, "utf-8"));
+  const blocks = codeBlocks(fs.readFileSync(docPath, "utf-8"));
   if (blocks.length + 1 >= codeBlockIndex) {
     // potentially create a function to alter resource line to something like
     //  "resource \"aws_waf_xss_match_set\" \"${MyAWSResource}\" {",
