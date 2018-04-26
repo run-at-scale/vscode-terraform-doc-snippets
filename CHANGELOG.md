@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.0.4...v0.1.1) (2018-04-26)
+
+
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
 ## [0.0.5](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.0.4...v0.0.5) (2018-04-24)
 
 * Source code fixed, though still very hacky in how async is controlled in the main function.
