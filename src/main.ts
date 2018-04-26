@@ -1,23 +1,36 @@
-import async = require("async");
-import downloadGitRepo = require("./downloadGitRepo");
-import iterateOnDocFiles = require("./iterateOnDocFiles");
+import { writeFileSync } from "fs";
+import { cleanup } from "./cleanup";
+import { downloadGitRepo } from "./downloadGitRepo";
+import { iterateOnDocFiles } from "./iterateOnDocFiles";
 import setup = require("./setup");
-// import cleanup = require("./cleanup");
 
-// TODO: load this a more conventional way that makes ts happy
+// TODO: load this a more conventional way that makes tslint happy
 const providersConfig = require("./config.json");
 
-const main = () => {
-  const queue = setup.createQueue();
+function sortObject(o) {
+  return Object.keys(o).sort().reduce((r, k) => (r[k] = o[k], r), {});
+}
+
+async function main() {
   const tmpDir = setup.setupWorkspace();
-  async.forEach(Object.keys(providersConfig.providers), (provider) => {
-    downloadGitRepo(tmpDir, provider, iterateOnDocFiles);
+  const snips = {};
+  Object.keys(providersConfig.providers).forEach(async (provider) => {
+    downloadGitRepo(tmpDir, provider, snips, iterateOnDocFiles);
   });
-};
+  // TODO: implement a count on markdown files to get this number?
+  const cap = 792;
+  while (Object.keys(snips).length < cap ) {
+    console.log(`${Object.keys(snips).length} of ${cap}`);
+    await sleep(20);
+  }
+  console.log(Object.keys(snips).length);
+  const sortedSnips = sortObject(snips);
+  writeFileSync("snippets/terraform.json", JSON.stringify(sortedSnips, null, 2), "utf-8");
+  cleanup(tmpDir);
+}
 
-// XXX need to clean up local files when all writes are complete
-
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms * 100));
+}
 
 main();
-
-export = queue;

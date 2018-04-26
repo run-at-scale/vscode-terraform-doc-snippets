@@ -17,7 +17,6 @@ A vscode extension that yanks resource and data source documentation from Terraf
 
 ## Known Issues
 
-* Temporary files/directories are not cleaned up after building the snippets file.
 * Repos are pulled from master but could/should be done from latest release.
 * tests? What tests?
 * Issue #1 is probably that this is my first node project and I'm not to be trusted with the language. Help and review wanted!

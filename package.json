@@ -2,14 +2,13 @@
   "name": "terraform-doc-snippets",
   "displayName": "Terraform doc snippets",
   "description": "Get Terraform code snippets from all providers/resources/data sources as yanked from the provider repo docs.",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "icon": "assets/terraform_logo.png",
   "publisher": "run-at-scale",
   "license": "MIT",
   "engines": {
     "vscode": "^1.19.0"
   },
-  "preview": true,
   "author": {
     "name": "Brandon O'Connor",
     "email": "brandon@atscale.run",
@@ -19,19 +18,11 @@
     "Snippets"
   ],
   "keywords": [
-    "vscode",
-    "Visual studio code",
+    "Terraform",
     "devops",
     "infrastructure as code",
-    "terraform",
-    "Amazon Web Services",
-    "AWS",
-    "GCP",
-    "Google Cloud Platform",
-    "Azure",
-    "Microsoft Azure",
-    "cloud",
-    "automation"
+    "automation",
+    "orchestration"
   ],
   "repository": {
     "type": "git",

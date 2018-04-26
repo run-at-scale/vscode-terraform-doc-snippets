@@ -1,6 +1,6 @@
 import fsExtra = require("fs-extra");
 
-function cleanup(dir) {
+export function cleanup(dir) {
     console.log(`Cleaning up ${dir}`);
     fsExtra.remove(dir, (err) => {
         if (err) {
@@ -9,5 +9,3 @@ function cleanup(dir) {
         console.log(`Deleted ${dir}`);
     });
 }
-
-export = cleanup;
