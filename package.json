@@ -2,7 +2,7 @@
   "name": "terraform-doc-snippets",
   "displayName": "Terraform doc snippets",
   "description": "Get Terraform code snippets from provider documentation for all resources and data sources. All providers soon to be covered!",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "icon": "assets/terraform_logo.png",
   "publisher": "run-at-scale",
   "license": "MIT",
