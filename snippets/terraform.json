@@ -19098,6 +19098,454 @@
       "}"
     ]
   },
+  "opc-data-opc_compute_image_list_entry": {
+    "description": "Defines opc_compute_image_list_entry",
+    "prefix": "tf-opc-data-opc_compute_image_list_entry",
+    "body": [
+      "data \"opc_compute_image_list_entry\" \"foo\" {",
+      "  image_list = \"my_image_list\"",
+      "  version = \"version_of_my_list\"",
+      "}",
+      "",
+      "output \"machine_images\" {",
+      "  value = \"${data.opc_compute_image_list_entry.foo.machine_images}\"",
+      "}",
+      "",
+      "output \"single_image\" {",
+      "  value = \"${data.opc_compute_image_list_entry.foo.machine_images[1]}\"",
+      "}"
+    ]
+  },
+  "opc-data-opc_compute_machine_image": {
+    "description": "Defines opc_compute_machine_image",
+    "prefix": "tf-opc-data-opc_compute_machine_image",
+    "body": [
+      "data \"opc_compute_machine_image\" \"foo\" {",
+      "  account = \"/Compute-${var.domain}/cloud_storage\"",
+      "  name = \"Microsoft_Windows_Server_2012_R2\"",
+      "}",
+      "",
+      "output \"attributes\" {",
+      "  value = \"${data.opc_compute_machine_image.foo.attributes}\"",
+      "}"
+    ]
+  },
+  "opc-data-opc_compute_network_interface": {
+    "description": "Defines opc_compute_network_interface",
+    "prefix": "tf-opc-data-opc_compute_network_interface",
+    "body": [
+      "data \"opc_compute_network_interface\" \"foo\" {",
+      "  instance_id   = \"${opc_compute_instance.my_instance.id}\"",
+      "  instance_name = \"${opc_compute_instance.my_instance.name}\"",
+      "  interface     = \"eth0\"",
+      "}",
+      "",
+      "output \"mac_address\" {",
+      "  value = \"${data.opc_compute_network_interface.foo.mac_address}\"",
+      "}",
+      "",
+      "output \"vnic\" {",
+      "  value = \"${data.opc_compute_network_interface.foo.vnic}\"",
+      "}"
+    ]
+  },
+  "opc-data-opc_compute_storage_volume_snapshot": {
+    "description": "Defines opc_compute_storage_volume_snapshot",
+    "prefix": "tf-opc-data-opc_compute_storage_volume_snapshot",
+    "body": [
+      "data \"opc_compute_storage_volume_snapshot\" \"foo\" {",
+      "  name = \"my-storage-volume/my-storage-volume-snapshot-name\"",
+      "}"
+    ]
+  },
+  "opc-data-opc_compute_vnic": {
+    "description": "Defines opc_compute_vnic",
+    "prefix": "tf-opc-data-opc_compute_vnic",
+    "body": [
+      "data \"opc_compute_vnic\" \"current\" {",
+      "  name = \"my_vnic_name\"",
+      "}",
+      "",
+      "output \"mac_address\" {",
+      "  value = \"${data.opc_compute_vnic.current.mac_address}\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_acl": {
+    "description": "Defines opc_compute_acl",
+    "prefix": "tf-opc-resource-opc_compute_acl",
+    "body": [
+      "resource \"opc_compute_acl\" \"default\" {",
+      "  name        = \"ACL1\"",
+      "  description = \"This is a description for an acl\"",
+      "  tags        = [\"tag1\", \"tag2\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_image_list": {
+    "description": "Defines opc_compute_image_list",
+    "prefix": "tf-opc-resource-opc_compute_image_list",
+    "body": [
+      "resource \"opc_compute_image_list\" \"test\" {",
+      "  name        = \"imagelist1\"",
+      "  description = \"This is a description of the Image List\"",
+      "  default     = 21",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_image_list_entry": {
+    "description": "Defines opc_compute_image_list_entry",
+    "prefix": "tf-opc-resource-opc_compute_image_list_entry",
+    "body": [
+      "resource \"opc_compute_image_list\" \"test\" {",
+      "  name        = \"imagelist1\"",
+      "  description = \"This is a description of the Image List\"",
+      "  default     = 21",
+      "}",
+      "",
+      "resource \"opc_compute_image_list_entry\" \"test\" {",
+      "  name           = \"${opc_compute_image_list.test.name}\"",
+      "  machine_images = [ \"/oracle/public/oel_6.7_apaas_16.4.5_1610211300\" ]",
+      "  version        = 1",
+      "  attributes     = <<JSON",
+      "{",
+      "  \"foo\": \"bar\"",
+      "}",
+      "JSON",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_instance": {
+    "description": "Defines opc_compute_instance",
+    "prefix": "tf-opc-resource-opc_compute_instance",
+    "body": [
+      "resource \"opc_compute_ip_network\" \"test\" {",
+      "  name                = \"internal-network\"",
+      "  description         = \"Terraform Provisioned Internal Network\"",
+      "  ip_address_prefix   = \"10.0.1.0/24\"",
+      "  public_napt_enabled = false",
+      "}",
+      "",
+      "resource \"opc_compute_storage_volume\" \"test\" {",
+      "  name = \"internal\"",
+      "  size = 100",
+      "}",
+      "",
+      "resource \"opc_compute_instance\" \"test\" {",
+      "  name       = \"instance1\"",
+      "  label      = \"Terraform Provisioned Instance\"",
+      "  shape      = \"oc3\"",
+      "  image_list = \"/oracle/public/oel_6.7_apaas_16.4.5_1610211300\"",
+      "",
+      "  storage {",
+      "    volume = \"${opc_compute_storage_volume.test.name}\"",
+      "    index  = 1",
+      "  }",
+      "",
+      "  networking_info {",
+      "    index          = 0",
+      "    nat            = [\"ippool:/oracle/public/ippool\"]",
+      "    shared_network = true",
+      "  }",
+      "}",
+      ""
+    ]
+  },
+  "opc-resource-opc_compute_ip_address_association": {
+    "description": "Defines opc_compute_ip_address_association",
+    "prefix": "tf-opc-resource-opc_compute_ip_address_association",
+    "body": [
+      "resource \"opc_compute_ip_address_association\" \"default\" {",
+      "  name                   = \"IPAddressAssociation1\"",
+      "  ip_address_reservation = \"${opc_compute_ip_address_reservation.default.name}\"",
+      "  vnic                   = \"${data.opc_compute_vnic.default.name}\"",
+      "  tags                   = [\"tags1\", \"tags2\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_ip_address_prefix_set": {
+    "description": "Defines opc_compute_ip_address_prefix_set",
+    "prefix": "tf-opc-resource-opc_compute_ip_address_prefix_set",
+    "body": [
+      "resource \"opc_compute_ip_address_prefix_set\" \"default\" {",
+      "  name     = \"PrefixSet1\"",
+      "  prefixes = [\"192.168.0.0/16\", \"172.120.0.0/24\"]",
+      "  tags     = [\"tags1\", \"tags2\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_ip_address_reservation": {
+    "description": "Defines opc_compute_ip_address_reservation",
+    "prefix": "tf-opc-resource-opc_compute_ip_address_reservation",
+    "body": [
+      "resource \"opc_compute_ip_address_reservation\" \"default\" {",
+      "  name            = \"IPAddressReservation1\"",
+      "  ip_address_pool = \"public-ippool\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_ip_association": {
+    "description": "Defines opc_compute_ip_association",
+    "prefix": "tf-opc-resource-opc_compute_ip_association",
+    "body": [
+      "resource \"opc_compute_ip_association\" \"instance1_reservation1\" {",
+      "  vcable     = \"${opc_compute_instance.test_instance.vcable}\"",
+      "  parent_pool = \"ipreservation:${opc_compute_ip_reservation.reservation1.name}\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_ip_network": {
+    "description": "Defines opc_compute_ip_network",
+    "prefix": "tf-opc-resource-opc_compute_ip_network",
+    "body": [
+      "resource \"opc_compute_ip_network\" \"foo\" {",
+      "  name                = \"my-ip-network\"",
+      "  description         = \"my IP Network\"",
+      "  ip_address_prefix   = \"10.0.1.0/24\"",
+      "  ip_network_exchange = \"${opc_compute_ip_exchange.foo.name}\"",
+      "  public_napt_enabled = false",
+      "  tags                = [\"tag1\", \"tag2\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_ip_network_exchange": {
+    "description": "Defines opc_compute_ip_network_exchange",
+    "prefix": "tf-opc-resource-opc_compute_ip_network_exchange",
+    "body": [
+      "resource \"opc_compute_ip_network_exchange\" \"default\" {",
+      "  name = \"NetworkExchange1\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_ip_reservation": {
+    "description": "Defines opc_compute_ip_reservation",
+    "prefix": "tf-opc-resource-opc_compute_ip_reservation",
+    "body": [
+      "resource \"opc_compute_ip_reservation\" \"reservation1\" {",
+      "  parent_pool = \"/oracle/public/ippool\"",
+      "  permanent   = true",
+      "  tags        = [ \"test\" ]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_machine_image": {
+    "description": "Defines opc_compute_machine_image",
+    "prefix": "tf-opc-resource-opc_compute_machine_image",
+    "body": [
+      "resource \"opc_compute_machine_image\" \"centos\" {",
+      "  account     = \"/Compute-${var.domain}/cloud_storage\"",
+      "  name        = \"CentOS_7\"",
+      "  file        = \"CentOS-7-x86_64-OracleCloud.raw.tar.gz\"",
+      "  description = \"CentOS 7\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_orchestrated_instance": {
+    "description": "Defines opc_compute_orchestrated_instance",
+    "prefix": "tf-opc-resource-opc_compute_orchestrated_instance",
+    "body": [
+      "resource \"opc_compute_orchestrated_instance\" \"default\" {",
+      "  name          = \"default_orchestration\"",
+      "  desired_state = \"active\"",
+      "",
+      "  instance {",
+      "    name       = \"default-orchestrated-instance\"",
+      "    label      = \"Orchestrated Instance 1 Label\"",
+      "    shape      = \"oc3\"",
+      "    image_list = \"/oracle/public/OL_7.2_UEKR4_x86_64\"",
+      "  }",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_route": {
+    "description": "Defines opc_compute_route",
+    "prefix": "tf-opc-resource-opc_compute_route",
+    "body": [
+      "resource \"opc_compute_route\" \"foo\" {",
+      "  name              = \"my-route\"",
+      "  description       = \"my IP Network route\"",
+      "  admin_distance    = 1",
+      "  ip_address_prefix = \"10.0.1.0/24\"",
+      "  next_hop_vnic_set = \"${opc_compute_vnic_set.bar.name}\"",
+      "  tags              = [\"tag1\", \"tag2\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_sec_rule": {
+    "description": "Defines opc_compute_sec_rule",
+    "prefix": "tf-opc-resource-opc_compute_sec_rule",
+    "body": [
+      "resource \"opc_compute_sec_rule\" \"test_rule\" {",
+      "  name             = \"test\"",
+      "  source_list      = \"seclist:${opc_compute_security_list.sec-list1.name}\"",
+      "  destination_list = \"seciplist:${opc_compute_security_ip_list.sec-ip-list1.name}\"",
+      "  action           = \"permit\"",
+      "  application      = \"${opc_compute_security_application.spring-boot.name}\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_security_application": {
+    "description": "Defines opc_compute_security_application",
+    "prefix": "tf-opc-resource-opc_compute_security_application",
+    "body": [
+      "resource \"opc_compute_security_application\" \"tomcat\" {",
+      "  name     = \"tomcat\"",
+      "  protocol = \"tcp\"",
+      "  dport    = \"8080\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_security_association": {
+    "description": "Defines opc_compute_security_association",
+    "prefix": "tf-opc-resource-opc_compute_security_association",
+    "body": [
+      "resource \"opc_compute_security_association\" \"test_instance_sec_list_1\" {",
+      "  name    = \"association1\"",
+      "  vcable  = \"${opc_compute_instance.test_instance.vcable}\"",
+      "  seclist = \"${opc_compute_security_list.sec_list1.name}\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_security_ip_list": {
+    "description": "Defines opc_compute_security_ip_list",
+    "prefix": "tf-opc-resource-opc_compute_security_ip_list",
+    "body": [
+      "resource \"opc_compute_security_ip_list\" \"sec_ip_list1\" {",
+      "  name       = \"sec-ip-list1\"",
+      "  ip_entries = [\"217.138.34.4\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_security_list": {
+    "description": "Defines opc_compute_security_list",
+    "prefix": "tf-opc-resource-opc_compute_security_list",
+    "body": [
+      "resource \"opc_compute_security_list\" \"sec_list1\" {",
+      "  name                 = \"sec-list-1\"",
+      "  policy               = \"permit\"",
+      "  outbound_cidr_policy = \"deny\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_security_protocol": {
+    "description": "Defines opc_compute_security_protocol",
+    "prefix": "tf-opc-resource-opc_compute_security_protocol",
+    "body": [
+      "resource \"opc_compute_security_protocol\" \"default\" {",
+      "  name        = \"security-protocol-1\"",
+      "  dst_ports   = [\"2045-2050\"]",
+      "  src_ports   = [\"3045-3060\"]",
+      "  ip_protocol = \"tcp\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_security_rule": {
+    "description": "Defines opc_compute_security_rule",
+    "prefix": "tf-opc-resource-opc_compute_security_rule",
+    "body": [
+      "resource \"opc_compute_security_rule\" \"default\" {",
+      "  name               = \"SecurityRule1\"",
+      "  flow_direction     = \"ingress\"",
+      "  acl                = \"${opc_compute_acl.default.name}\"",
+      "  security_protocols = [\"${opc_compute_security_protocol.default.name}\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_ssh_key": {
+    "description": "Defines opc_compute_ssh_key",
+    "prefix": "tf-opc-resource-opc_compute_ssh_key",
+    "body": [
+      "resource \"opc_compute_ssh_key\" \"test\" {",
+      "  name    = \"test-key\"",
+      "  key     = \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqw6JwbjIk...\"",
+      "  enabled = true",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_storage_volume": {
+    "description": "Defines opc_compute_storage_volume",
+    "prefix": "tf-opc-resource-opc_compute_storage_volume",
+    "body": [
+      "resource \"opc_compute_storage_volume\" \"test\" {",
+      "  name        = \"storageVolume1\"",
+      "  description = \"Description for the Storage Volume\"",
+      "  size        = 10",
+      "  tags        = [\"bar\", \"foo\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_storage_volume_attachment": {
+    "description": "Defines opc_compute_storage_volume_attachment",
+    "prefix": "tf-opc-resource-opc_compute_storage_volume_attachment",
+    "body": [
+      "resource \"opc_compute_storage_volume\" \"default\" {",
+      "  name = \"storage-volume-1\"",
+      "  size = 1",
+      "}",
+      "",
+      "resource \"opc_compute_instance\" \"default\" {",
+      "  name = \"instance-1\"",
+      "  label = \"instance-1\"",
+      "  shape = \"oc3\"",
+      "  image_list = \"/oracle/public/OL_7.2_UEKR4_x86_64\"",
+      "}",
+      "",
+      "resource \"opc_compute_storage_attachment\" \"test\" {",
+      "  instance = \"${opc_compute_instance.default.name}\"",
+      "  storage_volume = \"${opc_compute_storage_volume.default.name}\"",
+      "  index = 1",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_storage_volume_snapshot": {
+    "description": "Defines opc_compute_storage_volume_snapshot",
+    "prefix": "tf-opc-resource-opc_compute_storage_volume_snapshot",
+    "body": [
+      "resource \"opc_compute_storage_volume_snapshot\" \"test\" {",
+      "  name        = \"storageVolume1\"",
+      "  description = \"Description for the Storage Volume\"",
+      "  tags        = [\"bar\", \"foo\"]",
+      "  collocated  = true",
+      "  volume_name = \"${opc_compute_storage_volume.foo.name}\"",
+      "}"
+    ]
+  },
+  "opc-resource-opc_compute_vnic_set": {
+    "description": "Defines opc_compute_vnic_set",
+    "prefix": "tf-opc-resource-opc_compute_vnic_set",
+    "body": [
+      "resource \"opc_compute_vnic_set\" \"test_set\" {",
+      "  name         = \"test_vnic_set\"",
+      "  description  = \"My vnic set\"",
+      "  applied_acls = [\"acl1\", \"acl2\"]",
+      "  virtual_nics = [\"nic1\", \"nic2\", \"nic3\"]",
+      "  tags         = [\"xyzzy\", \"quux\"]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_storage_container": {
+    "description": "Defines opc_storage_container",
+    "prefix": "tf-opc-resource-opc_storage_container",
+    "body": [
+      "resource \"opc_storage_container\" \"default\" {",
+      "  name = \"storage-container-1\"",
+      "  read_acls = [ \".r:example.com\", \".rlistings\" ]",
+      "}"
+    ]
+  },
+  "opc-resource-opc_storage_object": {
+    "description": "Defines opc_storage_object",
+    "prefix": "tf-opc-resource-opc_storage_object",
+    "body": [
+      "resource \"opc_storage_object\" \"default\" {",
+      "  name         = \"storage-object-1\"",
+      "  container    = \"${opc_storage_container.container.name}\"",
+      "  file         = \"${\"./source_file.txt\"}\"",
+      "  etag         = \"${md5(file(\"./source_file.txt\"))}\"",
+      "  content_type = \"text/plain;charset=utf-8\"",
+      "}"
+    ]
+  },
   "template-data-cloudinit_config": {
     "description": "Defines cloudinit_config",
     "prefix": "tf-template-data-cloudinit_config",

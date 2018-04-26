@@ -18,7 +18,8 @@ async function main() {
     downloadGitRepo(tmpDir, provider, snips, iterateOnDocFiles);
   });
   // TODO: implement a count on markdown files to get this number?
-  const cap = 823;
+  // TODO: with a count, modify package.json to advertise number of snippets in description
+  const cap = 856;
   while (Object.keys(snips).length < cap ) {
     console.log(`${Object.keys(snips).length} of ${cap}`);
     await sleep(20);

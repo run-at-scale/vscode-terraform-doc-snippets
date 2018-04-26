@@ -3,7 +3,7 @@
     "aws": {},
     "google": {},
     "azurerm": {},
-    "ocp": {},
+    "opc": {},
     "vsphere": {},
     "template": {},
     "github": {},
@@ -13,8 +13,7 @@
     "consul": {},
     "archive": {},
     "random": {},
-    "chef": {},
-    "null": {},
-    "terraform": {}
+    "terraform": {},
+    "chef": {}
   }
 }
