@@ -1,5 +1,10 @@
 # vscode-terraform-doc-snippets
 
+[![Version](https://vsmarketplacebadge.apphb.com/version/run-at-scale.terraform-doc-snippets.svg)](https://vsmarketplacebadge.apphb.com/version-short/run-at-scale.terraform-doc-snippets.svg)
+[![Install](https://vsmarketplacebadge.apphb.com/installs/run-at-scale.terraform-doc-snippets.svg)](https://vsmarketplacebadge.apphb.com/installs-short/run-at-scale.terraform-doc-snippets.svg)
+[![Ratings](https://vsmarketplacebadge.apphb.com/rating-short/run-at-scale.terraform-doc-snippets.svg)](https://vsmarketplacebadge.apphb.com/rating-short/run-at-scale.terraform-doc-snippets.svg)
+
+
 ![Terraform](https://github.com/run-at-scale/vscode-terraform-doc-snippets/raw/master/assets/terraform_logo.png "Terraform doc snippets")
 
 A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured vscode snippets.
