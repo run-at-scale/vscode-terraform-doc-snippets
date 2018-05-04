@@ -22,10 +22,16 @@ class SnippetClass {
   }
 }
 
-export function downloadGitRepo(workspace, provider, allSnippets, iterateOnFilesFunc) {
+export function downloadGitRepo(
+  workspace,
+  providerFull,
+  allSnippets,
+  iterateOnFilesFunc,
+) {
+  const provider = providerFull.split("terraform-provider-")[1];
   console.log(`Downloading git repo for ${provider}`);
   // get this from config giving provider config preference, then global, then this default
-  const providerRepo = `https://github.com/terraform-providers/terraform-provider-${provider}`;
+  const providerRepo = `https://github.com/terraform-providers/${providerFull}`;
   const providerDir = `${workspace}/${provider}`;
   git.Clone.clone(providerRepo, providerDir).then(() => {
     async.each(Object.keys(tfTypesMap), (tfType) => {

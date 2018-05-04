@@ -2,11 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.1.3](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.2...v0.1.3) (2019-04-26)
+## [0.1.4](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.3...v0.1.4) (2018-05-04)
+
+* provider repos now scanned from the terraform-providers organization.
+* snippets added to 1199.
+* formatting and beautifying ✨
+
+## [0.1.3](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.2...v0.1.3) (2018-04-26)
 
 * `ocp` now reads `opc` to get all Oracle Public Cloud resources. Now at 856.
 
-## [0.1.2](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.1...v0.1.2) (2019-04-26)
+## [0.1.2](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.1...v0.1.2) (2018-04-26)
 
 * markdown files are sometimes supplied as `.md` and othertimes `.markdown`. The code now handles both.
 
