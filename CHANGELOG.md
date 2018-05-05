@@ -5,8 +5,9 @@ All notable changes to this project will be documented in this file. See [standa
 ## [0.1.4](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.3...v0.1.4) (2018-05-04)
 
 * provider repos now scanned from the terraform-providers organization.
-* snippets added to 1199.
+* snippets added to 1452.
 * formatting and beautifying ✨
+* added error handling for missing absent examples.
 
 ## [0.1.3](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.2...v0.1.3) (2018-04-26)
 

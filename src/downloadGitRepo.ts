@@ -42,10 +42,11 @@ export function downloadGitRepo(
         resourceType,
         providerTypeDir,
       );
-      const stats = fs.statSync(providerTypeDir);
-      if (stats.isDirectory()) {
-        iterateOnFilesFunc(snippetObject, allSnippets, generateSnippet);
-      }
+      fs.stat(providerTypeDir, (err, data) => {
+        if (err === null) {
+          iterateOnFilesFunc(snippetObject, allSnippets, generateSnippet);
+        }
+      });
     });
   });
 }

@@ -1,7 +1,7 @@
 const octokit = require("@octokit/rest")();
 import { iterateOnDocFiles } from "./iterateOnDocFiles";
 
-// error handle and do pagination
+// handle errors and do pagination
 export function getAvailableProviders(tmpDir, snips, processRepo) {
   octokit.repos.getForOrg(
     { org: "terraform-providers", type: "public", per_page: 100 },

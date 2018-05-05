@@ -1,8 +1,7 @@
 {
   "name": "terraform-doc-snippets",
   "displayName": "Terraform doc snippets",
-  "description":
-    "Get Terraform code snippets from provider documentation for all resources and data sources. All providers soon to be covered!",
+  "description": "Get Terraform code snippets from provider documentation for all resources and data sources. All providers soon to be covered!",
   "version": "0.1.4",
   "icon": "assets/terraform_logo.png",
   "publisher": "run-at-scale",
@@ -15,7 +14,9 @@
     "email": "brandon@atscale.run",
     "url": "https://github.com/run-at-scale"
   },
-  "categories": ["Snippets"],
+  "categories": [
+    "Snippets"
+  ],
   "keywords": [
     "Terraform",
     "devops",
@@ -41,8 +42,7 @@
     "test": "npm run compile && node ./node_modules/vscode/bin/test",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "build:snippets": "ts-node ./src/main.ts",
-    "build:changelog":
-      "conventional-changelog -p angular -i CHANGELOG.md -s -a",
+    "build:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -a",
     "publish:vsce": "vsce publish",
     "release": "standard-version"
   },
@@ -66,7 +66,6 @@
     "@octokit/rest": "^15.2.7",
     "async": "^2.6.0",
     "gfm-code-blocks": "^1.0.0",
-    "lockfile": "^1.0.4",
     "nodegit": "^0.20.3",
     "tmp": "0.0.33",
     "underscore": "^1.9.0"

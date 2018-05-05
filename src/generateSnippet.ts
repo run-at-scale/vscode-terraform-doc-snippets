@@ -1,11 +1,10 @@
 import path = require("path");
 import { getCodeBlock } from "./getCodeBlock";
 
-const providersConfig = require("./config.json");
+// const providersConfig = require("./config.json");
 
 export function generateSnippet(snippetObject, allSnippets) {
   const filename = path.parse(snippetObject.docFile).base;
-  // Feature? define in config the format of the prefix
   const resourceName = filename.split(".")[0];
   const fullResourceName = `${snippetObject.provider}-${
     snippetObject.resourceType

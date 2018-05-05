@@ -1,4 +1,1590 @@
 {
+  "alicloud-data-dns_domain_groups": {
+    "description": "Defines dns_domain_groups",
+    "prefix": "tf-alicloud-data-dns_domain_groups",
+    "body": [
+      "# empty snippet",
+      ""
+    ]
+  },
+  "alicloud-data-dns_domain_records": {
+    "description": "Defines dns_domain_records",
+    "prefix": "tf-alicloud-data-dns_domain_records",
+    "body": [
+      "# empty snippet",
+      ""
+    ]
+  },
+  "alicloud-data-dns_domains": {
+    "description": "Defines dns_domains",
+    "prefix": "tf-alicloud-data-dns_domains",
+    "body": [
+      "data \"alicloud_dns_domains\" \"domain\" {",
+      "  domain_name_regex = \"^hegu\"",
+      "  output_file = \"domains.txt\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-dns_groups": {
+    "description": "Defines dns_groups",
+    "prefix": "tf-alicloud-data-dns_groups",
+    "body": [
+      "data \"alicloud_dns_groups\" \"group\" {",
+      "  name_regex = \"^y[A-Za-z]+\"",
+      "  output_file = \"groups.txt\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-dns_records": {
+    "description": "Defines dns_records",
+    "prefix": "tf-alicloud-data-dns_records",
+    "body": [
+      "data \"alicloud_dns_records\" \"record\" {",
+      "  domain_name = \"xiaozhu.top\"",
+      "  is_locked = false",
+      "  type = \"A\"",
+      "  host_record_regex = \"^@\"",
+      "  output_file = \"records.txt\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-eips": {
+    "description": "Defines eips",
+    "prefix": "tf-alicloud-data-eips",
+    "body": [
+      "data \"alicloud_eips\" \"eips\"{",
+      "    cidr_block=\"172.16.0.0/12\"",
+      "    name_regex=\"^foo\"",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"foo\" {",
+      "    ...",
+      "    instance_name =  \"in-the-eip\"",
+      "    vswitch_id = \"vsw-abc123456\"",
+      "    ...",
+      "}",
+      "",
+      "resource \"alicloud_eip_association\" \"asso\" {",
+      "    instance_id = \"${alicloud_instance.foo.id}\"",
+      "    allocation_id = \"${data.alicloud_eips.eips.eips.0.id}\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-images": {
+    "description": "Defines images",
+    "prefix": "tf-alicloud-data-images",
+    "body": [
+      "data \"alicloud_images\" \"multi_image\" {",
+      "\towners = \"system\"",
+      "\tname_regex = \"^centos_6\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-instance_types": {
+    "description": "Defines instance_types",
+    "prefix": "tf-alicloud-data-instance_types",
+    "body": [
+      "# Declare the data source",
+      "data \"alicloud_instance_types\" \"1c2g\" {",
+      "  cpu_core_count = 1",
+      "  memory_size = 2",
+      "}",
+      "",
+      "# Create ecs instance with the first matched instance_type",
+      "",
+      "resource \"alicloud_instance\" \"instance\" {",
+      "  instance_type = \"${data.alicloud_instance_types.1c2g.instance_types.0.id}\"",
+      "",
+      "  # Other properties...",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-instances": {
+    "description": "Defines instances",
+    "prefix": "tf-alicloud-data-instances",
+    "body": [
+      "data \"alicloud_instances\" \"instances\" {",
+      "\tname_regex = \"web_server\"",
+      "\tstatus = \"Running\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-key_pairs": {
+    "description": "Defines key_pairs",
+    "prefix": "tf-alicloud-data-key_pairs",
+    "body": [
+      "# Declare the data source",
+      "data \"alicloud_key_pairs\" \"name_regex\" {",
+      "\tname_regex = \"test\"",
+      "\toutput_file = \"my_key_pairs.json\"",
+      "}",
+      "",
+      "# Bind a key pair for several ecs instances using the first matched key pair",
+      "",
+      "resource \"alicloud_key_pair_attachment\" \"attachment\" {",
+      "  key_name = \"${data.alicloud_key_pairs.default.key_pairs.0.id}\"",
+      "  instance_ids = [...]",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-kms_keys": {
+    "description": "Defines kms_keys",
+    "prefix": "tf-alicloud-data-kms_keys",
+    "body": [
+      "# Declare the data source",
+      "data \"alicloud_kms_keys\" \"keys\" {",
+      "\tdescription_regex = \"Hello KMS\"",
+      "\toutput_file = \"kms_keys.json\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-ram_account_aliases": {
+    "description": "Defines ram_account_aliases",
+    "prefix": "tf-alicloud-data-ram_account_aliases",
+    "body": [
+      "data \"alicloud_ram_account_aliases\" \"alias\" {",
+      "  output_file = \"alias.txt\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-ram_alias": {
+    "description": "Defines ram_alias",
+    "prefix": "tf-alicloud-data-ram_alias",
+    "body": [
+      "# empty snippet",
+      ""
+    ]
+  },
+  "alicloud-data-ram_groups": {
+    "description": "Defines ram_groups",
+    "prefix": "tf-alicloud-data-ram_groups",
+    "body": [
+      "data \"alicloud_ram_groups\" \"group\" {",
+      "  output_file = \"groups.txt\"",
+      "  user_name = \"user1\"",
+      "  name_regex = \"^group[0-9]*\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-ram_policies": {
+    "description": "Defines ram_policies",
+    "prefix": "tf-alicloud-data-ram_policies",
+    "body": [
+      "data \"alicloud_ram_policies\" \"policy\" {",
+      "  output_file = \"policies.txt\"",
+      "  user_name = \"user1\"",
+      "  group_name = \"group1\"",
+      "  type = \"System\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-ram_roles": {
+    "description": "Defines ram_roles",
+    "prefix": "tf-alicloud-data-ram_roles",
+    "body": [
+      "data \"alicloud_ram_roles\" \"role\" {",
+      "  output_file = \"roles.txt\"",
+      "  name_regex = \".*test.*\"",
+      "  policy_name = \"AliyunACSDefaultAccess\"",
+      "  policy_type = \"Custom\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-ram_users": {
+    "description": "Defines ram_users",
+    "prefix": "tf-alicloud-data-ram_users",
+    "body": [
+      "data \"alicloud_ram_users\" \"user\" {",
+      "  output_file = \"users.txt\"",
+      "  group_name = \"group1\"",
+      "  policy_name = \"AliyunACSDefaultAccess\"",
+      "  policy_type = \"Custom\"",
+      "  name_regex = \"^user\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-regions": {
+    "description": "Defines regions",
+    "prefix": "tf-alicloud-data-regions",
+    "body": [
+      "data \"alicloud_regions\" \"current\" {",
+      "\tcurrent = true",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-security_group_rules": {
+    "description": "Defines security_group_rules",
+    "prefix": "tf-alicloud-data-security_group_rules",
+    "body": [
+      "# accept a security group id as a variable",
+      "",
+      "variable \"security_group_id\" {}",
+      "",
+      "# or filter using data source",
+      "# note the filter must select only one specific group",
+      "",
+      "data \"alicloud_security_groups\" \"api\" {",
+      "  name_regex = \"api\"",
+      "}",
+      "",
+      "# filter the rule",
+      "",
+      "data \"alicloud_security_group_rules\" \"ingress\" {",
+      "  id          = \"${alicloud_security_groups.api.0.id}\"",
+      "                # or ${var.security_group_id}",
+      "  nic_type    = \"internet\"",
+      "  direction   = \"ingress\"",
+      "  ip_protocol = \"TCP\"",
+      "}",
+      "",
+      "# pass port_range to the backend service",
+      "",
+      "resource \"alicloud_instance\" \"backend\" {",
+      "  ...",
+      "  user_data = \"config_service.sh --portrange=${data.alicloud_security_group_rules.ingress.0.port_range}\"",
+      "}"
+    ]
+  },
+  "alicloud-data-security_groups": {
+    "description": "Defines security_groups",
+    "prefix": "tf-alicloud-data-security_groups",
+    "body": [
+      "# Filter security groups and output to a file",
+      "",
+      "data \"alicloud_security_groups\" \"web\" {",
+      "  name_regex  = \"^web-\"",
+      "  output_file = \"web_access.json\"",
+      "}",
+      "",
+      "# in conjunction with vpc",
+      "",
+      "resource \"alicloud_vpc\" \"primary\" {",
+      "  ...",
+      "}",
+      "",
+      "data \"alicloud_security_groups\" \"primary_groups\" {",
+      "  vpc_id = \"${alicloud_vpc.primary.id}\"",
+      "}"
+    ]
+  },
+  "alicloud-data-vpcs": {
+    "description": "Defines vpcs",
+    "prefix": "tf-alicloud-data-vpcs",
+    "body": [
+      "data \"alicloud_vpcs\" \"multi_vpc\"{",
+      "\tcidr_block=\"172.16.0.0/12\"",
+      "\tstatus=\"Available\"",
+      "\tname_regex=\"^foo\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-vswitches": {
+    "description": "Defines vswitches",
+    "prefix": "tf-alicloud-data-vswitches",
+    "body": [
+      "data \"alicloud_vswitches\" \"subnets\"{",
+      "    cidr_block=\"172.16.0.0/12\"",
+      "    name_regex=\"^foo\"",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"foo\" {",
+      "    ...",
+      "    instance_name =  \"in-the-vpc\"",
+      "    vswitch_id = \"${data.alicloud_vswitches.subnets.vswitches.0.id}\"",
+      "    ...",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-data-zones": {
+    "description": "Defines zones",
+    "prefix": "tf-alicloud-data-zones",
+    "body": [
+      "# Declare the data source",
+      "data \"alicloud_zones\" \"default\" {",
+      "\t\"available_instance_type\"= \"ecs.n4.large\"",
+      "\t\"available_disk_category\"= \"cloud_ssd\"",
+      "}",
+      "",
+      "# Create ecs instance with the first matched zone",
+      "",
+      "resource \"alicloud_instance\" \"instance\" {",
+      "  availability_zone = \"${data.alicloud_zones.default.zones.0.id}\"",
+      "",
+      "  # Other properties...",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-resource-cdn_domain": {
+    "description": "Defines cdn_domain",
+    "prefix": "tf-alicloud-resource-cdn_domain",
+    "body": [
+      "# Add a CDN Accelerated Domain with configs.",
+      "resource \"alicloud_cdn_domain\" \"domain\" {",
+      "  domain_name = \"${your_cdn_domain_name}\"",
+      "  cdn_type = \"web\"",
+      "  source_type = \"domain\"",
+      "  sources = [\"${your_cdn_domain_source1}\", \"${your_cdn_domain_source2}\"]",
+      "  ",
+      "  // configs",
+      "  optimize_enable = \"off\"",
+      "  page_compress_enable = \"off\"",
+      "  range_enable = \"off\"",
+      "  video_seek_enable = \"off\"",
+      "  block_ips = [\"1.2.3.4\", \"111.222.111.111\"]",
+      "  parameter_filter_config = [",
+      "    {",
+      "      enable = \"on\"",
+      "      hash_key_args = [\"hello\", \"youyouyou\"]",
+      "    }]",
+      "  page_404_config = [",
+      "    {",
+      "      page_type = \"other\"",
+      "      custom_page_url = \"http://${your_cdn_domain_name}/notfound/\"",
+      "    }]",
+      "  refer_config = [",
+      "    {",
+      "      refer_type = \"block\"",
+      "      refer_list = [\"www.xxxx.com\", \"www.xxxx.cn\"]",
+      "      allow_empty = \"off\"",
+      "    }]",
+      "  auth_config = [",
+      "    {",
+      "      auth_type = \"type_a\"",
+      "      master_key = \"helloworld1\"",
+      "      slave_key = \"helloworld2\"",
+      "    }]",
+      "  http_header_config = [",
+      "    {",
+      "      header_key = \"Content-Type\",",
+      "      header_value = \"text/plain\"",
+      "    },",
+      "    {",
+      "      header_key = \"Access-Control-Allow-Origin\",",
+      "      header_value = \"*\"",
+      "    }]",
+      "  cache_config = [",
+      "    {",
+      "      cache_content = \"/hello/world\",",
+      "      ttl = 1000",
+      "      cache_type = \"path\"",
+      "    },",
+      "    {",
+      "      cache_content = \"/hello/world/youyou\",",
+      "      ttl = 1000",
+      "      cache_type = \"path\"",
+      "    },",
+      "    {",
+      "      cache_content = \"txt,jpg,png\",",
+      "      ttl = 2000",
+      "      cache_type = \"suffix\"",
+      "    }]",
+      "}"
+    ]
+  },
+  "alicloud-resource-cms_alarm": {
+    "description": "Defines cms_alarm",
+    "prefix": "tf-alicloud-resource-cms_alarm",
+    "body": [
+      "resource \"alicloud_cms_alarm\" \"basic\" {",
+      "  name = \"tf-testAccCmsAlarm_basic\"",
+      "  project = \"acs_ecs_dashboard\"",
+      "  metric = \"disk_writebytes\"",
+      "  dimensions = {",
+      "    instanceId = \"i-bp1247,i-bp11gd\"",
+      "    device = \"/dev/vda1,/dev/vdb1\"",
+      "  }",
+      "  statistics =\"Average\"",
+      "  period = 900",
+      "  operator = \"<=\"",
+      "  threshold = 35",
+      "  triggered_count = 2",
+      "  contact_groups = [\"test-group\"]",
+      "  end_time = 20",
+      "  start_time = 6",
+      "  notify_type = 1",
+      "}"
+    ]
+  },
+  "alicloud-resource-container_cluster": {
+    "description": "Defines container_cluster",
+    "prefix": "tf-alicloud-resource-container_cluster",
+    "body": [
+      "# empty snippet",
+      ""
+    ]
+  },
+  "alicloud-resource-cs_application": {
+    "description": "Defines cs_application",
+    "prefix": "tf-alicloud-resource-cs_application",
+    "body": [
+      "resource \"alicloud_cs_application\" \"app\" {",
+      "  cluster_name = \"my-first-swarm\"",
+      "  name = \"wordpress\"",
+      "  version = \"1.2\"",
+      "  template = \"${file(\"wordpress.yml\")}\"",
+      "  latest_image = true",
+      "  environment = {",
+      "    EXTERNAL_URL = \"123.123.123.123:8080\"",
+      "  }",
+      "}"
+    ]
+  },
+  "alicloud-resource-cs_kubernetes": {
+    "description": "Defines cs_kubernetes",
+    "prefix": "tf-alicloud-resource-cs_kubernetes",
+    "body": [
+      "data \"alicloud_zones\" \"default\" {",
+      "  \"available_resource_creation\"= \"VSwitch\"",
+      "}",
+      "",
+      "resource \"alicloud_cs_kubernetes\" \"main\" {",
+      "  name_prefix = \"my-first-k8s\"",
+      "  availability_zone = \"${data.alicloud_zones.default.zones.0.id}\"",
+      "  new_nat_gateway = true",
+      "  master_instance_type = \"ecs.n4.small\"",
+      "  worker_instance_type = \"ecs.n4.small\"",
+      "  worker_number = 3",
+      "  password = \"Test12345\"",
+      "  pod_cidr = \"192.168.1.0/24\"",
+      "  service_cidr = \"192.168.2.0/24\"",
+      "  enable_ssh = true",
+      "  install_cloud_monitor = true",
+      "}"
+    ]
+  },
+  "alicloud-resource-cs_swarm": {
+    "description": "Defines cs_swarm",
+    "prefix": "tf-alicloud-resource-cs_swarm",
+    "body": [
+      "resource \"alicloud_cs_swarm\" \"my_cluster\" {",
+      "  password = \"Test12345\"",
+      "  instance_type = \"ecs.n4.small\"",
+      "  name = \"ClusterFromAlicloud\"",
+      "  node_number = 2",
+      "  disk_category = \"cloud_efficiency\"",
+      "  disk_size = 20",
+      "  cidr_block = \"172.18.0.0/24\"",
+      "  image_id = \"${var.image_id}\"",
+      "  vswitch_id = \"${var.vswitch_id}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-db_account": {
+    "description": "Defines db_account",
+    "prefix": "tf-alicloud-resource-db_account",
+    "body": [
+      "resource \"alicloud_db_account\" \"default\" {",
+      "\tinstance_id = \"rm-2eps...\"",
+      "\tname = \"tf_account\"",
+      "\tpassword = \"...\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-db_account_privilege": {
+    "description": "Defines db_account_privilege",
+    "prefix": "tf-alicloud-resource-db_account_privilege",
+    "body": [
+      "resource \"alicloud_db_database\" \"default\" {",
+      "    count = 2",
+      "\tinstance_id = \"rm-2eps...\"",
+      "\tname = \"tf_database\"",
+      "\tcharacter_set = \"utf8\"",
+      "}",
+      "",
+      "resource \"alicloud_db_account_privilege\" \"default\" {",
+      "\tinstance_id = \"rm-2eps...\"",
+      "\taccount_name = \"tf_account\"",
+      "\tprivilege = \"ReadOnly\"",
+      "\tdb_names = [\"${alicloud_db_database.base.*.name}\"]",
+      "}"
+    ]
+  },
+  "alicloud-resource-db_backup_policy": {
+    "description": "Defines db_backup_policy",
+    "prefix": "tf-alicloud-resource-db_backup_policy",
+    "body": [
+      "resource \"alicloud_db_backup_policy\" \"default\" {",
+      "\tinstance_id = \"rm-2eps...\"",
+      "\tbackup_period = [\"Monday\", \"Wednesday\"]",
+      "\tbackup_time = \"02:00Z-03:00Z\"",
+      "\tretention_period = 7",
+      "\tlog_backup = true",
+      "}"
+    ]
+  },
+  "alicloud-resource-db_connection": {
+    "description": "Defines db_connection",
+    "prefix": "tf-alicloud-resource-db_connection",
+    "body": [
+      "resource \"alicloud_db_connection\" \"default\" {",
+      "\tinstance_id = \"rm-2eps...\"",
+      "\tconnection_prefix = \"alicloud\"",
+      "\tport = \"3306\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-db_database": {
+    "description": "Defines db_database",
+    "prefix": "tf-alicloud-resource-db_database",
+    "body": [
+      "resource \"alicloud_db_database\" \"default\" {",
+      "\tinstance_id = \"rm-2eps...\"",
+      "\tname = \"tf_database\"",
+      "\tcharacter_set = \"utf8\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-db_instance": {
+    "description": "Defines db_instance",
+    "prefix": "tf-alicloud-resource-db_instance",
+    "body": [
+      "resource \"alicloud_db_instance\" \"default\" {",
+      "\tengine = \"MySQL\"",
+      "\tengine_version = \"5.6\"",
+      "\tdb_instance_class = \"rds.mysql.t1.small\"",
+      "\tdb_instance_storage = \"10\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-disk": {
+    "description": "Defines disk",
+    "prefix": "tf-alicloud-resource-disk",
+    "body": [
+      "# Create a new ECS disk.",
+      "resource \"alicloud_disk\" \"ecs_disk\" {",
+      "  # cn-beijing",
+      "  availability_zone = \"cn-beijing-b\"",
+      "  name              = \"New-disk\"",
+      "  description       = \"Hello ecs disk.\"",
+      "  category          = \"cloud_efficiency\"",
+      "  size              = \"30\"",
+      "",
+      "  tags {",
+      "    Name = \"TerraformTest\"",
+      "  }",
+      "}"
+    ]
+  },
+  "alicloud-resource-disk_attachment": {
+    "description": "Defines disk_attachment",
+    "prefix": "tf-alicloud-resource-disk_attachment",
+    "body": [
+      "# Create a new ECS disk-attachment and use it attach one disk to a new instance.",
+      "",
+      "resource \"alicloud_security_group\" \"ecs_sg\" {",
+      "  name        = \"terraform-test-group\"",
+      "  description = \"New security group\"",
+      "}",
+      "",
+      "resource \"alicloud_disk\" \"ecs_disk\" {",
+      "  availability_zone = \"cn-beijing-a\"",
+      "  size              = \"50\"",
+      "",
+      "  tags {",
+      "    Name = \"TerraformTest-disk\"",
+      "  }",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"ecs_instance\" {",
+      "  image_id              = \"ubuntu_140405_64_40G_cloudinit_20161115.vhd\"",
+      "  instance_type         = \"ecs.n4.small\"",
+      "  availability_zone     = \"cn-beijing-a\"",
+      "  security_groups       = [\"${alicloud_security_group.ecs_sg.id}\"]",
+      "  instance_name         = \"Hello\"",
+      "  instance_network_type = \"classic\"",
+      "  internet_charge_type  = \"PayByBandwidth\"",
+      "",
+      "  tags {",
+      "    Name = \"TerraformTest-instance\"",
+      "  }",
+      "}",
+      "",
+      "resource \"alicloud_disk_attachment\" \"ecs_disk_att\" {",
+      "  disk_id     = \"${alicloud_disk.ecs_disk.id}\"",
+      "  instance_id = \"${alicloud_instance.ecs_instance.id}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-dns": {
+    "description": "Defines dns",
+    "prefix": "tf-alicloud-resource-dns",
+    "body": [
+      "# Add a new Domain.",
+      "resource \"alicloud_dns\" \"dns\" {",
+      "  name = \"starmove.com\"                      ",
+      "  group_id = \"85ab8713-4a30-4de4-9d20-155ff830f651\" ",
+      "}"
+    ]
+  },
+  "alicloud-resource-dns_group": {
+    "description": "Defines dns_group",
+    "prefix": "tf-alicloud-resource-dns_group",
+    "body": [
+      "# Add a new Domain group.",
+      "resource \"alicloud_dns_group\" \"group\" {",
+      "  name = \"testgroup\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-dns_record": {
+    "description": "Defines dns_record",
+    "prefix": "tf-alicloud-resource-dns_record",
+    "body": [
+      "# Create a new Domain record",
+      "resource \"alicloud_dns_record\" \"record\" {",
+      "  name = \"domainname\"",
+      "  host_record = \"@\"",
+      "  type = \"A\"",
+      "  value = \"192.168.99.99\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-eip": {
+    "description": "Defines eip",
+    "prefix": "tf-alicloud-resource-eip",
+    "body": [
+      "# Create a new EIP.",
+      "resource \"alicloud_eip\" \"example\" {",
+      "  bandwidth            = \"10\"",
+      "  internet_charge_type = \"PayByBandwidth\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-eip_association": {
+    "description": "Defines eip_association",
+    "prefix": "tf-alicloud-resource-eip_association",
+    "body": [
+      "# Create a new EIP association and use it to associate a EIP form a instance.",
+      "",
+      "resource \"alicloud_vpc\" \"vpc\" {",
+      "  cidr_block = \"10.1.0.0/21\"",
+      "}",
+      "",
+      "resource \"alicloud_vswitch\" \"vsw\" {",
+      "  vpc_id            = \"${alicloud_vpc.vpc.id}\"",
+      "  cidr_block        = \"10.1.1.0/24\"",
+      "  availability_zone = \"cn-beijing-a\"",
+      "",
+      "  depends_on = [",
+      "    \"alicloud_vpc.vpc\",",
+      "  ]",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"ecs_instance\" {",
+      "  image_id              = \"ubuntu_140405_64_40G_cloudinit_20161115.vhd\"",
+      "  instance_type         = \"ecs.n4.small\"",
+      "  availability_zone     = \"cn-beijing-a\"",
+      "  security_groups       = [\"${alicloud_security_group.group.id}\"]",
+      "  vswitch_id            = \"${alicloud_vswitch.vsw.id}\"",
+      "  instance_name         = \"hello\"",
+      "  instance_network_type = \"vpc\"",
+      "",
+      "  tags {",
+      "    Name = \"TerraformTest-instance\"",
+      "  }",
+      "}",
+      "",
+      "resource \"alicloud_eip\" \"eip\" {}",
+      "",
+      "resource \"alicloud_eip_association\" \"eip_asso\" {",
+      "  allocation_id = \"${alicloud_eip.eip.id}\"",
+      "  instance_id   = \"${alicloud_instance.ecs_instance.id}\"",
+      "}",
+      "",
+      "resource \"alicloud_security_group\" \"group\" {",
+      "  name        = \"terraform-test-group\"",
+      "  description = \"New security group\"",
+      "  vpc_id      = \"${alicloud_vpc.vpc.id}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-ess_attachment": {
+    "description": "Defines ess_attachment",
+    "prefix": "tf-alicloud-resource-ess_attachment",
+    "body": [
+      "resource \"alicloud_instance\" \"instance\" {",
+      "  # Other parameters...",
+      "}",
+      "resource \"alicloud_ess_scaling_group\" \"scaling\" {",
+      "  min_size           = 0",
+      "  max_size           = 2",
+      "  removal_policies   = [\"OldestInstance\", \"NewestInstance\"]",
+      "",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_ess_scaling_configuration\" \"config\" {",
+      "  scaling_group_id  = \"${alicloud_ess_scaling_group.scaling.id}\"",
+      "  image_id          = \"ubuntu_140405_64_40G_cloudinit_20161115.vhd\"",
+      "  instance_type     = \"ecs.n4.large\"",
+      "  security_group_id = \"${alicloud_security_group.classic.id}\"",
+      "  active = true",
+      "  enable = true",
+      "}",
+      "",
+      "resource \"alicloud_ess_attachment\" \"att\" {",
+      "  scaling_group_id = \"${alicloud_ess_scaling_group.scaling.id}\"",
+      "  instance_ids = [\"${alicloud_instance.instance.*.id}\"]",
+      "  force = true",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-resource-ess_scaling_configuration": {
+    "description": "Defines ess_scaling_configuration",
+    "prefix": "tf-alicloud-resource-ess_scaling_configuration",
+    "body": [
+      "resource \"alicloud_security_group\" \"classic\" {",
+      "  # Other parameters...",
+      "}",
+      "resource \"alicloud_ess_scaling_group\" \"scaling\" {",
+      "  min_size           = 1",
+      "  max_size           = 2",
+      "  removal_policies   = [\"OldestInstance\", \"NewestInstance\"]",
+      "}",
+      "",
+      "resource \"alicloud_ess_scaling_configuration\" \"config\" {",
+      "  scaling_group_id  = \"${alicloud_ess_scaling_group.scaling.id}\"",
+      "",
+      "  image_id          = \"ubuntu_140405_64_40G_cloudinit_20161115.vhd\"",
+      "  instance_type     = \"ecs.n4.large\"",
+      "  security_group_id = \"${alicloud_security_group.classic.id}\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-resource-ess_scaling_group": {
+    "description": "Defines ess_scaling_group",
+    "prefix": "tf-alicloud-resource-ess_scaling_group",
+    "body": [
+      "resource \"alicloud_ess_scaling_group\" \"scaling\" {",
+      "  min_size           = 1",
+      "  max_size           = 2",
+      "  removal_policies   = [\"OldestInstance\", \"NewestInstance\"]",
+      "}"
+    ]
+  },
+  "alicloud-resource-ess_scaling_rule": {
+    "description": "Defines ess_scaling_rule",
+    "prefix": "tf-alicloud-resource-ess_scaling_rule",
+    "body": [
+      "resource \"alicloud_ess_scaling_group\" \"scaling\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_ess_scaling_configuration\" \"config\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_ess_scaling_rule\" \"rule\" {",
+      "  scaling_group_id = \"${alicloud_ess_scaling_group.scaling.id}\"",
+      "  adjustment_type  = \"TotalCapacity\"",
+      "  adjustment_value = 2",
+      "  cooldown         = 60",
+      "}"
+    ]
+  },
+  "alicloud-resource-ess_schedule": {
+    "description": "Defines ess_schedule",
+    "prefix": "tf-alicloud-resource-ess_schedule",
+    "body": [
+      "resource \"alicloud_ess_scaling_group\" \"scaling\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_ess_scaling_configuration\" \"config\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_ess_scaling_rule\" \"rule\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_ess_schedule\" \"schedule\" {",
+      "  scheduled_action    = \"${alicloud_ess_scaling_rule.rule.ari}\"",
+      "  launch_time         = \"2017-04-29T07:30Z\"",
+      "  scheduled_task_name = \"sg-schedule\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-forward": {
+    "description": "Defines forward",
+    "prefix": "tf-alicloud-resource-forward",
+    "body": [
+      "resource \"alicloud_vpc\" \"foo\" {",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_vswitch\" \"foo\" {",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_nat_gateway\" \"foo\" {",
+      "  vpc_id = \"${alicloud_vpc.foo.id}\"",
+      "  spec   = \"Small\"",
+      "  name   = \"test_foo\"",
+      "",
+      "  bandwidth_packages = [",
+      "    {",
+      "      ip_count  = 2",
+      "      bandwidth = 5",
+      "      zone      = \"\"",
+      "    },",
+      "    {",
+      "      ip_count  = 1",
+      "      bandwidth = 6",
+      "      zone      = \"cn-beijing-b\"",
+      "    }",
+      "  ]",
+      "",
+      "  depends_on = [",
+      "    \"alicloud_vswitch.foo\",",
+      "  ]",
+      "}",
+      "",
+      "resource \"alicloud_forward_entry\" \"foo\" {",
+      "  forward_table_id = \"${alicloud_nat_gateway.foo.forward_table_ids}\"",
+      "  external_ip      = \"${alicloud_nat_gateway.foo.bandwidth_packages.0.public_ip_addresses}\"",
+      "  external_port    = \"80\"",
+      "  ip_protocol      = \"tcp\"",
+      "  internal_ip      = \"172.16.0.3\"",
+      "  internal_port    = \"8080\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-resource-instance": {
+    "description": "Defines instance",
+    "prefix": "tf-alicloud-resource-instance",
+    "body": [
+      "# Create a new ECS instance for a VPC",
+      "resource \"alicloud_security_group\" \"group\" {",
+      "  name        = \"tf_test_foo\"",
+      "  description = \"foo\"",
+      "  vpc_id = \"${alicloud_vpc.vpc.id}\"",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"instance\" {",
+      "  # cn-beijing",
+      "  availability_zone = \"cn-beijing-b\"",
+      "  security_groups = [\"${alicloud_security_group.group.*.id}\"]",
+      "",
+      "  # series III",
+      "  instance_type        = \"ecs.n4.large\"",
+      "  system_disk_category = \"cloud_efficiency\"",
+      "  image_id             = \"ubuntu_140405_64_40G_cloudinit_20161115.vhd\"",
+      "  instance_name        = \"test_foo\"",
+      "  vswitch_id = \"${alicloud_vswitch.vswitch.id}\"",
+      "  internet_max_bandwidth_out = 10",
+      "}",
+      "",
+      "# Create a new ECS instance for VPC",
+      "resource \"alicloud_vpc\" \"vpc\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_vswitch\" \"vswitch\" {",
+      "  vpc_id = \"${alicloud_vpc.vpc.id}\"",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_slb\" \"slb\" {",
+      "  name       = \"test-slb-tf\"",
+      "  vpc_id     = \"${alicloud_vpc.vpc.id}\"",
+      "  vswitch_id = \"${alicloud_vswitch.vswitch.id}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-key_pair": {
+    "description": "Defines key_pair",
+    "prefix": "tf-alicloud-resource-key_pair",
+    "body": [
+      "resource \"alicloud_key_pair\" \"basic\" {",
+      "\tkey_name = \"terraform-test-key-pair\"",
+      "}",
+      "",
+      "// Using name prefix to build key pair",
+      "resource \"alicloud_key_pair\" \"prefix\" {",
+      "\tkey_name_prefix = \"terraform-test-key-pair-prefix\"",
+      "}",
+      "",
+      "// Import an existing public key to build a alicloud key pair",
+      "resource \"alicloud_key_pair\" \"publickey\" {",
+      "    key_name = \"my_public_key\"",
+      "  \tpublic_key = \"ssh-rsa AAAAB3Nza12345678qwertyuudsfsg\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-key_pair_attachment": {
+    "description": "Defines key_pair_attachment",
+    "prefix": "tf-alicloud-resource-key_pair_attachment",
+    "body": [
+      "resource \"alicloud_key_pair\" \"key\" {",
+      "\tkey_name = \"terraform-test-key-pair\"",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"instance\" {",
+      "  instance_name = \"test-keypair-${format(var.count_format, count.index+1)}\"",
+      "  image_id = \"ubuntu_140405_64_40G_cloudinit_20161115.vhd\"",
+      "  instance_type = \"ecs.n4.small\"",
+      "  count = 2",
+      "  availability_zone = \"${var.availability_zones}\"",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_key_pair_attachment\" \"attach\" {",
+      "  key_name = \"${alicloud_key_pair.key.id}\"",
+      "  instance_ids = [\"${alicloud_instance.instance.*.id}\"]",
+      "}"
+    ]
+  },
+  "alicloud-resource-kms_key": {
+    "description": "Defines kms_key",
+    "prefix": "tf-alicloud-resource-kms_key",
+    "body": [
+      "resource \"alicloud_kms_key\" \"key\" {",
+      "  description = \"Hello KMS\"",
+      "  deletion_window_in_days = \"7\"",
+      "  is_enabled = true",
+      "}"
+    ]
+  },
+  "alicloud-resource-nat_gateway": {
+    "description": "Defines nat_gateway",
+    "prefix": "tf-alicloud-resource-nat_gateway",
+    "body": [
+      "resource \"alicloud_vpc\" \"vpc\" {",
+      "  name       = \"tf_test_foo\"",
+      "  cidr_block = \"172.16.0.0/12\"",
+      "}",
+      "",
+      "resource \"alicloud_vswitch\" \"vsw\" {",
+      "  vpc_id            = \"${alicloud_vpc.vpc.id}\"",
+      "  cidr_block        = \"172.16.0.0/21\"",
+      "  availability_zone = \"cn-beijing-b\"",
+      "}",
+      "",
+      "resource \"alicloud_nat_gateway\" \"nat_gateway\" {",
+      "  vpc_id = \"${alicloud_vpc.vpc.id}\"",
+      "  spec   = \"Small\"",
+      "  name   = \"test_foo\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-oss_bucket": {
+    "description": "Defines oss_bucket",
+    "prefix": "tf-alicloud-resource-oss_bucket",
+    "body": [
+      "resource \"alicloud_oss_bucket\" \"bucket-acl\"{",
+      "  bucket = \"bucket-170309-acl\"",
+      "  acl = \"private\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-oss_bucket_object": {
+    "description": "Defines oss_bucket_object",
+    "prefix": "tf-alicloud-resource-oss_bucket_object",
+    "body": [
+      "resource \"alicloud_oss_bucket_object\" \"object-source\" {",
+      "  bucket = \"your_bucket_name\"",
+      "  key    = \"new_object_key\"",
+      "  source = \"path/to/file\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_access_key": {
+    "description": "Defines ram_access_key",
+    "prefix": "tf-alicloud-resource-ram_access_key",
+    "body": [
+      "# Create a new RAM access key for user.",
+      "resource \"alicloud_ram_user\" \"user\" {",
+      "  name = \"user_test\"",
+      "  display_name = \"user_display_name\"",
+      "  mobile = \"86-18688888888\"",
+      "  email = \"hello.uuu@aaa.com\"",
+      "  comments = \"yoyoyo\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_access_key\" \"ak\" {",
+      "  user_name = \"${alicloud_ram_user.user.name}\"",
+      "  secret_file = \"/xxx/xxx/xxx.txt\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_account_alias": {
+    "description": "Defines ram_account_alias",
+    "prefix": "tf-alicloud-resource-ram_account_alias",
+    "body": [
+      "# Create a alias for cloud account.",
+      "resource \"alicloud_ram_account_alias\" \"alias\" {",
+      "  account_alias = \"hallo\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_alias": {
+    "description": "Defines ram_alias",
+    "prefix": "tf-alicloud-resource-ram_alias",
+    "body": [
+      "# empty snippet",
+      ""
+    ]
+  },
+  "alicloud-resource-ram_group": {
+    "description": "Defines ram_group",
+    "prefix": "tf-alicloud-resource-ram_group",
+    "body": [
+      "# Create a new RAM Group.",
+      "resource \"alicloud_ram_group\" \"group\" {",
+      "  name = \"test_group\"",
+      "  comments = \"this is a group comments.\"",
+      "  force = true",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_group_membership": {
+    "description": "Defines ram_group_membership",
+    "prefix": "tf-alicloud-resource-ram_group_membership",
+    "body": [
+      "# Create a RAM Group membership.",
+      "resource \"alicloud_ram_group\" \"group\" {",
+      "  name = \"test_group\"",
+      "  comments = \"this is a group comments.\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_user\" \"user\" {",
+      "  name = \"user_test\"",
+      "  display_name = \"user_display_name\"",
+      "  mobile = \"86-18688888888\"",
+      "  email = \"hello.uuu@aaa.com\"",
+      "  comments = \"yoyoyo\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_user\" \"user1\" {",
+      "  name = \"user_test1\"",
+      "  display_name = \"user_display_name1\"",
+      "  mobile = \"86-18688888889\"",
+      "  email = \"hello.uuu@aaa.com\"",
+      "  comments = \"yoyoyo\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_group_membership\" \"membership\" {",
+      "  group_name = \"${alicloud_ram_group.group.name}\"",
+      "  user_names = [\"${alicloud_ram_user.user.name}\"，\"${alicloud_ram_user.user1.name}\"]",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_group_policy_attachment": {
+    "description": "Defines ram_group_policy_attachment",
+    "prefix": "tf-alicloud-resource-ram_group_policy_attachment",
+    "body": [
+      "# Create a RAM Group Policy attachment.",
+      "resource \"alicloud_ram_group\" \"group\" {",
+      "  name = \"test_group\"",
+      "  comments = \"this is a group comments.\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_policy\" \"policy\" {",
+      "  name = \"test_policy\"",
+      "  statement = [",
+      "      {",
+      "        effect = \"Allow\"",
+      "        action = [",
+      "          \"oss:ListObjects\",",
+      "          \"oss:GetObject\"]",
+      "        resource = [",
+      "          \"acs:oss:*:*:mybucket\",",
+      "          \"acs:oss:*:*:mybucket/*\"]",
+      "      }]",
+      "  description = \"this is a policy test\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_group_policy_attachment\" \"attach\" {",
+      "  policy_name = \"${alicloud_ram_policy.policy.name}\"",
+      "  policy_type = \"${alicloud_ram_policy.policy.type}\"",
+      "  group_name = \"${alicloud_ram_group.group.name}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_login_profile": {
+    "description": "Defines ram_login_profile",
+    "prefix": "tf-alicloud-resource-ram_login_profile",
+    "body": [
+      "# Create a RAM login profile.",
+      "resource \"alicloud_ram_user\" \"user\" {",
+      "  name = \"user_test\"",
+      "  display_name = \"user_display_name\"",
+      "  mobile = \"86-18688888888\"",
+      "  email = \"hello.uuu@aaa.com\"",
+      "  comments = \"yoyoyo\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_login_profile\" \"profile\" {",
+      "  user_name = \"${alicloud_ram_user.user.name}\"",
+      "  password = \"Haha..1234\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_policy": {
+    "description": "Defines ram_policy",
+    "prefix": "tf-alicloud-resource-ram_policy",
+    "body": [
+      "# Create a new RAM Policy.",
+      "resource \"alicloud_ram_policy\" \"policy\" {",
+      "  name = \"test_policy\"",
+      "  statement = [",
+      "    {",
+      "      effect = \"Allow\"",
+      "      action = [",
+      "        \"oss:ListObjects\",",
+      "        \"oss:GetObject\"",
+      "      ]",
+      "      resource = [",
+      "        \"acs:oss:*:*:mybucket\",",
+      "        \"acs:oss:*:*:mybucket/*\"",
+      "      ]",
+      "    }",
+      "  ]",
+      "  description = \"this is a policy test\"",
+      "  force = true",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_role": {
+    "description": "Defines ram_role",
+    "prefix": "tf-alicloud-resource-ram_role",
+    "body": [
+      "# Create a new RAM Role.",
+      "resource \"alicloud_ram_role\" \"role\" {",
+      "  name = \"test_role\"",
+      "  ram_users = [\"acs:ram::${your_account_id}:root\", \"acs:ram::${other_account_id}:user/username\"]",
+      "  services = [\"apigateway.aliyuncs.com\", \"ecs.aliyuncs.com\"]",
+      "  description = \"this is a role test.\"",
+      "  force = true",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_role_attachment": {
+    "description": "Defines ram_role_attachment",
+    "prefix": "tf-alicloud-resource-ram_role_attachment",
+    "body": [
+      "resource \"alicloud_ram_role\" \"role\" {",
+      "  name = \"test_role\"",
+      "  services = [\"apigateway.aliyuncs.com\", \"ecs.aliyuncs.com\"]",
+      "  ram_users = [\"acs:ram::${your_account_id}:root\", \"acs:ram::${other_account_id}:user/username\"]",
+      "  description = \"this is a role test.\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"instance\" {",
+      "  instance_name = \"test-keypair-${format(var.count_format, count.index+1)}\"",
+      "  image_id = \"ubuntu_140405_64_40G_cloudinit_20161115.vhd\"",
+      "  instance_type = \"ecs.n4.small\"",
+      "  count = 2",
+      "  availability_zone = \"${var.availability_zones}\"",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_ram_role_attachment\" \"attach\" {",
+      "  role_name = \"${alicloud_ram_role.role.name}\"",
+      "  instance_ids = [\"${alicloud_instance.instance.*.id}\"]",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_role_policy_attachment": {
+    "description": "Defines ram_role_policy_attachment",
+    "prefix": "tf-alicloud-resource-ram_role_policy_attachment",
+    "body": [
+      "# Create a RAM Role Policy attachment.",
+      "resource \"alicloud_ram_role\" \"role\" {",
+      "  name = \"test_role\"",
+      "  ram_users = [\"acs:ram::${your_account_id}:root\", \"acs:ram::${other_account_id}:user/username\"]",
+      "  services = [\"apigateway.aliyuncs.com\", \"ecs.aliyuncs.com\"]",
+      "  description = \"this is a role test.\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_policy\" \"policy\" {",
+      "  name = \"test_policy\"",
+      "  statement = [",
+      "          {",
+      "            effect = \"Allow\"",
+      "            action = [",
+      "              \"oss:ListObjects\",",
+      "              \"oss:GetObject\"]",
+      "            resource = [",
+      "              \"acs:oss:*:*:mybucket\",",
+      "              \"acs:oss:*:*:mybucket/*\"]",
+      "          }]",
+      "  description = \"this is a policy test\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_role_policy_attachment\" \"attach\" {",
+      "  policy_name = \"${alicloud_ram_policy.policy.name}\"",
+      "  policy_type = \"${alicloud_ram_policy.policy.type}\"",
+      "  role_name = \"${alicloud_ram_role.role.name}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_user": {
+    "description": "Defines ram_user",
+    "prefix": "tf-alicloud-resource-ram_user",
+    "body": [
+      "# Create a new RAM user.",
+      "resource \"alicloud_ram_user\" \"user\" {",
+      "  name = \"user_test\"",
+      "  display_name = \"user_display_name\"",
+      "  mobile = \"86-18688888888\"",
+      "  email = \"hello.uuu@aaa.com\"",
+      "  comments = \"yoyoyo\"",
+      "  force = true",
+      "}"
+    ]
+  },
+  "alicloud-resource-ram_user_policy_attachment": {
+    "description": "Defines ram_user_policy_attachment",
+    "prefix": "tf-alicloud-resource-ram_user_policy_attachment",
+    "body": [
+      "# Create a RAM User Policy attachment.",
+      "resource \"alicloud_ram_user\" \"user\" {",
+      "  name = \"user_test\"",
+      "  display_name = \"user_display_name\"",
+      "  mobile = \"86-18688888888\"",
+      "  email = \"hello.uuu@aaa.com\"",
+      "  comments = \"yoyoyo\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_policy\" \"policy\" {",
+      "  name = \"test_policy\"",
+      "  statement = [",
+      "          {",
+      "            effect = \"Allow\"",
+      "            action = [",
+      "              \"oss:ListObjects\",",
+      "              \"oss:GetObject\"]",
+      "            resource = [",
+      "              \"acs:oss:*:*:mybucket\",",
+      "              \"acs:oss:*:*:mybucket/*\"]",
+      "          }]",
+      "  description = \"this is a policy test\"",
+      "  force = true",
+      "}",
+      "",
+      "resource \"alicloud_ram_user_policy_attachment\" \"attach\" {",
+      "  policy_name = \"${alicloud_ram_policy.policy.name}\"",
+      "  policy_type = \"${alicloud_ram_policy.policy.type}\"",
+      "  user_name = \"${alicloud_ram_user.user.name}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-router_interface": {
+    "description": "Defines router_interface",
+    "prefix": "tf-alicloud-resource-router_interface",
+    "body": [
+      "resource \"alicloud_vpc\" \"foo\" {",
+      "  name = \"tf_test_foo12345\"",
+      "  cidr_block = \"172.16.0.0/12\"",
+      "}",
+      "",
+      "resource \"alicloud_router_interface\" \"interface\" {",
+      "  opposite_region = \"cn-beijing\"",
+      "  router_type = \"VRouter\"",
+      "  router_id = \"${alicloud_vpc.foo.router_id}\"",
+      "  role = \"InitiatingSide\"",
+      "  specification = \"Large.2\"",
+      "  name = \"test1\"",
+      "  description = \"test1\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-security_group": {
+    "description": "Defines security_group",
+    "prefix": "tf-alicloud-resource-security_group",
+    "body": [
+      "resource \"alicloud_security_group\" \"group\" {",
+      "  name        = \"terraform-test-group\"",
+      "  description = \"New security group\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-security_group_rule": {
+    "description": "Defines security_group_rule",
+    "prefix": "tf-alicloud-resource-security_group_rule",
+    "body": [
+      "resource \"alicloud_security_group\" \"default\" {",
+      "  name = \"default\"",
+      "}",
+      "",
+      "resource \"alicloud_security_group_rule\" \"allow_all_tcp\" {",
+      "  type              = \"ingress\"",
+      "  ip_protocol       = \"tcp\"",
+      "  nic_type          = \"internet\"",
+      "  policy            = \"accept\"",
+      "  port_range        = \"1/65535\"",
+      "  priority          = 1",
+      "  security_group_id = \"${alicloud_security_group.default.id}\"",
+      "  cidr_ip           = \"0.0.0.0/0\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-slb": {
+    "description": "Defines slb",
+    "prefix": "tf-alicloud-resource-slb",
+    "body": [
+      "# Create a new load balancer for classic",
+      "resource \"alicloud_slb\" \"classic\" {",
+      "  name                 = \"test-slb-tf\"",
+      "  internet             = true",
+      "  internet_charge_type = \"paybybandwidth\"",
+      "  bandwidth            = 5",
+      "  specification = \"slb.s1.small\"",
+      "}",
+      "",
+      "# Create a new load balancer for VPC",
+      "resource \"alicloud_vpc\" \"default\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_vswitch\" \"default\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_slb\" \"vpc\" {",
+      "  name       = \"test-slb-tf\"",
+      "  vswitch_id = \"${alicloud_vswitch.default.id}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-slb_attachment": {
+    "description": "Defines slb_attachment",
+    "prefix": "tf-alicloud-resource-slb_attachment",
+    "body": [
+      "# Create a new load balancer attachment for classic",
+      "resource \"alicloud_slb\" \"default\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"default\" {",
+      "  # Other parameters...",
+      "}",
+      "",
+      "resource \"alicloud_slb_attachment\" \"default\" {",
+      "  load_balancer_id    = \"${alicloud_slb.default.id}\"",
+      "  instances = [\"${alicloud_instance.default.id}\"]",
+      "}"
+    ]
+  },
+  "alicloud-resource-slb_listener": {
+    "description": "Defines slb_listener",
+    "prefix": "tf-alicloud-resource-slb_listener",
+    "body": [
+      "# Create a new load balancer and listeners",
+      "resource \"alicloud_slb\" \"instance\" {",
+      "  name                 = \"test-slb-tf\"",
+      "  internet             = true",
+      "  internet_charge_type = \"paybybandwidth\"",
+      "  bandwidth            = 25",
+      "}",
+      "",
+      "resource \"alicloud_slb_listener\" \"http\" {",
+      "  load_balancer_id = \"${alicloud_slb.instance.id}\"",
+      "  backend_port = 80",
+      "  frontend_port = 80",
+      "  bandwidth = 10",
+      "  protocol = \"http\"",
+      "  sticky_session = \"on\"",
+      "  sticky_session_type = \"insert\"",
+      "  cookie = \"testslblistenercookie\"",
+      "  cookie_timeout = 86400",
+      "}",
+      "resource \"alicloud_slb_listener\" \"tcp\" {",
+      "  load_balancer_id = \"${alicloud_slb.instance.id}\"",
+      "  backend_port = \"22\"",
+      "  frontend_port = \"22\"",
+      "  protocol = \"tcp\"",
+      "  bandwidth = \"10\"",
+      "  health_check_type = \"tcp\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-slb_rule": {
+    "description": "Defines slb_rule",
+    "prefix": "tf-alicloud-resource-slb_rule",
+    "body": [
+      "# Create a new load balancer and virtual rule",
+      "",
+      "resource \"alicloud_slb\" \"instance\" {",
+      "  name = \"new-slb\"",
+      "  vswitch_id = \"<one vswitch id>\"",
+      "}",
+      "",
+      "resource \"alicloud_slb_listener\" \"listener\" {",
+      "  load_balancer_id = \"${alicloud_slb.instance.id}\"",
+      "  protocol = \"http\"",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_slb_server_group\" \"group\" {",
+      "  load_balancer_id = \"${alicloud_slb.instance.id}\"",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_slb_rule\" \"rule\" {",
+      "  count = 2",
+      "  load_balancer_id = \"${alicloud_slb.instance.id}\"",
+      "  frontend_port = \"${alicloud_slb_listener.listener.frontend_port}\"",
+      "  name = \"from-tf\"",
+      "  domain = \"*.test.com\"",
+      "  url = \"/image/${count.index}\"",
+      "  server_group_id = \"${alicloud_slb_server_group.group.id}\"",
+      "}",
+      ""
+    ]
+  },
+  "alicloud-resource-slb_server_group": {
+    "description": "Defines slb_server_group",
+    "prefix": "tf-alicloud-resource-slb_server_group",
+    "body": [
+      "# Create a new load balancer and virtual server group",
+      "",
+      "resource \"alicloud_instance\" \"instance\" {",
+      "  instance_name = \"for-slb-server\"",
+      "  count = 3",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_slb\" \"instance\" {",
+      "  name = \"new-slb\"",
+      "  vswitch_id = \"<one vswitch id>\"",
+      "}",
+      "",
+      "resource \"alicloud_slb_server_group\" \"group\" {",
+      "  load_balancer_id = \"${alicloud_slb.instance.id}\"",
+      "  servers = [",
+      "    {",
+      "      server_ids = [\"${alicloud_instance.instance.*.id}\"]",
+      "      port = 80",
+      "      weight = 100",
+      "    }",
+      "  ]",
+      "}"
+    ]
+  },
+  "alicloud-resource-snat": {
+    "description": "Defines snat",
+    "prefix": "tf-alicloud-resource-snat",
+    "body": [
+      "resource \"alicloud_vpc\" \"foo\" {",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_vswitch\" \"foo\" {",
+      "  ...",
+      "}",
+      "",
+      "resource \"alicloud_nat_gateway\" \"foo\" {",
+      "  vpc_id = \"${alicloud_vpc.foo.id}\"",
+      "  spec   = \"Small\"",
+      "  name   = \"test_foo\"",
+      "",
+      "  bandwidth_packages = [",
+      "    {",
+      "      ip_count  = 2",
+      "      bandwidth = 5",
+      "      zone      = \"\"",
+      "    },",
+      "    {",
+      "      ip_count  = 1",
+      "      bandwidth = 6",
+      "      zone      = \"cn-beijing-b\"",
+      "    }",
+      "  ]",
+      "",
+      "  depends_on = [",
+      "    \"alicloud_vswitch.foo\"",
+      "  ]",
+      "}",
+      "",
+      "resource \"alicloud_snat_entry\" \"foo\" {",
+      "  snat_table_id     = \"${alicloud_nat_gateway.foo.snat_table_ids}\"",
+      "  source_vswitch_id = \"${alicloud_vswitch.foo.id}\"",
+      "  snat_ip           = \"${alicloud_nat_gateway.foo.bandwidth_packages.0.public_ip_addresses}\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-vpc": {
+    "description": "Defines vpc",
+    "prefix": "tf-alicloud-resource-vpc",
+    "body": [
+      "resource \"alicloud_vpc\" \"vpc\" {",
+      "  name       = \"tf_test_foo\"",
+      "  cidr_block = \"172.16.0.0/12\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-vroute_entry": {
+    "description": "Defines vroute_entry",
+    "prefix": "tf-alicloud-resource-vroute_entry",
+    "body": [
+      "resource \"alicloud_vpc\" \"vpc\" {",
+      "  name       = \"tf_test_foo\"",
+      "  cidr_block = \"172.16.0.0/12\"",
+      "}",
+      "",
+      "resource \"alicloud_route_entry\" \"default\" {",
+      "  route_table_id        = \"${alicloud_vpc.default.router_table_id}\"",
+      "  destination_cidrblock = \"${var.entry_cidr}\"",
+      "  nexthop_type          = \"Instance\"",
+      "  nexthop_id            = \"${alicloud_instance.snat.id}\"",
+      "}",
+      "",
+      "resource \"alicloud_instance\" \"snat\" {",
+      "  // ...",
+      "}"
+    ]
+  },
+  "alicloud-resource-vswitch": {
+    "description": "Defines vswitch",
+    "prefix": "tf-alicloud-resource-vswitch",
+    "body": [
+      "resource \"alicloud_vpc\" \"vpc\" {",
+      "  name       = \"tf_test_foo\"",
+      "  cidr_block = \"172.16.0.0/12\"",
+      "}",
+      "",
+      "resource \"alicloud_vswitch\" \"vsw\" {",
+      "  vpc_id            = \"${alicloud_vpc.vpc.id}\"",
+      "  cidr_block        = \"172.16.0.0/21\"",
+      "  availability_zone = \"cn-beijing-b\"",
+      "}"
+    ]
+  },
   "archive-data-archive_file": {
     "description": "Defines archive_file",
     "prefix": "tf-archive-data-archive_file",
@@ -25,6 +1611,28 @@
       "  source {",
       "    content  = \"${data.template_file.ssh_config.rendered}\"",
       "    filename = \".ssh/config\"",
+      "  }",
+      "}"
+    ]
+  },
+  "arukas-resource-container": {
+    "description": "Defines container",
+    "prefix": "tf-arukas-resource-container",
+    "body": [
+      "resource \"arukas_container\" \"foobar\" {",
+      "  name      = \"terraform_for_arukas_test_foobar\"",
+      "  image     = \"nginx:latest\"",
+      "  instances = 1",
+      "  memory    = 256",
+      "",
+      "  ports = {",
+      "    protocol = \"tcp\"",
+      "    number   = \"80\"",
+      "  }",
+      "",
+      "  environments {",
+      "    key   = \"key1\"",
+      "    value = \"value1\"",
       "  }",
       "}"
     ]
@@ -10448,6 +12056,249 @@
       "}"
     ]
   },
+  "azure-classic-resource-affinity_group": {
+    "description": "Defines affinity_group",
+    "prefix": "tf-azure-classic-resource-affinity_group",
+    "body": [
+      "resource \"azure_affinity_group\" \"terraform-main-group\" {",
+      "  name        = \"terraform-group\"",
+      "  location    = \"North Europe\"",
+      "  label       = \"tf-group-01\"",
+      "  description = \"Affinity group created by Terraform.\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-data_disk": {
+    "description": "Defines data_disk",
+    "prefix": "tf-azure-classic-resource-data_disk",
+    "body": [
+      "resource \"azure_data_disk\" \"data\" {",
+      "  lun                  = 0",
+      "  size                 = 10",
+      "  storage_service_name = \"yourstorage\"",
+      "  virtual_machine      = \"server1\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-dns_server": {
+    "description": "Defines dns_server",
+    "prefix": "tf-azure-classic-resource-dns_server",
+    "body": [
+      "resource \"azure_dns_server\" \"google-dns\" {",
+      "  name        = \"google\"",
+      "  dns_address = \"8.8.8.8\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-hosted_service": {
+    "description": "Defines hosted_service",
+    "prefix": "tf-azure-classic-resource-hosted_service",
+    "body": [
+      "resource \"azure_hosted_service\" \"terraform-service\" {",
+      "  name               = \"terraform-service\"",
+      "  location           = \"North Europe\"",
+      "  ephemeral_contents = false",
+      "  description        = \"Hosted service created by Terraform.\"",
+      "  label              = \"tf-hs-01\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-instance": {
+    "description": "Defines instance",
+    "prefix": "tf-azure-classic-resource-instance",
+    "body": [
+      "resource \"azure_hosted_service\" \"terraform-service\" {",
+      "  name               = \"terraform-service\"",
+      "  location           = \"North Europe\"",
+      "  ephemeral_contents = false",
+      "  description        = \"Hosted service created by Terraform.\"",
+      "  label              = \"tf-hs-01\"",
+      "}",
+      "",
+      "resource \"azure_instance\" \"web\" {",
+      "  name                 = \"terraform-test\"",
+      "  hosted_service_name  = \"${azure_hosted_service.terraform-service.name}\"",
+      "  image                = \"Ubuntu Server 14.04 LTS\"",
+      "  size                 = \"Basic_A1\"",
+      "  storage_service_name = \"yourstorage\"",
+      "  location             = \"West US\"",
+      "  username             = \"terraform\"",
+      "  password             = \"Pass!admin123\"",
+      "  domain_name          = \"contoso.com\"",
+      "  domain_ou            = \"OU=Servers,DC=contoso.com,DC=Contoso,DC=com\"",
+      "  domain_username      = \"Administrator\"",
+      "  domain_password      = \"Pa$$word123\"",
+      "",
+      "  endpoint {",
+      "    name         = \"SSH\"",
+      "    protocol     = \"tcp\"",
+      "    public_port  = 22",
+      "    private_port = 22",
+      "  }",
+      "}"
+    ]
+  },
+  "azure-classic-resource-local_network_connection": {
+    "description": "Defines local_network_connection",
+    "prefix": "tf-azure-classic-resource-local_network_connection",
+    "body": [
+      "resource \"azure_local_network_connection\" \"localnet\" {",
+      "  name                   = \"terraform-local-network-connection\"",
+      "  vpn_gateway_address    = \"45.12.189.2\"",
+      "  address_space_prefixes = [\"10.10.10.0/24\", \"10.10.11.0/24\"]",
+      "}"
+    ]
+  },
+  "azure-classic-resource-security_group": {
+    "description": "Defines security_group",
+    "prefix": "tf-azure-classic-resource-security_group",
+    "body": [
+      "resource \"azure_security_group\" \"web\" {",
+      "  name     = \"webservers\"",
+      "  location = \"West US\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-security_group_rule": {
+    "description": "Defines security_group_rule",
+    "prefix": "tf-azure-classic-resource-security_group_rule",
+    "body": [
+      "resource \"azure_security_group\" \"web\" {",
+      "  # ...",
+      "}",
+      "",
+      "resource \"azure_security_group\" \"apps\" {",
+      "  # ...",
+      "}",
+      "",
+      "resource \"azure_security_group_rule\" \"ssh_access\" {",
+      "  name                       = \"ssh-access-rule\"",
+      "  security_group_names       = [\"${azure_security_group.web.name}\", \"${azure_security_group.apps.name}\"]",
+      "  type                       = \"Inbound\"",
+      "  action                     = \"Allow\"",
+      "  priority                   = 200",
+      "  source_address_prefix      = \"100.0.0.0/32\"",
+      "  source_port_range          = \"*\"",
+      "  destination_address_prefix = \"10.0.0.0/32\"",
+      "  destination_port_range     = \"22\"",
+      "  protocol                   = \"TCP\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-sql_database_server": {
+    "description": "Defines sql_database_server",
+    "prefix": "tf-azure-classic-resource-sql_database_server",
+    "body": [
+      "resource \"azure_sql_database_server\" \"sql-serv\" {",
+      "  name     = \"<computed>\"",
+      "  location = \"West US\"",
+      "  username = \"SuperUser\"",
+      "  password = \"SuperSEKR3T\"",
+      "  version  = \"2.0\"",
+      "  url      = \"<computed>\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-sql_database_server_firewall_rule": {
+    "description": "Defines sql_database_server_firewall_rule",
+    "prefix": "tf-azure-classic-resource-sql_database_server_firewall_rule",
+    "body": [
+      "resource \"azure_sql_database_server\" \"sql-serv1\" {",
+      "  # ...",
+      "}",
+      "",
+      "resource \"azure_sql_database_server\" \"sql-serv2\" {",
+      "  # ...",
+      "}",
+      "",
+      "resource \"azure_sql_database_server_firewall_rule\" \"constraint\" {",
+      "  name     = \"terraform-testing-rule\"",
+      "  start_ip = \"154.0.0.0\"",
+      "  end_ip   = \"154.0.0.255\"",
+      "",
+      "  database_server_names = [",
+      "    \"${azure_sql_database_server.sql-serv1.name}\",",
+      "    \"${azure_sql_database_server.sql-serv2.name}\",",
+      "  ]",
+      "}"
+    ]
+  },
+  "azure-classic-resource-sql_database_service": {
+    "description": "Defines sql_database_service",
+    "prefix": "tf-azure-classic-resource-sql_database_service",
+    "body": [
+      "resource \"azure_sql_database_service\" \"sql-server\" {",
+      "  name                 = \"terraform-testing-db-renamed\"",
+      "  database_server_name = \"flibberflabber\"",
+      "  edition              = \"Standard\"",
+      "  collation            = \"SQL_Latin1_General_CP1_CI_AS\"",
+      "  max_size_bytes       = \"5368709120\"",
+      "  service_level_id     = \"f1173c43-91bd-4aaa-973c-54e79e15235b\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-storage_blob": {
+    "description": "Defines storage_blob",
+    "prefix": "tf-azure-classic-resource-storage_blob",
+    "body": [
+      "resource \"azure_storage_blob\" \"foo\" {",
+      "  name                   = \"tftesting-blob\"",
+      "  storage_service_name   = \"tfstorserv\"",
+      "  storage_container_name = \"terraform-storage-container\"",
+      "  type                   = \"PageBlob\"",
+      "  size                   = 1024",
+      "}"
+    ]
+  },
+  "azure-classic-resource-storage_container": {
+    "description": "Defines storage_container",
+    "prefix": "tf-azure-classic-resource-storage_container",
+    "body": [
+      "resource \"azure_storage_container\" \"stor-cont\" {",
+      "  name                  = \"terraform-storage-container\"",
+      "  container_access_type = \"blob\"",
+      "  storage_service_name  = \"tfstorserv\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-storage_queue": {
+    "description": "Defines storage_queue",
+    "prefix": "tf-azure-classic-resource-storage_queue",
+    "body": [
+      "resource \"azure_storage_queue\" \"stor-queue\" {",
+      "  name                 = \"terraform-storage-queue\"",
+      "  storage_service_name = \"tfstorserv\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-storage_service": {
+    "description": "Defines storage_service",
+    "prefix": "tf-azure-classic-resource-storage_service",
+    "body": [
+      "resource \"azure_storage_service\" \"tfstor\" {",
+      "  name         = \"tfstor\"",
+      "  location     = \"West US\"",
+      "  description  = \"Made by Terraform.\"",
+      "  account_type = \"Standard_LRS\"",
+      "}"
+    ]
+  },
+  "azure-classic-resource-virtual_network": {
+    "description": "Defines virtual_network",
+    "prefix": "tf-azure-classic-resource-virtual_network",
+    "body": [
+      "resource \"azure_virtual_network\" \"default\" {",
+      "  name          = \"test-network\"",
+      "  address_space = [\"10.1.2.0/24\"]",
+      "  location      = \"West US\"",
+      "",
+      "  subnet {",
+      "    name           = \"subnet1\"",
+      "    address_prefix = \"10.1.2.0/25\"",
+      "  }",
+      "}"
+    ]
+  },
   "azurerm-data-app_service": {
     "description": "Defines app_service",
     "prefix": "tf-azurerm-data-app_service",
@@ -15114,6 +16965,106 @@
       "}"
     ]
   },
+  "bitbucket-resource-default_reviewers": {
+    "description": "Defines default_reviewers",
+    "prefix": "tf-bitbucket-resource-default_reviewers",
+    "body": [
+      "# Manage your repository",
+      "resource \"bitbucket_default_reviewers\" \"infrastructure\" {",
+      "  owner      = \"myteam\"",
+      "  repository = \"terraform-code\"",
+      "",
+      "  reviewers = [",
+      "    \"gob\",",
+      "    \"michael\",",
+      "    \"michalejr\",",
+      "  ]",
+      "}"
+    ]
+  },
+  "bitbucket-resource-hook": {
+    "description": "Defines hook",
+    "prefix": "tf-bitbucket-resource-hook",
+    "body": [
+      "# Manage your repositories hooks",
+      "resource \"bitbucket_hook\" \"deploy_on_push\" {",
+      "  owner       = \"myteam\"",
+      "  repository  = \"terraform-code\"",
+      "  url         = \"https://mywebhookservice.mycompany.com/deploy-on-push\"",
+      "  description = \"Deploy the code via my webhook\"",
+      "",
+      "  events = [",
+      "    \"repo:push\",",
+      "  ]",
+      "}"
+    ]
+  },
+  "bitbucket-resource-repository": {
+    "description": "Defines repository",
+    "prefix": "tf-bitbucket-resource-repository",
+    "body": [
+      "# Manage your repository",
+      "resource \"bitbucket_repository\" \"infrastructure\" {",
+      "  owner = \"myteam\"",
+      "  name  = \"terraform-code\"",
+      "}"
+    ]
+  },
+  "chef-resource-data_bag": {
+    "description": "Defines data_bag",
+    "prefix": "tf-chef-resource-data_bag",
+    "body": [
+      "resource \"chef_data_bag\" \"example\" {",
+      "  name = \"example-data-bag\"",
+      "}"
+    ]
+  },
+  "chef-resource-data_bag_item": {
+    "description": "Defines data_bag_item",
+    "prefix": "tf-chef-resource-data_bag_item",
+    "body": [
+      "resource \"chef_data_bag_item\" \"example\" {",
+      "  data_bag_name = \"example-data-bag\"",
+      "",
+      "  content_json = <<EOT",
+      "{",
+      "    \"id\": \"example-item\",",
+      "    \"any_arbitrary_data\": true",
+      "}",
+      "EOT",
+      "}"
+    ]
+  },
+  "chef-resource-environment": {
+    "description": "Defines environment",
+    "prefix": "tf-chef-resource-environment",
+    "body": [
+      "resource \"chef_environment\" \"example\" {",
+      "  name = \"example-environment\"",
+      "}"
+    ]
+  },
+  "chef-resource-node": {
+    "description": "Defines node",
+    "prefix": "tf-chef-resource-node",
+    "body": [
+      "resource \"chef_node\" \"example\" {",
+      "  name             = \"example-environment\"",
+      "  environment_name = \"${chef_environment.example.name}\"",
+      "  run_list         = [\"recipe[example]\", \"role[app_server]\"]",
+      "}"
+    ]
+  },
+  "chef-resource-role": {
+    "description": "Defines role",
+    "prefix": "tf-chef-resource-role",
+    "body": [
+      "resource \"chef_role\" \"example\" {",
+      "  name     = \"example-role\"",
+      "  run_list = [\"recipe[example]\"]",
+      "}"
+    ]
+  },
   "circonus-data-account": {
     "description": "Defines account",
     "prefix": "tf-circonus-data-account",
@@ -15531,6 +17482,134 @@
       "}"
     ]
   },
+  "clc-resource-group": {
+    "description": "Defines group",
+    "prefix": "tf-clc-resource-group",
+    "body": [
+      "# Provision/Resolve a server group",
+      "resource \"clc_group\" \"frontends\" {",
+      "  location_id = \"WA1\"",
+      "  name        = \"frontends\"",
+      "  parent      = \"Default Group\"",
+      "}",
+      "",
+      "output \"group_id\" {",
+      "  value = \"clc_group.frontends.id\"",
+      "}"
+    ]
+  },
+  "clc-resource-load_balancer": {
+    "description": "Defines load_balancer",
+    "prefix": "tf-clc-resource-load_balancer",
+    "body": [
+      "# Provision a load balancer",
+      "resource \"clc_load_balancer\" \"api\" {",
+      "  data_center = \"${clc_group.frontends.location_id}\"",
+      "  name        = \"api\"",
+      "  description = \"api load balancer\"",
+      "  status      = \"enabled\"",
+      "}",
+      "",
+      "output \"api_ip\" {",
+      "  value = \"clc_load_balancer.api.ip_address\"",
+      "}"
+    ]
+  },
+  "clc-resource-load_balancer_pool": {
+    "description": "Defines load_balancer_pool",
+    "prefix": "tf-clc-resource-load_balancer_pool",
+    "body": [
+      "# Provision a load balancer pool",
+      "resource \"clc_load_balancer_pool\" \"pool\" {",
+      "  data_center   = \"${clc_group.frontends.location_id}\"",
+      "  load_balancer = \"${clc_load_balancer.api.id}\"",
+      "  method        = \"roundRobin\"",
+      "  persistence   = \"standard\"",
+      "  port          = 80",
+      "",
+      "  nodes {",
+      "    status      = \"enabled\"",
+      "    ipAddress   = \"${clc_server.node.0.private_ip_address}\"",
+      "    privatePort = 3000",
+      "  }",
+      "",
+      "  nodes {",
+      "    status      = \"enabled\"",
+      "    ipAddress   = \"${clc_server.node.1.private_ip_address}\"",
+      "    privatePort = 3000",
+      "  }",
+      "}",
+      "",
+      "output \"pool\" {",
+      "  value = \"${join(\" \", clc_load_balancer.pool.nodes)}\"",
+      "}"
+    ]
+  },
+  "clc-resource-public_ip": {
+    "description": "Defines public_ip",
+    "prefix": "tf-clc-resource-public_ip",
+    "body": [
+      "# Provision a public ip",
+      "resource \"clc_public_ip\" \"backdoor\" {",
+      "  server_id           = \"${clc_server.node.0.id}\"",
+      "  internal_ip_address = \"${clc_server.node.0.private_ip_address}\"",
+      "",
+      "  ports {",
+      "    protocol = \"ICMP\"",
+      "    port     = -1",
+      "  }",
+      "",
+      "  ports {",
+      "    protocol = \"TCP\"",
+      "    port     = 22",
+      "  }",
+      "",
+      "  ports {",
+      "    protocol = \"TCP\"",
+      "    port     = 2000",
+      "    port_to  = 9000",
+      "  }",
+      "",
+      "  source_restrictions {",
+      "    cidr = \"85.39.22.15/30\"",
+      "  }",
+      "}",
+      "",
+      "output \"ip\" {",
+      "  value = \"clc_public_ip.backdoor.id\"",
+      "}"
+    ]
+  },
+  "clc-resource-server": {
+    "description": "Defines server",
+    "prefix": "tf-clc-resource-server",
+    "body": [
+      "# Provision a server",
+      "resource \"clc_server\" \"node\" {",
+      "  name_template    = \"trusty\"",
+      "  source_server_id = \"UBUNTU-14-64-TEMPLATE\"",
+      "  group_id         = \"${clc_group.frontends.id}\"",
+      "  cpu              = 2",
+      "  memory_mb        = 2048",
+      "  password         = \"Green123$\"",
+      "",
+      "  additional_disks {",
+      "    path    = \"/var\"",
+      "    size_gb = 100",
+      "    type    = \"partitioned\"",
+      "  }",
+      "",
+      "  additional_disks {",
+      "    size_gb = 10",
+      "    type    = \"raw\"",
+      "  }",
+      "}",
+      "",
+      "output \"server_id\" {",
+      "  value = \"clc_server.node.id\"",
+      "}"
+    ]
+  },
   "cloudflare-data-ip_ranges": {
     "description": "Defines ip_ranges",
     "prefix": "tf-cloudflare-data-ip_ranges",
@@ -15712,6 +17791,48 @@
       "\t\t\tenabled = true",
       "\t\t}",
       "\t}",
+      "}"
+    ]
+  },
+  "cloudscale-resource-floating_ip": {
+    "description": "Defines floating_ip",
+    "prefix": "tf-cloudscale-resource-floating_ip",
+    "body": [
+      "# Create a new Server",
+      "resource \"cloudscale_server\" \"web-worker01\" {",
+      "  name        = \"web-worker01\"",
+      "  flavor_slug = \"flex-4\"",
+      "  image_slug  = \"debian-9\"",
+      "  ssh_keys    = [\"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL2jzgla23DfRVLQr3KT20QQYovqCCN3clHrjm2ZuQFW user@example.com\"]",
+      "}",
+      "",
+      "# Add a Floating IPv4 address to web-worker01",
+      "resource \"cloudscale_floating_ip\" \"web-worker01-vip\" {",
+      "  server      = \"${cloudscale_server.web-worker01.id}\"",
+      "  ip_version  = 4",
+      "  reverse_ptr = \"vip.web-worker01.example.com\"",
+      "}",
+      "",
+      "# Add a Floating IPv6 network to web-worker01",
+      "resource \"cloudscale_floating_ip\" \"web-worker01-net\" {",
+      "  server        = \"${cloudscale_server.web-worker01.id}\"",
+      "  ip_version    = 6",
+      "  prefix_length = 56",
+      "}"
+    ]
+  },
+  "cloudscale-resource-server": {
+    "description": "Defines server",
+    "prefix": "tf-cloudscale-resource-server",
+    "body": [
+      "# Create a new Server",
+      "resource \"cloudscale_server\" \"web-worker01\" {",
+      "  name                = \"web-worker01\"",
+      "  flavor_slug         = \"flex-4\"",
+      "  image_slug          = \"debian-9\"",
+      "  volume_size_gb      = 10",
+      "  bulk_volume_size_gb = 200",
+      "  ssh_keys            = [\"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL2jzgla23DfRVLQr3KT20QQYovqCCN3clHrjm2ZuQFW user@example.com\"]",
       "}"
     ]
   },
@@ -16036,6 +18157,92 @@
       "}"
     ]
   },
+  "cobbler-resource-distro": {
+    "description": "Defines distro",
+    "prefix": "tf-cobbler-resource-distro",
+    "body": [
+      "resource \"cobbler_distro\" \"ubuntu-1404-x86_64\" {",
+      "  name       = \"foo\"",
+      "  breed      = \"ubuntu\"",
+      "  os_version = \"trusty\"",
+      "  arch       = \"x86_64\"",
+      "  kernel     = \"/var/www/cobbler/ks_mirror/Ubuntu-14.04/install/netboot/ubuntu-installer/amd64/linux\"",
+      "  initrd     = \"/var/www/cobbler/ks_mirror/Ubuntu-14.04/install/netboot/ubuntu-installer/amd64/initrd.gz\"",
+      "}"
+    ]
+  },
+  "cobbler-resource-kickstart_file": {
+    "description": "Defines kickstart_file",
+    "prefix": "tf-cobbler-resource-kickstart_file",
+    "body": [
+      "resource \"cobbler_kickstart_file\" \"my_kickstart\" {",
+      "  name = \"/var/lib/cobbler/kickstarts/my_kickstart.ks\"",
+      "  body = \"<content of kickstart file>\"",
+      "}"
+    ]
+  },
+  "cobbler-resource-profile": {
+    "description": "Defines profile",
+    "prefix": "tf-cobbler-resource-profile",
+    "body": [
+      "resource \"cobbler_profile\" \"my_profile\" {",
+      "  name   = \"/var/lib/cobbler/snippets/my_snippet\"",
+      "  distro = \"ubuntu-1404-x86_64\"",
+      "}"
+    ]
+  },
+  "cobbler-resource-repo": {
+    "description": "Defines repo",
+    "prefix": "tf-cobbler-resource-repo",
+    "body": [
+      "resource \"cobbler_repo\" \"my_repo\" {",
+      "  name           = \"my_repo\"",
+      "  breed          = \"apt\"",
+      "  arch           = \"x86_64\"",
+      "  apt_components = [\"main\"]",
+      "  apt_dists      = [\"trusty\"]",
+      "  mirror         = \"http://us.archive.ubuntu.com/ubuntu/\"",
+      "}"
+    ]
+  },
+  "cobbler-resource-snippet": {
+    "description": "Defines snippet",
+    "prefix": "tf-cobbler-resource-snippet",
+    "body": [
+      "resource \"cobbler_snippet\" \"my_snippet\" {",
+      "  name = \"/var/lib/cobbler/snippets/my_snippet\"",
+      "  body = \"<content of snippet>\"",
+      "}"
+    ]
+  },
+  "cobbler-resource-system": {
+    "description": "Defines system",
+    "prefix": "tf-cobbler-resource-system",
+    "body": [
+      "resource \"cobbler_system\" \"my_system\" {",
+      "  name         = \"my_system\"",
+      "  profile      = \"${cobbler_profile.my_profile.name}\"",
+      "  name_servers = [\"8.8.8.8\", \"8.8.4.4\"]",
+      "  comment      = \"I'm a system\"",
+      "",
+      "  interface {",
+      "    name        = \"eth0\"",
+      "    mac_address = \"aa:bb:cc:dd:ee:ff\"",
+      "    static      = true",
+      "    ip_address  = \"1.2.3.4\"",
+      "    netmask     = \"255.255.255.0\"",
+      "  }",
+      "",
+      "  interface {",
+      "    name        = \"eth1\"",
+      "    mac_address = \"aa:bb:cc:dd:ee:fa\"",
+      "    static      = true",
+      "    ip_address  = \"1.2.3.5\"",
+      "    netmask     = \"255.255.255.0\"",
+      "  }",
+      "}"
+    ]
+  },
   "consul-data-agent_config": {
     "description": "Defines agent_config",
     "prefix": "tf-consul-data-agent_config",
@@ -16324,6 +18531,139 @@
       "}"
     ]
   },
+  "datadog-resource-downtime": {
+    "description": "Defines downtime",
+    "prefix": "tf-datadog-resource-downtime",
+    "body": [
+      "# Create a new daily 1700-0900 Datadog downtime",
+      "resource \"datadog_downtime\" \"foo\" {",
+      "  scope = [\"*\"]",
+      "  start = 1483308000",
+      "  end   = 1483365600",
+      "",
+      "  recurrence {",
+      "    type   = \"days\"",
+      "    period = 1",
+      "  }",
+      "}"
+    ]
+  },
+  "datadog-resource-metric_metadata": {
+    "description": "Defines metric_metadata",
+    "prefix": "tf-datadog-resource-metric_metadata",
+    "body": [
+      "# Manage a Datadog metric's metadata",
+      "resource \"datadog_metric_metadata\" \"request_time\" {",
+      "  metric = \"request.time\"",
+      "  short_name = \"Request time\"",
+      "  description = \"99th percentile request time in millseconds\"",
+      "  type = \"gauge\"",
+      "  unit = \"millisecond\"",
+      "}"
+    ]
+  },
+  "datadog-resource-monitor": {
+    "description": "Defines monitor",
+    "prefix": "tf-datadog-resource-monitor",
+    "body": [
+      "# Create a new Datadog monitor",
+      "resource \"datadog_monitor\" \"foo\" {",
+      "  name               = \"Name for monitor foo\"",
+      "  type               = \"metric alert\"",
+      "  message            = \"Monitor triggered. Notify: @hipchat-channel\"",
+      "  escalation_message = \"Escalation message @pagerduty\"",
+      "",
+      "  query = \"avg(last_1h):avg:aws.ec2.cpu{environment:foo,host:foo} by {host} > 4\"",
+      "",
+      "  thresholds {",
+      "    ok                = 0",
+      "    warning           = 2",
+      "    warning_recovery  = 1",
+      "    critical          = 4",
+      "    critical_recovery = 3",
+      "  }",
+      "",
+      "  notify_no_data    = false",
+      "  renotify_interval = 60",
+      "",
+      "  notify_audit = false",
+      "  timeout_h    = 60",
+      "  include_tags = true",
+      "",
+      "  silenced {",
+      "    \"*\" = 0",
+      "  }",
+      "",
+      "  tags = [\"foo:bar\", \"baz\"]",
+      "}"
+    ]
+  },
+  "datadog-resource-timeboard": {
+    "description": "Defines timeboard",
+    "prefix": "tf-datadog-resource-timeboard",
+    "body": [
+      "# Create a new Datadog timeboard",
+      "resource \"datadog_timeboard\" \"redis\" {",
+      "  title       = \"Redis Timeboard (created via Terraform)\"",
+      "  description = \"created using the Datadog provider in Terraform\"",
+      "  read_only   = true",
+      "",
+      "  graph {",
+      "    title = \"Redis latency (ms)\"",
+      "    viz   = \"timeseries\"",
+      "",
+      "    request {",
+      "      q    = \"avg:redis.info.latency_ms{$host}\"",
+      "      type = \"bars\"",
+      "    }",
+      "  }",
+      "",
+      "  graph {",
+      "    title = \"Redis memory usage\"",
+      "    viz   = \"timeseries\"",
+      "",
+      "    request {",
+      "      q       = \"avg:redis.mem.used{$host} - avg:redis.mem.lua{$host}, avg:redis.mem.lua{$host}\"",
+      "      stacked = true",
+      "    }",
+      "",
+      "    request {",
+      "      q = \"avg:redis.mem.rss{$host}\"",
+      "",
+      "      style {",
+      "        palette = \"warm\"",
+      "      }",
+      "    }",
+      "  }",
+      "",
+      "  graph {",
+      "    title = \"Top System CPU by Docker container\"",
+      "    viz   = \"toplist\"",
+      "",
+      "    request {",
+      "      q = \"top(avg:docker.cpu.system{*} by {container_name}, 10, 'mean', 'desc')\"",
+      "    }",
+      "  }",
+      "",
+      "  template_variable {",
+      "    name   = \"host\"",
+      "    prefix = \"host\"",
+      "  }",
+      "}"
+    ]
+  },
+  "datadog-resource-user": {
+    "description": "Defines user",
+    "prefix": "tf-datadog-resource-user",
+    "body": [
+      "# Create a new Datadog user",
+      "resource \"datadog_user\" \"foo\" {",
+      "  email  = \"new@example.com\"",
+      "  handle = \"new@example.com\"",
+      "  name   = \"New User\"",
+      "}"
+    ]
+  },
   "digitalocean-data-image": {
     "description": "Defines image",
     "prefix": "tf-digitalocean-data-image",
@@ -16556,6 +18896,21 @@
       "}"
     ]
   },
+  "dme-resource-record": {
+    "description": "Defines record",
+    "prefix": "tf-dme-resource-record",
+    "body": [
+      "# Add an A record to the domain",
+      "resource \"dme_record\" \"www\" {",
+      "  domainid    = \"123456\"",
+      "  name        = \"www\"",
+      "  type        = \"A\"",
+      "  value       = \"192.168.1.1\"",
+      "  ttl         = 3600",
+      "  gtdLocation = \"DEFAULT\"",
+      "}"
+    ]
+  },
   "dns-data-dns_a_record_set": {
     "description": "Defines dns_a_record_set",
     "prefix": "tf-dns-data-dns_a_record_set",
@@ -16708,6 +19063,20 @@
       "}"
     ]
   },
+  "dnsimple-resource-record": {
+    "description": "Defines record",
+    "prefix": "tf-dnsimple-resource-record",
+    "body": [
+      "# Add a record to the root domain",
+      "resource \"dnsimple_record\" \"foobar\" {",
+      "  domain = \"${var.dnsimple_domain}\"",
+      "  name   = \"\"",
+      "  value  = \"192.168.0.11\"",
+      "  type   = \"A\"",
+      "  ttl    = 3600",
+      "}"
+    ]
+  },
   "docker-data-registry_image": {
     "description": "Defines registry_image",
     "prefix": "tf-docker-data-registry_image",
@@ -16775,6 +19144,20 @@
       "",
       "# Reference the volume with ${docker_volume.shared_volume.name}",
       ""
+    ]
+  },
+  "dyn-resource-record": {
+    "description": "Defines record",
+    "prefix": "tf-dyn-resource-record",
+    "body": [
+      "# Add a record to the domain",
+      "resource \"dyn_record\" \"foobar\" {",
+      "  zone  = \"${var.dyn_zone}\"",
+      "  name  = \"terraform\"",
+      "  value = \"192.168.0.11\"",
+      "  type  = \"A\"",
+      "  ttl   = 3600",
+      "}"
     ]
   },
   "fastly-data-ip_ranges": {
@@ -17032,6 +19415,85 @@
       "  team_id    = \"${github_team.some_team.id}\"",
       "  repository = \"${github_repository.some_repo.name}\"",
       "  permission = \"pull\"",
+      "}"
+    ]
+  },
+  "gitlab-resource-deploy_key": {
+    "description": "Defines deploy_key",
+    "prefix": "tf-gitlab-resource-deploy_key",
+    "body": [
+      "resource \"gitlab_deploy_key\" \"example\" {",
+      "  project = \"example/deploying\"",
+      "  title   = \"Example deploy key\"",
+      "  key     = \"ssh-rsa AAAA...\"",
+      "}"
+    ]
+  },
+  "gitlab-resource-group": {
+    "description": "Defines group",
+    "prefix": "tf-gitlab-resource-group",
+    "body": [
+      "resource \"gitlab_group\" \"example\" {",
+      "  name        = \"example\"",
+      "  path        = \"example\"",
+      "  description = \"An example group\"",
+      "}",
+      "",
+      "// Create a project in the example group",
+      "resource \"gitlab_project\" \"example\" {",
+      "  name         = \"example\"",
+      "  description  = \"An example project\"",
+      "  namespace_id = \"${gitlab_group.example.id}\"",
+      "}"
+    ]
+  },
+  "gitlab-resource-label": {
+    "description": "Defines label",
+    "prefix": "tf-gitlab-resource-label",
+    "body": [
+      "resource \"gitlab_label\" \"fixme\" {",
+      "  project     = \"example\"",
+      "  name        = \"fixme\"",
+      "  description = \"issue with failing tests\"",
+      "  color       = \"#ffcc00\"",
+      "}"
+    ]
+  },
+  "gitlab-resource-project": {
+    "description": "Defines project",
+    "prefix": "tf-gitlab-resource-project",
+    "body": [
+      "resource \"gitlab_project\" \"example\" {",
+      "  name        = \"example\"",
+      "  description = \"My awesome codebase\"",
+      "",
+      "  visibility_level = \"public\"",
+      "}"
+    ]
+  },
+  "gitlab-resource-project_hook": {
+    "description": "Defines project_hook",
+    "prefix": "tf-gitlab-resource-project_hook",
+    "body": [
+      "resource \"gitlab_project_hook\" \"example\" {",
+      "  project               = \"example/hooked\"",
+      "  url                   = \"https://example.com/hook/example\"",
+      "  merge_requests_events = true",
+      "}"
+    ]
+  },
+  "gitlab-resource-user": {
+    "description": "Defines user",
+    "prefix": "tf-gitlab-resource-user",
+    "body": [
+      "resource \"gitlab_user\" \"example\" {",
+      "  name             = \"Example Foo\"",
+      "  username         = \"example\"",
+      "  password         = \"superPassword\"",
+      "  email            = \"gitlab@user.create\"",
+      "  is_admin         = true",
+      "  projects_limit   = 4",
+      "  can_create_group = false",
       "}"
     ]
   },
@@ -20176,6 +22638,45 @@
       "}"
     ]
   },
+  "grafana-resource-alert_notification": {
+    "description": "Defines alert_notification",
+    "prefix": "tf-grafana-resource-alert_notification",
+    "body": [
+      "resource \"grafana_alert_notification\" \"email_someteam\" {",
+      "  name = \"Email that team\"",
+      "  type = \"email\"",
+      "  is_default = false",
+      "",
+      "  settings {",
+      "    \"addresses\" = \"foo@example.net;bar@example.net\"",
+      "    \"uploadImage\" = \"false\"",
+      "  }",
+      "}"
+    ]
+  },
+  "grafana-resource-dashboard": {
+    "description": "Defines dashboard",
+    "prefix": "tf-grafana-resource-dashboard",
+    "body": [
+      "resource \"grafana_dashboard\" \"metrics\" {",
+      "  config_json = \"${file(\"grafana-dashboard.json\")}\"",
+      "}"
+    ]
+  },
+  "grafana-resource-data_source": {
+    "description": "Defines data_source",
+    "prefix": "tf-grafana-resource-data_source",
+    "body": [
+      "resource \"grafana_data_source\" \"metrics\" {",
+      "  type          = \"influxdb\"",
+      "  name          = \"myapp-metrics\"",
+      "  url           = \"http://influxdb.example.net:8086/\"",
+      "  username      = \"myapp\"",
+      "  password      = \"foobarbaz\"",
+      "  database_name = \"${influxdb_database.metrics.name}\"",
+      "}"
+    ]
+  },
   "heroku-data-app": {
     "description": "Defines app",
     "prefix": "tf-heroku-data-app",
@@ -20396,6 +22897,82 @@
       "}"
     ]
   },
+  "icinga2-resource-checkcommands": {
+    "description": "Defines checkcommands",
+    "prefix": "tf-icinga2-resource-checkcommands",
+    "body": [
+      "# Configure a new checkcommand on an Icinga2 Server, that can be used to monitor hosts and/or services",
+      "provider \"icinga2\" {",
+      "  api_url = \"https://192.168.33.5:5665/v1\"",
+      "}",
+      "",
+      "resource \"icinga2_checkcommand\" \"apache_status\" {",
+      "  name      = \"apache_status\"",
+      "  templates = [\"apache-status\", \"plugin-check-command\", \"plugin-check-command\", \"ipv4-or-ipv6\"]",
+      "  command   = \"/usr/lib64/nagios/plugins/check_apache_status.pl\"",
+      "",
+      "  arguments = {",
+      "    \"-H\" = \"$apache_status_address$\"",
+      "    \"-c\" = \"$apache_status_critical$\"",
+      "    \"-p\" = \"$apache_status_port$\"",
+      "  }",
+      "}"
+    ]
+  },
+  "icinga2-resource-host": {
+    "description": "Defines host",
+    "prefix": "tf-icinga2-resource-host",
+    "body": [
+      "# Configure a new host to be monitored by an Icinga2 Server",
+      "provider \"icinga2\" {",
+      "  api_url = \"https://192.168.33.5:5665/v1\"",
+      "}",
+      "",
+      "resource \"icinga2_host\" \"host\" {",
+      "  hostname      = \"terraform-host-1\"",
+      "  address       = \"10.10.10.1\"",
+      "  check_command = \"hostalive\"",
+      "  templates     = [\"bp-host-web\"]",
+      "",
+      "  vars {",
+      "    os        = \"linux\"",
+      "    osver     = \"1\"",
+      "    allowance = \"none\"",
+      "  }",
+      "}"
+    ]
+  },
+  "icinga2-resource-hostgroup": {
+    "description": "Defines hostgroup",
+    "prefix": "tf-icinga2-resource-hostgroup",
+    "body": [
+      "# Configure a new hostgroup to be monitored by an Icinga2 Server",
+      "provider \"icinga2\" {",
+      "  api_url = \"https://192.168.33.5:5665/v1\"",
+      "}",
+      "",
+      "resource \"icinga2_hostgroup\" \"my-hostgroup\" {",
+      "  name         = \"terraform-hostgroup-1\"",
+      "  display_name = \"Terraform Test HostGroup\"",
+      "}"
+    ]
+  },
+  "icinga2-resource-service": {
+    "description": "Defines service",
+    "prefix": "tf-icinga2-resource-service",
+    "body": [
+      "# Configure a new service to be monitored by an Icinga2 Server",
+      "provider \"icinga2\" {",
+      "  api_url = \"https://192.168.33.5:5665/v1\"",
+      "}",
+      "",
+      "resource \"icinga2_service\" \"my-service\" {",
+      "  name          = \"ssh\"",
+      "  hostname      = \"c1-mysql-1\"",
+      "  check_command = \"ssh\"",
+      "}"
+    ]
+  },
   "ignition-data-config": {
     "description": "Defines config",
     "prefix": "tf-ignition-data-config",
@@ -20542,6 +23119,61 @@
       "\tname = \"foo\"",
       "\thome_dir = \"/home/foo/\"",
       "\tshell = \"/bin/bash\"",
+      "}"
+    ]
+  },
+  "influxdb-resource-continuous_query": {
+    "description": "Defines continuous_query",
+    "prefix": "tf-influxdb-resource-continuous_query",
+    "body": [
+      "resource \"influxdb_database\" \"test\" {",
+      "    name = \"terraform-test\"",
+      "}",
+      "",
+      "resource \"influxdb_continuous_query\" \"minnie\" {",
+      "    name = \"minnie\"",
+      "    database = \"${influxdb_database.test.name}\"",
+      "    query = \"SELECT min(mouse) INTO min_mouse FROM zoo GROUP BY time(30m)\"",
+      "}",
+      ""
+    ]
+  },
+  "influxdb-resource-database": {
+    "description": "Defines database",
+    "prefix": "tf-influxdb-resource-database",
+    "body": [
+      "resource \"influxdb_database\" \"metrics\" {",
+      "    name = \"awesome_app\"",
+      "}",
+      "",
+      "resource \"influxdb_database\" \"metrics_aggregation\" {",
+      "  name = \"testdb11\"",
+      "  retention_policies = [",
+      "    {",
+      "      name = \"52weeks\",",
+      "      duration = \"52w\"",
+      "      default = \"true\"",
+      "    },",
+      "  ]",
+      "}"
+    ]
+  },
+  "influxdb-resource-user": {
+    "description": "Defines user",
+    "prefix": "tf-influxdb-resource-user",
+    "body": [
+      "resource \"influxdb_database\" \"green\" {",
+      "    name = \"terraform-green\"",
+      "}",
+      "",
+      "resource \"influxdb_user\" \"paul\" {",
+      "    name = \"paul\"",
+      "    password = \"super-secret\"",
+      "",
+      "    grant {",
+      "      database = \"${influxdb_database.green.name}\"",
+      "      privilege = \"write\"",
+      "    }",
       "}"
     ]
   },
@@ -20886,6 +23518,100 @@
       "}"
     ]
   },
+  "librato-resource-alert": {
+    "description": "Defines alert",
+    "prefix": "tf-librato-resource-alert",
+    "body": [
+      "# Create a new Librato alert",
+      "resource \"librato_alert\" \"myalert\" {",
+      "  name        = \"MyAlert\"",
+      "  description = \"A Test Alert\"",
+      "  services    = [\"${librato_service.myservice.id}\"]",
+      "",
+      "  condition {",
+      "    type        = \"above\"",
+      "    threshold   = 10",
+      "    metric_name = \"librato.cpu.percent.idle\"",
+      "  }",
+      "}"
+    ]
+  },
+  "librato-resource-metric": {
+    "description": "Defines metric",
+    "prefix": "tf-librato-resource-metric",
+    "body": [
+      "# Create a new Librato metric",
+      "resource \"librato_metric\" \"mymetric\" {",
+      "    name = \"MyMetric\"",
+      "    type = \"counter\"",
+      "    description = \"A Test Metric\"",
+      "    attributes {",
+      "      display_stacked = true",
+      "    }",
+      "}"
+    ]
+  },
+  "librato-resource-service": {
+    "description": "Defines service",
+    "prefix": "tf-librato-resource-service",
+    "body": [
+      "# Create a new Librato service",
+      "resource \"librato_service\" \"email\" {",
+      "  title = \"Email the admins\"",
+      "  type  = \"mail\"",
+      "",
+      "  settings = <<EOF",
+      "{",
+      "  \"addresses\": \"admin@example.com\"",
+      "}",
+      "EOF",
+      "}"
+    ]
+  },
+  "librato-resource-space": {
+    "description": "Defines space",
+    "prefix": "tf-librato-resource-space",
+    "body": [
+      "# Create a new Librato space",
+      "resource \"librato_space\" \"default\" {",
+      "  name = \"My New Space\"",
+      "}"
+    ]
+  },
+  "librato-resource-space_chart": {
+    "description": "Defines space_chart",
+    "prefix": "tf-librato-resource-space_chart",
+    "body": [
+      "# Create a new Librato space",
+      "resource \"librato_space\" \"my_space\" {",
+      "  name = \"My New Space\"",
+      "}",
+      "",
+      "# Create a new chart",
+      "resource \"librato_space_chart\" \"server_temperature\" {",
+      "  name     = \"Server Temperature\"",
+      "  space_id = \"${librato_space.my_space.id}\"",
+      "",
+      "  stream {",
+      "    metric = \"server_temp\"",
+      "    source = \"app1\"",
+      "  }",
+      "",
+      "  stream {",
+      "    metric           = \"environmental_temp\"",
+      "    source           = \"*\"",
+      "    group_function   = \"breakout\"",
+      "    summary_function = \"average\"",
+      "  }",
+      "",
+      "  stream {",
+      "    metric         = \"server_temp\"",
+      "    source         = \"%\"",
+      "    group_function = \"average\"",
+      "  }",
+      "}"
+    ]
+  },
   "local-data-file": {
     "description": "Defines file",
     "prefix": "tf-local-data-file",
@@ -21026,6 +23752,56 @@
       "     \"group\" = \"test\"",
       "     \"system.categories\" = \"a,b,c,d\"",
       "    }",
+      "}"
+    ]
+  },
+  "mailgun-resource-domain": {
+    "description": "Defines domain",
+    "prefix": "tf-mailgun-resource-domain",
+    "body": [
+      "# Create a new Mailgun domain",
+      "resource \"mailgun_domain\" \"default\" {",
+      "  name          = \"test.example.com\"",
+      "  spam_action   = \"disabled\"",
+      "  smtp_password = \"foobar\"",
+      "}"
+    ]
+  },
+  "mysql-resource-database": {
+    "description": "Defines database",
+    "prefix": "tf-mysql-resource-database",
+    "body": [
+      "resource \"mysql_database\" \"app\" {",
+      "  name = \"my_awesome_app\"",
+      "}"
+    ]
+  },
+  "mysql-resource-grant": {
+    "description": "Defines grant",
+    "prefix": "tf-mysql-resource-grant",
+    "body": [
+      "resource \"mysql_user\" \"jdoe\" {",
+      "  user     = \"jdoe\"",
+      "  host     = \"example.com\"",
+      "  password = \"password\"",
+      "}",
+      "",
+      "resource \"mysql_grant\" \"jdoe\" {",
+      "  user       = \"${mysql_user.jdoe.user}\"",
+      "  host       = \"${mysql_user.jdoe.host}\"",
+      "  database   = \"app\"",
+      "  privileges = [\"SELECT\", \"UPDATE\"]",
+      "}"
+    ]
+  },
+  "mysql-resource-user": {
+    "description": "Defines user",
+    "prefix": "tf-mysql-resource-user",
+    "body": [
+      "resource \"mysql_user\" \"jdoe\" {",
+      "  user               = \"jdoe\"",
+      "  host               = \"example.com\"",
+      "  plaintext_password = \"password\"",
       "}"
     ]
   },
@@ -21338,6 +24114,191 @@
       "  scope = \"submit-job\"",
       "  # allow administrators to override",
       "  enforcement_level = \"soft-mandatory\"",
+      "}"
+    ]
+  },
+  "ns1-resource-apikey": {
+    "description": "Defines apikey",
+    "prefix": "tf-ns1-resource-apikey",
+    "body": [
+      "resource \"ns1_team\" \"example\" {",
+      "  name = \"Example team\"",
+      "}",
+      "",
+      "resource \"ns1_apikey\" \"example\" {",
+      "  name  = \"Example key\"",
+      "  teams = [\"${ns1_team.example.id}\"]",
+      "",
+      "  permissions = {",
+      "    dns_view_zones       = false",
+      "    account_manage_users = false",
+      "  }",
+      "}"
+    ]
+  },
+  "ns1-resource-datafeed": {
+    "description": "Defines datafeed",
+    "prefix": "tf-ns1-resource-datafeed",
+    "body": [
+      "resource \"ns1_datasource\" \"example\" {",
+      "  name       = \"example\"",
+      "  sourcetype = \"nsone_v1\"",
+      "}",
+      "",
+      "resource \"ns1_datafeed\" \"uswest_feed\" {",
+      "  name      = \"uswest_feed\"",
+      "  source_id = \"${ns1_datasource.example.id}\"",
+      "",
+      "  config = {",
+      "    label = \"uswest\"",
+      "  }",
+      "}",
+      "",
+      "resource \"ns1_datafeed\" \"useast_feed\" {",
+      "  name      = \"useast_feed\"",
+      "  source_id = \"${ns1_datasource.example.id}\"",
+      "",
+      "  config = {",
+      "    label = \"useast\"",
+      "  }",
+      "}"
+    ]
+  },
+  "ns1-resource-datasource": {
+    "description": "Defines datasource",
+    "prefix": "tf-ns1-resource-datasource",
+    "body": [
+      "resource \"ns1_datasource\" \"example\" {",
+      "  name       = \"example\"",
+      "  sourcetype = \"nsone_v1\"",
+      "}"
+    ]
+  },
+  "ns1-resource-monitoringjob": {
+    "description": "Defines monitoringjob",
+    "prefix": "tf-ns1-resource-monitoringjob",
+    "body": [
+      "resource \"ns1_monitoringjob\" \"uswest_monitor\" {",
+      "  name          = \"uswest\"",
+      "  active        = true",
+      "  regions       = [\"sjc\", \"sin\", \"lga\"]",
+      "  job_type      = \"tcp\"",
+      "  frequency     = 60",
+      "  rapid_recheck = true",
+      "  policy        = \"quorum\"",
+      "",
+      "  config = {",
+      "    send = \"HEAD / HTTP/1.0\\r\\n\\r\\n\"",
+      "    port = 80",
+      "    host = \"example-elb-uswest.aws.amazon.com\"",
+      "  }",
+      "",
+      "  rules = {",
+      "    value      = \"200 OK\"",
+      "    comparison = \"contains\"",
+      "    key        = \"output\"",
+      "  }",
+      "}"
+    ]
+  },
+  "ns1-resource-notifylist": {
+    "description": "Defines notifylist",
+    "prefix": "tf-ns1-resource-notifylist",
+    "body": [
+      "resource \"ns1_notifylist\" \"nl\" {",
+      "  name = \"my notify list\"",
+      "  notifications = {",
+      "    type = \"webhook\"",
+      "    config = {",
+      "      url = \"http://www.mywebhook.com\"",
+      "    }",
+      "  }",
+      "",
+      "  notifications = {",
+      "    type = \"email\"",
+      "    config = {",
+      "      email = \"test@test.com\"",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  "ns1-resource-record": {
+    "description": "Defines record",
+    "prefix": "tf-ns1-resource-record",
+    "body": [
+      "resource \"ns1_zone\" \"tld\" {",
+      "  zone = \"terraform.example\"",
+      "}",
+      "",
+      "resource \"ns1_record\" \"www\" {",
+      "  zone   = \"${ns1_zone.tld.zone}\"",
+      "  domain = \"www.${ns1_zone.tld.zone}\"",
+      "  type   = \"CNAME\"",
+      "  ttl    = 60",
+      "",
+      "  answers = {",
+      "    answer = \"sub1.${ns1_zone.tld.zone}\"",
+      "  }",
+      "",
+      "  answers = {",
+      "    answer = \"sub2.${ns1_zone.tld.zone}\"",
+      "  } ",
+      "",
+      "  filters = {",
+      "    filter = \"select_first_n\"",
+      "",
+      "    config = {",
+      "      N = 1",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  "ns1-resource-team": {
+    "description": "Defines team",
+    "prefix": "tf-ns1-resource-team",
+    "body": [
+      "# Create a new NS1 Team",
+      "resource \"ns1_team\" \"example\" {",
+      "  name = \"Example team\"",
+      "",
+      "  permissions = {",
+      "    dns_view_zones       = false",
+      "    account_manage_users = false",
+      "  }",
+      "}"
+    ]
+  },
+  "ns1-resource-user": {
+    "description": "Defines user",
+    "prefix": "tf-ns1-resource-user",
+    "body": [
+      "resource \"ns1_team\" \"example\" {",
+      "  name = \"Example team\"",
+      "",
+      "  permissions = {",
+      "    dns_view_zones       = false",
+      "    account_manage_users = false",
+      "  }",
+      "}",
+      "",
+      "resource \"ns1_user\" \"example\" {",
+      "  name     = \"Example User\"",
+      "  username = \"example_user\"",
+      "  email    = \"user@example.com\"",
+      "  teams    = [\"${ns1_team.example.id}\"]",
+      "}"
+    ]
+  },
+  "ns1-resource-zone": {
+    "description": "Defines zone",
+    "prefix": "tf-ns1-resource-zone",
+    "body": [
+      "# Create a new DNS zone",
+      "resource \"ns1_zone\" \"example\" {",
+      "  zone = \"terraform.example.io\"",
+      "  ttl  = 600",
       "}"
     ]
   },
@@ -21940,6 +24901,288 @@
       "    scope = \"color\"",
       "    tag   = \"blue\"",
       "  }",
+      "}"
+    ]
+  },
+  "oneandone-resource-firewall_policy": {
+    "description": "Defines firewall_policy",
+    "prefix": "tf-oneandone-resource-firewall_policy",
+    "body": [
+      "resource \"oneandone_firewall_policy\" \"fw\" {",
+      "  name = \"test_fw_011\"",
+      "  rules = [",
+      "    {",
+      "      \"protocol\" = \"TCP\"",
+      "      \"port_from\" = 80",
+      "      \"port_to\" = 80",
+      "      \"source_ip\" = \"0.0.0.0\"",
+      "    },",
+      "    {",
+      "      \"protocol\" = \"ICMP\"",
+      "      \"source_ip\" = \"0.0.0.0\"",
+      "    },",
+      "    {",
+      "      \"protocol\" = \"TCP\"",
+      "      \"port_from\" = 43",
+      "      \"port_to\" = 43",
+      "      \"source_ip\" = \"0.0.0.0\"",
+      "    },",
+      "    {",
+      "      \"protocol\" = \"TCP\"",
+      "      \"port_from\" = 22",
+      "      \"port_to\" = 22",
+      "      \"source_ip\" = \"0.0.0.0\"",
+      "    }",
+      "  ]",
+      "}"
+    ]
+  },
+  "oneandone-resource-instance_size": {
+    "description": "Defines instance_size",
+    "prefix": "tf-oneandone-resource-instance_size",
+    "body": [
+      "data \"oneandone_instance_size\" \"sizeByName\" {",
+      "  name = \"L\"",
+      "}",
+      "",
+      "data \"oneandone_instance_size\" \"sizeByHardware\" {",
+      "  vcores = 2",
+      "  ram = 4",
+      "}",
+      "",
+      "resource \"oneandone_server\" \"server\" {",
+      "  name                = \"Example\"",
+      "  image               = \"debian8-64min\"",
+      "  datacenter          = \"DE\"",
+      "  fixed_instance_size = \"${data.oneandone_instance_size.sizeByName.id}\"",
+      "  ...",
+      "}"
+    ]
+  },
+  "oneandone-resource-loadbalancer": {
+    "description": "Defines loadbalancer",
+    "prefix": "tf-oneandone-resource-loadbalancer",
+    "body": [
+      "resource \"oneandone_loadbalancer\" \"lb\" {",
+      "  name = \"test_lb\"",
+      "  method = \"ROUND_ROBIN\"",
+      "  persistence = true",
+      "  persistence_time = 60",
+      "  health_check_test = \"TCP\"",
+      "  health_check_interval = 300",
+      "  datacenter = \"GB\"",
+      "  rules = [",
+      "    {",
+      "      protocol = \"TCP\"",
+      "      port_balancer = 8080",
+      "      port_server = 8089",
+      "      source_ip = \"0.0.0.0\"",
+      "    },",
+      "    {",
+      "      protocol = \"TCP\"",
+      "      port_balancer = 9090",
+      "      port_server = 9099",
+      "      source_ip = \"0.0.0.0\"",
+      "    }",
+      "  ]",
+      "}"
+    ]
+  },
+  "oneandone-resource-monitoring_policy": {
+    "description": "Defines monitoring_policy",
+    "prefix": "tf-oneandone-resource-monitoring_policy",
+    "body": [
+      "resource \"oneandone_monitoring_policy\" \"mp\" {",
+      "  name = \"test_mp\"",
+      "  agent = true",
+      "  email = \"jasmin@stackpointcloud.com\"",
+      "",
+      "  thresholds = {",
+      "    cpu = {",
+      "      warning = {",
+      "        value = 50,",
+      "        alert = false",
+      "      }",
+      "      critical = {",
+      "        value = 66,",
+      "        alert = false",
+      "      }",
+      "",
+      "    }",
+      "    ram = {",
+      "      warning = {",
+      "        value = 70,",
+      "        alert = true",
+      "      }",
+      "      critical = {",
+      "        value = 80,",
+      "        alert = true",
+      "      }",
+      "    },",
+      "    ram = {",
+      "      warning = {",
+      "        value = 85,",
+      "        alert = true",
+      "      }",
+      "      critical = {",
+      "        value = 95,",
+      "        alert = true",
+      "      }",
+      "    },",
+      "    disk = {",
+      "      warning = {",
+      "        value = 84,",
+      "        alert = true",
+      "      }",
+      "      critical = {",
+      "        value = 94,",
+      "        alert = true",
+      "      }",
+      "    },",
+      "    transfer = {",
+      "      warning = {",
+      "        value = 1000,",
+      "        alert = true",
+      "      }",
+      "      critical = {",
+      "        value = 2000,",
+      "        alert = true",
+      "      }",
+      "    },",
+      "    internal_ping = {",
+      "      warning = {",
+      "        value = 3000,",
+      "        alert = true",
+      "      }",
+      "      critical = {",
+      "        value = 4000,",
+      "        alert = true",
+      "      }",
+      "    }",
+      "  }",
+      "  ports = [",
+      "    {",
+      "      email_notification = true",
+      "      port = 443",
+      "      protocol = \"TCP\"",
+      "      alert_if = \"NOT_RESPONDING\"",
+      "    },",
+      "    {",
+      "      email_notification = false",
+      "      port = 80",
+      "      protocol = \"TCP\"",
+      "      alert_if = \"NOT_RESPONDING\"",
+      "    },",
+      "    {",
+      "      email_notification = true",
+      "      port = 21",
+      "      protocol = \"TCP\"",
+      "      alert_if = \"NOT_RESPONDING\"",
+      "    }",
+      "  ]",
+      "",
+      "  processes = [",
+      "    {",
+      "      email_notification = false",
+      "      process = \"httpdeamon\"",
+      "      alert_if = \"RUNNING\"",
+      "    },",
+      "    {",
+      "      process = \"iexplorer\",",
+      "      alert_if = \"NOT_RUNNING\"",
+      "      email_notification = true",
+      "    }]",
+      "}"
+    ]
+  },
+  "oneandone-resource-private_network": {
+    "description": "Defines private_network",
+    "prefix": "tf-oneandone-resource-private_network",
+    "body": [
+      "resource \"oneandone_private_network\" \"pn\" {",
+      "  name = \"pn_test\",",
+      "  description = \"new stuff001\"",
+      "  datacenter = \"GB\"",
+      "  network_address = \"192.168.7.0\"",
+      "  subnet_mask = \"255.255.255.0\"",
+      "  server_ids = [",
+      "    \"${oneandone_server.server.id}\",",
+      "    \"${oneandone_server.server02.id}\",",
+      "  ]",
+      "}"
+    ]
+  },
+  "oneandone-resource-public_ip": {
+    "description": "Defines public_ip",
+    "prefix": "tf-oneandone-resource-public_ip",
+    "body": [
+      "resource \"oneandone_public_ip\" \"ip\" {",
+      "\t\"ip_type\"     = \"IPV4\"",
+      "\t\"reverse_dns\" = \"%s\"",
+      "\t\"datacenter\"  = \"GB\"",
+      "}"
+    ]
+  },
+  "oneandone-resource-server": {
+    "description": "Defines server",
+    "prefix": "tf-oneandone-resource-server",
+    "body": [
+      "resource \"oneandone_server\" \"server\" {",
+      "  name = \"Example\"",
+      "  description = \"Terraform 1and1 tutorial\"",
+      "  image = \"ubuntu\"",
+      "  datacenter = \"GB\"",
+      "  vcores = 1",
+      "  cores_per_processor = 1",
+      "  ram = 2",
+      "  ssh_key_path = \"/path/to/private/ssh_key\"",
+      "  ssh_key_public = \"${file(\"/path/to/public/key.pub\")}\"",
+      "  hdds = [",
+      "    {",
+      "      disk_size = 60",
+      "      is_main = true",
+      "    }",
+      "  ]",
+      "",
+      "  provisioner \"remote-exec\" {",
+      "    inline = [",
+      "      \"apt-get update\",",
+      "      \"apt-get -y install nginx\",",
+      "    ]",
+      "  }",
+      "}"
+    ]
+  },
+  "oneandone-resource-shared_storage": {
+    "description": "Defines shared_storage",
+    "prefix": "tf-oneandone-resource-shared_storage",
+    "body": [
+      "resource \"oneandone_shared_storage\" \"storage\" {",
+      "  name = \"test_storage1\"",
+      "  description = \"1234\"",
+      "  size = 50",
+      "",
+      "  storage_servers = [",
+      "    {",
+      "      id = \"${oneandone_server.server.id}\"",
+      "      rights = \"RW\"",
+      "    },",
+      "    {",
+      "      id = \"${oneandone_server.server02.id}\"",
+      "      rights = \"RW\"",
+      "    }",
+      "  ]",
+      "}"
+    ]
+  },
+  "oneandone-resource-vpn": {
+    "description": "Defines vpn",
+    "prefix": "tf-oneandone-resource-vpn",
+    "body": [
+      "resource \"oneandone_vpn\" \"vpn\" {",
+      "  datacenter  = \"GB\"",
+      "  name        = \"%s\"",
+      "  description = \"ttest descr\"",
       "}"
     ]
   },
@@ -23322,6 +26565,17 @@
       "}"
     ]
   },
+  "openstack-resource-vpnaas_service_v2": {
+    "description": "Defines vpnaas_service_v2",
+    "prefix": "tf-openstack-resource-vpnaas_service_v2",
+    "body": [
+      "resource \"openstack_vpnaas_service_v2\" \"service_1\" {",
+      "  name = \"my_service\"",
+      "  router_id = \"14a75700-fc03-4602-9294-26ee44f366b3\"",
+      "  admin_state_up = \"true\"",
+      "}"
+    ]
+  },
   "opentelekomcloud-data-cesalarm-rule": {
     "description": "Defines cesalarm-rule",
     "prefix": "tf-opentelekomcloud-data-cesalarm-rule",
@@ -23488,6 +26742,862 @@
       "    datastore_name = \"PostgreSQL\"",
       "    datastore_version = \"9.5.5\"",
       "    speccode = \"rds.pg.s1.medium\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-data-s3_bucket_object": {
+    "description": "Defines s3_bucket_object",
+    "prefix": "tf-opentelekomcloud-data-s3_bucket_object",
+    "body": [
+      "# empty snippet",
+      ""
+    ]
+  },
+  "opentelekomcloud-resource-blockstorage_volume_attach_v2": {
+    "description": "Defines blockstorage_volume_attach_v2",
+    "prefix": "tf-opentelekomcloud-resource-blockstorage_volume_attach_v2",
+    "body": [
+      "resource \"opentelekomcloud_blockstorage_volume_v2\" \"volume_1\" {",
+      "  name = \"volume_1\"",
+      "  size = 1",
+      "}",
+      "",
+      "resource \"opentelekomcloud_blockstorage_volume_attach_v2\" \"va_1\" {",
+      "  volume_id = \"${opentelekomcloud_blockstorage_volume_v2.volume_1.id}\"",
+      "  device = \"auto\"",
+      "  host_name = \"devstack\"",
+      "  ip_address = \"192.168.255.10\"",
+      "  initiator = \"iqn.1993-08.org.debian:01:e9861fb1859\"",
+      "  os_type = \"linux2\"",
+      "  platform = \"x86_64\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-blockstorage_volume_v1": {
+    "description": "Defines blockstorage_volume_v1",
+    "prefix": "tf-opentelekomcloud-resource-blockstorage_volume_v1",
+    "body": [
+      "resource \"opentelekomcloud_blockstorage_volume_v1\" \"volume_1\" {",
+      "  region      = \"RegionOne\"",
+      "  name        = \"tf-test-volume\"",
+      "  description = \"first test volume\"",
+      "  size        = 3",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-blockstorage_volume_v2": {
+    "description": "Defines blockstorage_volume_v2",
+    "prefix": "tf-opentelekomcloud-resource-blockstorage_volume_v2",
+    "body": [
+      "resource \"opentelekomcloud_blockstorage_volume_v2\" \"volume_1\" {",
+      "  region      = \"RegionOne\"",
+      "  name        = \"volume_1\"",
+      "  description = \"first test volume\"",
+      "  size        = 3",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-compute_floatingip_associate_v2": {
+    "description": "Defines compute_floatingip_associate_v2",
+    "prefix": "tf-opentelekomcloud-resource-compute_floatingip_associate_v2",
+    "body": [
+      "resource \"opentelekomcloud_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  image_id        = \"ad091b52-742f-469e-8f3c-fd81cadf0743\"",
+      "  flavor_id       = 3",
+      "  key_pair        = \"my_key_pair_name\"",
+      "  security_groups = [\"default\"]",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_floatingip_v2\" \"fip_1\" {",
+      "  pool = \"my_pool\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_compute_floatingip_associate_v2\" \"fip_1\" {",
+      "  floating_ip = \"${opentelekomcloud_networking_floatingip_v2.fip_1.address}\"",
+      "  instance_id = \"${opentelekomcloud_compute_instance_v2.instance_1.id}\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-compute_floatingip_v2": {
+    "description": "Defines compute_floatingip_v2",
+    "prefix": "tf-opentelekomcloud-resource-compute_floatingip_v2",
+    "body": [
+      "resource \"opentelekomcloud_compute_floatingip_v2\" \"floatip_1\" {",
+      "  pool = \"public\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-compute_instance_v2": {
+    "description": "Defines compute_instance_v2",
+    "prefix": "tf-opentelekomcloud-resource-compute_instance_v2",
+    "body": [
+      "resource \"opentelekomcloud_compute_instance_v2\" \"basic\" {",
+      "  name            = \"basic\"",
+      "  image_id        = \"ad091b52-742f-469e-8f3c-fd81cadf0743\"",
+      "  flavor_id       = \"3\"",
+      "  key_pair        = \"my_key_pair_name\"",
+      "  security_groups = [\"default\"]",
+      "  tags = [\"foo.bar\", \"tag.value\"]",
+      "",
+      "  metadata {",
+      "    this = \"that\"",
+      "  }",
+      "",
+      "  network {",
+      "    name = \"my_network\"",
+      "  }",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-compute_keypair_v2": {
+    "description": "Defines compute_keypair_v2",
+    "prefix": "tf-opentelekomcloud-resource-compute_keypair_v2",
+    "body": [
+      "resource \"opentelekomcloud_compute_keypair_v2\" \"test-keypair\" {",
+      "  name       = \"my-keypair\"",
+      "  public_key = \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLotBCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAnOfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZqd9LvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TaIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIF61p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-compute_secgroup_v2": {
+    "description": "Defines compute_secgroup_v2",
+    "prefix": "tf-opentelekomcloud-resource-compute_secgroup_v2",
+    "body": [
+      "resource \"opentelekomcloud_compute_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"my_secgroup\"",
+      "  description = \"my security group\"",
+      "",
+      "  rule {",
+      "    from_port   = 22",
+      "    to_port     = 22",
+      "    ip_protocol = \"tcp\"",
+      "    cidr        = \"0.0.0.0/0\"",
+      "  }",
+      "",
+      "  rule {",
+      "    from_port   = 80",
+      "    to_port     = 80",
+      "    ip_protocol = \"tcp\"",
+      "    cidr        = \"0.0.0.0/0\"",
+      "  }",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-compute_servergroup_v2": {
+    "description": "Defines compute_servergroup_v2",
+    "prefix": "tf-opentelekomcloud-resource-compute_servergroup_v2",
+    "body": [
+      "resource \"opentelekomcloud_compute_servergroup_v2\" \"test-sg\" {",
+      "  name     = \"my-sg\"",
+      "  policies = [\"anti-affinity\"]",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-compute_volume_attach_v2": {
+    "description": "Defines compute_volume_attach_v2",
+    "prefix": "tf-opentelekomcloud-resource-compute_volume_attach_v2",
+    "body": [
+      "resource \"opentelekomcloud_blockstorage_volume_v2\" \"volume_1\" {",
+      "  name = \"volume_1\"",
+      "  size = 1",
+      "}",
+      "",
+      "resource \"opentelekomcloud_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  security_groups = [\"default\"]",
+      "}",
+      "",
+      "resource \"opentelekomcloud_compute_volume_attach_v2\" \"va_1\" {",
+      "  instance_id = \"${opentelekomcloud_compute_instance_v2.instance_1.id}\"",
+      "  volume_id   = \"${opentelekomcloud_blockstorage_volume_v2.volume_1.id}\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-dns_recordset_v2": {
+    "description": "Defines dns_recordset_v2",
+    "prefix": "tf-opentelekomcloud-resource-dns_recordset_v2",
+    "body": [
+      "resource \"opentelekomcloud_dns_zone_v2\" \"example_zone\" {",
+      "  name = \"example.com.\"",
+      "  email = \"email2@example.com\"",
+      "  description = \"a zone\"",
+      "  ttl = 6000",
+      "  type = \"PRIMARY\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_dns_recordset_v2\" \"rs_example_com\" {",
+      "  zone_id = \"${opentelekomcloud_dns_zone_v2.example_zone.id}\"",
+      "  name = \"rs.example.com.\"",
+      "  description = \"An example record set\"",
+      "  ttl = 3000",
+      "  type = \"A\"",
+      "  records = [\"10.0.0.1\"]",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-dns_zone_v2": {
+    "description": "Defines dns_zone_v2",
+    "prefix": "tf-opentelekomcloud-resource-dns_zone_v2",
+    "body": [
+      "resource \"opentelekomcloud_dns_zone_v2\" \"example.com\" {",
+      "  name = \"example.com.\"",
+      "  email = \"jdoe@example.com\"",
+      "  description = \"An example zone\"",
+      "  ttl = 3000",
+      "  type = \"PRIMARY\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-elb_backend": {
+    "description": "Defines elb_backend",
+    "prefix": "tf-opentelekomcloud-resource-elb_backend",
+    "body": [
+      "resource \"opentelekomcloud_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"opentelekomcloud_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  protocol_port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${opentelekomcloud_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}",
+      "",
+      "resource \"opentelekomcloud_elb_backend\" \"backend\" {",
+      "  address = \"192.168.0.211\"",
+      "  listener_id = \"${opentelekomcloud_elb_listener.listener.id}\"",
+      "  server_id = \"8f7a32f1-f66c-4d13-9b17-3a13f9f0bb8d\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-elb_health": {
+    "description": "Defines elb_health",
+    "prefix": "tf-opentelekomcloud-resource-elb_health",
+    "body": [
+      "resource \"opentelekomcloud_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"opentelekomcloud_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  protocol_port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${opentelekomcloud_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}",
+      "",
+      "resource \"opentelekomcloud_elb_health\" \"healthcheck\" {",
+      "  listener_id = \"${opentelekomcloud_elb_listener.listener.id}\"",
+      "  healthcheck_protocol = \"TCP\"",
+      "  healthcheck_connect_porta = 22",
+      "  healthy_threshold = 5",
+      "  healthcheck_timeout = 25",
+      "  healthcheck_interval = 3",
+      "  timeouts {",
+      "    create = \"5m\"",
+      "    update = \"5m\"",
+      "    delete = \"5m\"",
+      "  }",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-elb_listener": {
+    "description": "Defines elb_listener",
+    "prefix": "tf-opentelekomcloud-resource-elb_listener",
+    "body": [
+      "resource \"opentelekomcloud_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"opentelekomcloud_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  protocol_port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${opentelekomcloud_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-elb_loadbalancer": {
+    "description": "Defines elb_loadbalancer",
+    "prefix": "tf-opentelekomcloud-resource-elb_loadbalancer",
+    "body": [
+      "resource \"opentelekomcloud_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-fw_firewall_group_v2": {
+    "description": "Defines fw_firewall_group_v2",
+    "prefix": "tf-opentelekomcloud-resource-fw_firewall_group_v2",
+    "body": [
+      "resource \"opentelekomcloud_fw_rule_v2\" \"rule_1\" {",
+      "  name             = \"my-rule-1\"",
+      "  description      = \"drop TELNET traffic\"",
+      "  action           = \"deny\"",
+      "  protocol         = \"tcp\"",
+      "  destination_port = \"23\"",
+      "  enabled          = \"true\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_fw_rule_v2\" \"rule_2\" {",
+      "  name             = \"my-rule-2\"",
+      "  description      = \"drop NTP traffic\"",
+      "  action           = \"deny\"",
+      "  protocol         = \"udp\"",
+      "  destination_port = \"123\"",
+      "  enabled          = \"false\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_fw_policy_v2\" \"policy_1\" {",
+      "  name = \"my-policy\"",
+      "",
+      "  rules = [\"${opentelekomcloud_fw_rule_v2.rule_1.id}\",",
+      "    \"${opentelekomcloud_fw_rule_v2.rule_2.id}\",",
+      "  ]",
+      "}",
+      "",
+      "resource \"opentelekomcloud_fw_firewall_group_v2\" \"firewall_group_1\" {",
+      "  name      = \"my-firewall-group\"",
+      "  ingress_policy_id = \"${opentelekomcloud_fw_policy_v2.policy_1.id}\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-fw_policy_v2": {
+    "description": "Defines fw_policy_v2",
+    "prefix": "tf-opentelekomcloud-resource-fw_policy_v2",
+    "body": [
+      "resource \"opentelekomcloud_fw_rule_v2\" \"rule_1\" {",
+      "  name             = \"my-rule-1\"",
+      "  description      = \"drop TELNET traffic\"",
+      "  action           = \"deny\"",
+      "  protocol         = \"tcp\"",
+      "  destination_port = \"23\"",
+      "  enabled          = \"true\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_fw_rule_v2\" \"rule_2\" {",
+      "  name             = \"my-rule-2\"",
+      "  description      = \"drop NTP traffic\"",
+      "  action           = \"deny\"",
+      "  protocol         = \"udp\"",
+      "  destination_port = \"123\"",
+      "  enabled          = \"false\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_fw_policy_v2\" \"policy_1\" {",
+      "  name = \"my-policy\"",
+      "",
+      "  rules = [\"${opentelekomcloud_fw_rule_v2.rule_1.id}\",",
+      "    \"${opentelekomcloud_fw_rule_v2.rule_2.id}\",",
+      "  ]",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-fw_rule_v2": {
+    "description": "Defines fw_rule_v2",
+    "prefix": "tf-opentelekomcloud-resource-fw_rule_v2",
+    "body": [
+      "resource \"opentelekomcloud_fw_rule_v2\" \"rule_1\" {",
+      "  name             = \"my_rule\"",
+      "  description      = \"drop TELNET traffic\"",
+      "  action           = \"deny\"",
+      "  protocol         = \"tcp\"",
+      "  destination_port = \"23\"",
+      "  enabled          = \"true\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-images_image_v2": {
+    "description": "Defines images_image_v2",
+    "prefix": "tf-opentelekomcloud-resource-images_image_v2",
+    "body": [
+      "resource \"opentelekomcloud_images_image_v2\" \"rancheros\" {",
+      "  name   = \"RancherOS\"",
+      "  image_source_url = \"https://releases.rancher.com/os/latest/rancheros-openstack.img\"",
+      "  container_format = \"bare\"",
+      "  disk_format = \"qcow2\"",
+      "  tags = [\"foo.bar\", \"tag.value\"]",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-kms_key_v1": {
+    "description": "Defines kms_key_v1",
+    "prefix": "tf-opentelekomcloud-resource-kms_key_v1",
+    "body": [
+      "resource \"huaweicloud_kms_key_v1\" \"key_1\" {",
+      "  key_alias       = \"key_1\"",
+      "  pending_days    = \"7\"",
+      "  key_description = \"first test key\"",
+      "  realm           = \"cn-north-1\"",
+      "  is_enabled      = true",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-lb_listener_v2": {
+    "description": "Defines lb_listener_v2",
+    "prefix": "tf-opentelekomcloud-resource-lb_listener_v2",
+    "body": [
+      "resource \"opentelekomcloud_lb_listener_v2\" \"listener_1\" {",
+      "  protocol        = \"HTTP\"",
+      "  protocol_port   = 8080",
+      "  loadbalancer_id = \"d9415786-5f1a-428b-b35f-2f1523e146d2\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-lb_loadbalancer_v2": {
+    "description": "Defines lb_loadbalancer_v2",
+    "prefix": "tf-opentelekomcloud-resource-lb_loadbalancer_v2",
+    "body": [
+      "resource \"opentelekomcloud_lb_loadbalancer_v2\" \"lb_1\" {",
+      "  vip_subnet_id = \"d9415786-5f1a-428b-b35f-2f1523e146d2\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-lb_member_v2": {
+    "description": "Defines lb_member_v2",
+    "prefix": "tf-opentelekomcloud-resource-lb_member_v2",
+    "body": [
+      "resource \"opentelekomcloud_lb_member_v2\" \"member_1\" {",
+      "  address       = \"192.168.199.23\"",
+      "  protocol_port = 8080",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-lb_monitor_v2": {
+    "description": "Defines lb_monitor_v2",
+    "prefix": "tf-opentelekomcloud-resource-lb_monitor_v2",
+    "body": [
+      "resource \"opentelekomcloud_lb_monitor_v2\" \"monitor_1\" {",
+      "  pool_id     = \"${opentelekomcloud_lb_pool_v2.pool_1.id}\"",
+      "  type        = \"PING\"",
+      "  delay       = 20",
+      "  timeout     = 10",
+      "  max_retries = 5",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-lb_pool_v2": {
+    "description": "Defines lb_pool_v2",
+    "prefix": "tf-opentelekomcloud-resource-lb_pool_v2",
+    "body": [
+      "resource \"opentelekomcloud_lb_pool_v2\" \"pool_1\" {",
+      "  protocol    = \"HTTP\"",
+      "  lb_method   = \"ROUND_ROBIN\"",
+      "  listener_id = \"d9415786-5f1a-428b-b35f-2f1523e146d2\"",
+      "",
+      "  persistence {",
+      "    type        = \"HTTP_COOKIE\"",
+      "    cookie_name = \"testCookie\"",
+      "  }",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_floatingip_v2": {
+    "description": "Defines networking_floatingip_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_floatingip_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_floatingip_v2\" \"floatip_1\" {",
+      "  pool = \"public\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_network_v2": {
+    "description": "Defines networking_network_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_network_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  name       = \"subnet_1\"",
+      "  network_id = \"${opentelekomcloud_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"opentelekomcloud_compute_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"a security group\"",
+      "",
+      "  rule {",
+      "    from_port   = 22",
+      "    to_port     = 22",
+      "    ip_protocol = \"tcp\"",
+      "    cidr        = \"0.0.0.0/0\"",
+      "  }",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_port_v2\" \"port_1\" {",
+      "  name               = \"port_1\"",
+      "  network_id         = \"${opentelekomcloud_networking_network_v2.network_1.id}\"",
+      "  admin_state_up     = \"true\"",
+      "  security_group_ids = [\"${opentelekomcloud_compute_secgroup_v2.secgroup_1.id}\"]",
+      "",
+      "  fixed_ip {",
+      "    \"subnet_id\"  = \"${opentelekomcloud_networking_subnet_v2.subnet_1.id}\"",
+      "    \"ip_address\" = \"192.168.199.10\"",
+      "  }",
+      "}",
+      "",
+      "resource \"opentelekomcloud_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  security_groups = [\"${opentelekomcloud_compute_secgroup_v2.secgroup_1.name}\"]",
+      "",
+      "  network {",
+      "    port = \"${opentelekomcloud_networking_port_v2.port_1.id}\"",
+      "  }",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_port_v2": {
+    "description": "Defines networking_port_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_port_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_port_v2\" \"port_1\" {",
+      "  name           = \"port_1\"",
+      "  network_id     = \"${opentelekomcloud_networking_network_v2.network_1.id}\"",
+      "  admin_state_up = \"true\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_router_interface_v2": {
+    "description": "Defines networking_router_interface_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_router_interface_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"tf_test_network\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${opentelekomcloud_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_router_v2\" \"router_1\" {",
+      "  name             = \"my_router\"",
+      "  external_gateway = \"f67f0d72-0ddf-11e4-9d95-e1f29f417e2f\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_router_interface_v2\" \"router_interface_1\" {",
+      "  router_id = \"${opentelekomcloud_networking_router_v2.router_1.id}\"",
+      "  subnet_id = \"${opentelekomcloud_networking_subnet_v2.subnet_1.id}\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_router_route_v2": {
+    "description": "Defines networking_router_route_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_router_route_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_router_v2\" \"router_1\" {",
+      "  name           = \"router_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${opentelekomcloud_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_router_interface_v2\" \"int_1\" {",
+      "  router_id = \"${opentelekomcloud_networking_router_v2.router_1.id}\"",
+      "  subnet_id = \"${opentelekomcloud_networking_subnet_v2.subnet_1.id}\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_router_route_v2\" \"router_route_1\" {",
+      "  depends_on       = [\"opentelekomcloud_networking_router_interface_v2.int_1\"]",
+      "  router_id        = \"${opentelekomcloud_networking_router_v2.router_1.id}\"",
+      "  destination_cidr = \"10.0.1.0/24\"",
+      "  next_hop         = \"192.168.199.254\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_router_v2": {
+    "description": "Defines networking_router_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_router_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_router_v2\" \"router_1\" {",
+      "  name             = \"my_router\"",
+      "  external_gateway = \"f67f0d72-0ddf-11e4-9d95-e1f29f417e2f\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_secgroup_rule_v2": {
+    "description": "Defines networking_secgroup_rule_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_secgroup_rule_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"My neutron security group\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_secgroup_rule_v2\" \"secgroup_rule_1\" {",
+      "  direction         = \"ingress\"",
+      "  ethertype         = \"IPv4\"",
+      "  protocol          = \"tcp\"",
+      "  port_range_min    = 22",
+      "  port_range_max    = 22",
+      "  remote_ip_prefix  = \"0.0.0.0/0\"",
+      "  security_group_id = \"${opentelekomcloud_networking_secgroup_v2.secgroup_1.id}\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_secgroup_v2": {
+    "description": "Defines networking_secgroup_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_secgroup_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"My neutron security group\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-networking_subnet_v2": {
+    "description": "Defines networking_subnet_v2",
+    "prefix": "tf-opentelekomcloud-resource-networking_subnet_v2",
+    "body": [
+      "resource \"opentelekomcloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"tf_test_network\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${opentelekomcloud_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-rds_instance_v1": {
+    "description": "Defines rds_instance_v1",
+    "prefix": "tf-opentelekomcloud-resource-rds_instance_v1",
+    "body": [
+      "data \"opentelekomcloud_rds_flavors_v1\" \"flavor\" {",
+      "    region = \"eu-de\"",
+      "    datastore_name = \"PostgreSQL\"",
+      "    datastore_version = \"9.5.5\"",
+      "    speccode = \"rds.pg.s1.large\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_compute_secgroup_v2\" \"secgrp_rds\" {",
+      "  name        = \"secgrp-rds-instance\"",
+      "  description = \"Rds Security Group\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_rds_instance_v1\" \"instance\" {",
+      "  name = \"rds-instance\"",
+      "  datastore {",
+      "    type = \"PostgreSQL\"",
+      "    version = \"9.5.5\"",
+      "  }",
+      "  flavorref = \"${data.opentelekomcloud_rds_flavors_v1.flavor.id}\"",
+      "  volume {",
+      "    type = \"COMMON\"",
+      "    size = 200",
+      "  }",
+      "  region = \"eu-de\"",
+      "  availabilityzone = \"eu-de-01\"",
+      "  vpc = \"c1095fe7-03df-4205-ad2d-6f4c181d436e\"",
+      "  nics {",
+      "    subnetid = \"b65f8d25-c533-47e2-8601-cfaa265a3e3e\"",
+      "  }",
+      "  securitygroup {",
+      "    id = \"${opentelekomcloud_compute_secgroup_v2.secgrp_rds.id}\"",
+      "  }",
+      "  dbport = \"8635\"",
+      "  backupstrategy = {",
+      "    starttime = \"04:00:00\"",
+      "    keepdays = 4",
+      "  }",
+      "  dbrtpd = \"Huangwei!120521\"",
+      "  ha = {",
+      "    enable = true",
+      "    replicationmode = \"async\"",
+      "  }",
+      "  depends_on = [\"opentelekomcloud_compute_secgroup_v2.secgrp_rds\"]",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-s3_bucket": {
+    "description": "Defines s3_bucket",
+    "prefix": "tf-opentelekomcloud-resource-s3_bucket",
+    "body": [
+      "resource \"opentelekomcloud_s3_bucket\" \"b\" {",
+      "  bucket = \"my-tf-test-bucket\"",
+      "  acl    = \"private\"",
+      "",
+      "  tags {",
+      "    Name        = \"My bucket\"",
+      "    Environment = \"Dev\"",
+      "  }",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-s3_bucket_object": {
+    "description": "Defines s3_bucket_object",
+    "prefix": "tf-opentelekomcloud-resource-s3_bucket_object",
+    "body": [
+      "resource \"opentelekomcloud_s3_bucket_object\" \"object\" {",
+      "  bucket = \"your_bucket_name\"",
+      "  key    = \"new_object_key\"",
+      "  source = \"path/to/file\"",
+      "  etag   = \"${md5(file(\"path/to/file\"))}\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-s3_bucket_policy": {
+    "description": "Defines s3_bucket_policy",
+    "prefix": "tf-opentelekomcloud-resource-s3_bucket_policy",
+    "body": [
+      "resource \"opentelekomcloud_s3_bucket\" \"b\" {",
+      "  bucket = \"my_tf_test_bucket\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_s3_bucket_policy\" \"b\" {",
+      "  bucket = \"${opentelekomcloud_s3_bucket.b.id}\"",
+      "  policy =<<POLICY",
+      "{",
+      "  \"Version\": \"2012-10-17\",",
+      "  \"Id\": \"MYBUCKETPOLICY\",",
+      "  \"Statement\": [",
+      "    {",
+      "      \"Sid\": \"IPAllow\",",
+      "      \"Effect\": \"Deny\",",
+      "      \"Principal\": \"*\",",
+      "      \"Action\": \"s3:*\",",
+      "      \"Resource\": \"arn:aws:s3:::my_tf_test_bucket/*\",",
+      "      \"Condition\": {",
+      "         \"IpAddress\": {\"aws:SourceIp\": \"8.8.8.8/32\"}",
+      "      } ",
+      "    } ",
+      "  ]",
+      "}",
+      "POLICY",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-smn_subscription_v2": {
+    "description": "Defines smn_subscription_v2",
+    "prefix": "tf-opentelekomcloud-resource-smn_subscription_v2",
+    "body": [
+      "resource \"opentelekomcloud_smn_topic_v2\" \"topic_1\" {",
+      "  name\t\t  = \"topic_1\"",
+      "  display_name    = \"The display name of topic_1\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_smn_subscription_v2\" \"subscription_1\" {",
+      "  topic_urn       = \"${opentelekomcloud_smn_topic_v2.topic_1.id}\"",
+      "  endpoint        = \"mailtest@gmail.com\"",
+      "  protocol        = \"email\"",
+      "  remark          = \"O&M\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_smn_subscription_v2\" \"subscription_2\" {",
+      "  topic_urn       = \"${opentelekomcloud_smn_topic_v2.topic_1.id}\"",
+      "  endpoint        = \"13600000000\"",
+      "  protocol        = \"sms\"",
+      "  remark          = \"O&M\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-smn_topic_v2": {
+    "description": "Defines smn_topic_v2",
+    "prefix": "tf-opentelekomcloud-resource-smn_topic_v2",
+    "body": [
+      "resource \"opentelekomcloud_smn_topic_v2\" \"topic_1\" {",
+      "  name\t\t  = \"topic_1\"",
+      "  display_name    = \"The display name of topic_1\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_smn_subscription_v2\" \"subscription_1\" {",
+      "  topic_urn       = \"${opentelekomcloud_smn_topic_v2.topic_1.id}\"",
+      "  endpoint        = \"mailtest@gmail.com\"",
+      "  protocol        = \"email\"",
+      "  remark          = \"O&M\"",
+      "}",
+      "",
+      "resource \"opentelekomcloud_smn_subscription_v2\" \"subscription_2\" {",
+      "  topic_urn       = \"${opentelekomcloud_smn_topic_v2.topic_1.id}\"",
+      "  endpoint        = \"13600000000\"",
+      "  protocol        = \"sms\"",
+      "  remark          = \"O&M\"",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-vpc_eip_v1": {
+    "description": "Defines vpc_eip_v1",
+    "prefix": "tf-opentelekomcloud-resource-vpc_eip_v1",
+    "body": [
+      "resource \"opentelekomcloud_vpc_eip_v1\" \"eip_1\" {",
+      "  publicip {",
+      "    type = \"5_bgp\"",
+      "  }",
+      "  bandwidth {",
+      "    name = \"test\"",
+      "    size = 8",
+      "    share_type = \"PER\"",
+      "    charge_mode = \"traffic\"",
+      "  }",
       "}"
     ]
   },
@@ -24778,6 +28888,103 @@
       "}"
     ]
   },
+  "postgresql-resource-postgresql_database": {
+    "description": "Defines postgresql_database",
+    "prefix": "tf-postgresql-resource-postgresql_database",
+    "body": [
+      "resource \"postgresql_database\" \"my_db\" {",
+      "  name              = \"my_db\"",
+      "  owner             = \"my_role\"",
+      "  template          = \"template0\"",
+      "  lc_collate        = \"C\"",
+      "  connection_limit  = -1",
+      "  allow_connections = true",
+      "}"
+    ]
+  },
+  "postgresql-resource-postgresql_extension": {
+    "description": "Defines postgresql_extension",
+    "prefix": "tf-postgresql-resource-postgresql_extension",
+    "body": [
+      "resource \"postgresql_extension\" \"my_extension\" {",
+      "  name = \"pg_trgm\"",
+      "}"
+    ]
+  },
+  "postgresql-resource-postgresql_role": {
+    "description": "Defines postgresql_role",
+    "prefix": "tf-postgresql-resource-postgresql_role",
+    "body": [
+      "resource \"postgresql_role\" \"my_role\" {",
+      "  name     = \"my_role\"",
+      "  login    = true",
+      "  password = \"mypass\"",
+      "}",
+      "",
+      "resource \"postgresql_role\" \"my_replication_role\" {",
+      "  name             = \"replication_role\"",
+      "  replication      = true",
+      "  login            = true",
+      "  connection_limit = 5",
+      "  password         = \"md5c98cbfeb6a347a47eb8e96cfb4c4b890\"",
+      "}"
+    ]
+  },
+  "postgresql-resource-postgresql_schema": {
+    "description": "Defines postgresql_schema",
+    "prefix": "tf-postgresql-resource-postgresql_schema",
+    "body": [
+      "resource \"postgresql_role\" \"app_www\" {",
+      "  name = \"app_www\"",
+      "}",
+      "",
+      "resource \"postgresql_role\" \"app_dba\" {",
+      "  name = \"app_dba\"",
+      "}",
+      "",
+      "resource \"postgresql_role\" \"app_releng\" {",
+      "  name = \"app_releng\"",
+      "}",
+      "",
+      "resource \"postgresql_schema\" \"my_schema\" {",
+      "  name  = \"my_schema\"",
+      "  owner = \"postgres\"",
+      "",
+      "  policy {",
+      "    usage = true",
+      "    role  = \"${postgresql_role.app_www.name}\"",
+      "  }",
+      "",
+      "  # app_releng can create new objects in the schema.  This is the role that",
+      "  # migrations are executed as.",
+      "  policy {",
+      "    create = true",
+      "    usage  = true",
+      "    role   = \"${postgresql_role.app_releng.name}\"",
+      "  }",
+      "",
+      "  policy {",
+      "    create_with_grant = true",
+      "    usage_with_grant  = true",
+      "    role              = \"${postgresql_role.app_dba.name}\"",
+      "  }",
+      "}"
+    ]
+  },
+  "powerdns-resource-record": {
+    "description": "Defines record",
+    "prefix": "tf-powerdns-resource-record",
+    "body": [
+      "# Add a record to the zone",
+      "resource \"powerdns_record\" \"foobar\" {",
+      "  zone    = \"example.com.\"",
+      "  name    = \"www.example.com\"",
+      "  type    = \"A\"",
+      "  ttl     = 300",
+      "  records = [\"192.168.0.11\"]",
+      "}"
+    ]
+  },
   "profitbricks-data-profitbricks_datacenter": {
     "description": "Defines profitbricks_datacenter",
     "prefix": "tf-profitbricks-data-profitbricks_datacenter",
@@ -25017,6 +29224,197 @@
       "}"
     ]
   },
+  "rabbitmq-resource-binding": {
+    "description": "Defines binding",
+    "prefix": "tf-rabbitmq-resource-binding",
+    "body": [
+      "resource \"rabbitmq_vhost\" \"test\" {",
+      "  name = \"test\"",
+      "}",
+      "",
+      "resource \"rabbitmq_permissions\" \"guest\" {",
+      "  user  = \"guest\"",
+      "  vhost = \"${rabbitmq_vhost.test.name}\"",
+      "",
+      "  permissions {",
+      "    configure = \".*\"",
+      "    write     = \".*\"",
+      "    read      = \".*\"",
+      "  }",
+      "}",
+      "",
+      "resource \"rabbitmq_exchange\" \"test\" {",
+      "  name  = \"test\"",
+      "  vhost = \"${rabbitmq_permissions.guest.vhost}\"",
+      "",
+      "  settings {",
+      "    type        = \"fanout\"",
+      "    durable     = false",
+      "    auto_delete = true",
+      "  }",
+      "}",
+      "",
+      "resource \"rabbitmq_queue\" \"test\" {",
+      "  name  = \"test\"",
+      "  vhost = \"${rabbitmq_permissions.guest.vhost}\"",
+      "",
+      "  settings {",
+      "    durable     = true",
+      "    auto_delete = false",
+      "  }",
+      "}",
+      "",
+      "resource \"rabbitmq_binding\" \"test\" {",
+      "  source           = \"${rabbitmq_exchange.test.name}\"",
+      "  vhost            = \"${rabbitmq_vhost.test.name}\"",
+      "  destination      = \"${rabbitmq_queue.test.name}\"",
+      "  destination_type = \"queue\"",
+      "  routing_key      = \"#\"",
+      "}"
+    ]
+  },
+  "rabbitmq-resource-exchange": {
+    "description": "Defines exchange",
+    "prefix": "tf-rabbitmq-resource-exchange",
+    "body": [
+      "resource \"rabbitmq_vhost\" \"test\" {",
+      "  name = \"test\"",
+      "}",
+      "",
+      "resource \"rabbitmq_permissions\" \"guest\" {",
+      "  user  = \"guest\"",
+      "  vhost = \"${rabbitmq_vhost.test.name}\"",
+      "",
+      "  permissions {",
+      "    configure = \".*\"",
+      "    write     = \".*\"",
+      "    read      = \".*\"",
+      "  }",
+      "}",
+      "",
+      "resource \"rabbitmq_exchange\" \"test\" {",
+      "  name  = \"test\"",
+      "  vhost = \"${rabbitmq_permissions.guest.vhost}\"",
+      "",
+      "  settings {",
+      "    type        = \"fanout\"",
+      "    durable     = false",
+      "    auto_delete = true",
+      "  }",
+      "}"
+    ]
+  },
+  "rabbitmq-resource-permissions": {
+    "description": "Defines permissions",
+    "prefix": "tf-rabbitmq-resource-permissions",
+    "body": [
+      "resource \"rabbitmq_vhost\" \"test\" {",
+      "  name = \"test\"",
+      "}",
+      "",
+      "resource \"rabbitmq_user\" \"test\" {",
+      "  name     = \"mctest\"",
+      "  password = \"foobar\"",
+      "  tags     = [\"administrator\"]",
+      "}",
+      "",
+      "resource \"rabbitmq_permissions\" \"test\" {",
+      "  user  = \"${rabbitmq_user.test.name}\"",
+      "  vhost = \"${rabbitmq_vhost.test.name}\"",
+      "",
+      "  permissions {",
+      "    configure = \".*\"",
+      "    write     = \".*\"",
+      "    read      = \".*\"",
+      "  }",
+      "}"
+    ]
+  },
+  "rabbitmq-resource-policy": {
+    "description": "Defines policy",
+    "prefix": "tf-rabbitmq-resource-policy",
+    "body": [
+      "resource \"rabbitmq_vhost\" \"test\" {",
+      "  name = \"test\"",
+      "}",
+      "",
+      "resource \"rabbitmq_permissions\" \"guest\" {",
+      "  user  = \"guest\"",
+      "  vhost = \"${rabbitmq_vhost.test.name}\"",
+      "",
+      "  permissions {",
+      "    configure = \".*\"",
+      "    write     = \".*\"",
+      "    read      = \".*\"",
+      "  }",
+      "}",
+      "",
+      "resource \"rabbitmq_policy\" \"test\" {",
+      "  name  = \"test\"",
+      "  vhost = \"${rabbitmq_permissions.guest.vhost}\"",
+      "",
+      "  policy {",
+      "    pattern  = \".*\"",
+      "    priority = 0",
+      "    apply_to = \"all\"",
+      "",
+      "    definition {",
+      "      ha-mode = \"all\"",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  "rabbitmq-resource-queue": {
+    "description": "Defines queue",
+    "prefix": "tf-rabbitmq-resource-queue",
+    "body": [
+      "resource \"rabbitmq_vhost\" \"test\" {",
+      "  name = \"test\"",
+      "}",
+      "",
+      "resource \"rabbitmq_permissions\" \"guest\" {",
+      "  user  = \"guest\"",
+      "  vhost = \"${rabbitmq_vhost.test.name}\"",
+      "",
+      "  permissions {",
+      "    configure = \".*\"",
+      "    write     = \".*\"",
+      "    read      = \".*\"",
+      "  }",
+      "}",
+      "",
+      "resource \"rabbitmq_queue\" \"test\" {",
+      "  name  = \"test\"",
+      "  vhost = \"${rabbitmq_permissions.guest.vhost}\"",
+      "",
+      "  settings {",
+      "    durable     = false",
+      "    auto_delete = true",
+      "  }",
+      "}"
+    ]
+  },
+  "rabbitmq-resource-user": {
+    "description": "Defines user",
+    "prefix": "tf-rabbitmq-resource-user",
+    "body": [
+      "resource \"rabbitmq_user\" \"test\" {",
+      "  name     = \"mctest\"",
+      "  password = \"foobar\"",
+      "  tags     = [\"administrator\", \"management\"]",
+      "}"
+    ]
+  },
+  "rabbitmq-resource-vhost": {
+    "description": "Defines vhost",
+    "prefix": "tf-rabbitmq-resource-vhost",
+    "body": [
+      "resource \"rabbitmq_vhost\" \"my_vhost\" {",
+      "  name = \"my_vhost\"",
+      "}"
+    ]
+  },
   "rancher-data-certificate": {
     "description": "Defines certificate",
     "prefix": "tf-rancher-data-certificate",
@@ -25193,6 +29591,171 @@
       "}"
     ]
   },
+  "random-resource-id": {
+    "description": "Defines id",
+    "prefix": "tf-random-resource-id",
+    "body": [
+      "resource \"random_id\" \"server\" {",
+      "  keepers = {",
+      "    # Generate a new id each time we switch to a new AMI id",
+      "    ami_id = \"${var.ami_id}\"",
+      "  }",
+      "",
+      "  byte_length = 8",
+      "}",
+      "",
+      "resource \"aws_instance\" \"server\" {",
+      "  tags = {",
+      "    Name = \"web-server ${random_id.server.hex}\"",
+      "  }",
+      "",
+      "  # Read the AMI id \"through\" the random_id resource to ensure that",
+      "  # both will change together.",
+      "  ami = \"${random_id.server.keepers.ami_id}\"",
+      "",
+      "  # ... (other aws_instance arguments) ...",
+      "}"
+    ]
+  },
+  "random-resource-integer": {
+    "description": "Defines integer",
+    "prefix": "tf-random-resource-integer",
+    "body": [
+      "resource \"random_integer\" \"priority\" {",
+      "  min     = 1",
+      "  max     = 99999",
+      "  keepers = {",
+      "    # Generate a new integer each time we switch to a new listener ARN",
+      "    listener_arn = \"${var.listener_arn}\"",
+      "  }",
+      "}",
+      "",
+      "resource \"aws_alb_listener_rule\" \"main\" {",
+      "  listener_arn = \"${var.listener_arn}\"",
+      "  priority     = \"${random_integer.priority.result}\"",
+      "",
+      "  action {",
+      "    type             = \"forward\"",
+      "    target_group_arn = \"${var.target_group_arn}\"",
+      "  }",
+      "  # ... (other aws_alb_listener_rule arguments) ...",
+      "}"
+    ]
+  },
+  "random-resource-pet": {
+    "description": "Defines pet",
+    "prefix": "tf-random-resource-pet",
+    "body": [
+      "resource \"random_pet\" \"server\" {",
+      "  keepers = {",
+      "    # Generate a new pet name each time we switch to a new AMI id",
+      "    ami_id = \"${var.ami_id}\"",
+      "  }",
+      "}",
+      "",
+      "resource \"aws_instance\" \"server\" {",
+      "  tags = {",
+      "    Name = \"web-server-${random_pet.server.id}\"",
+      "  }",
+      "",
+      "  # Read the AMI id \"through\" the random_pet resource to ensure that",
+      "  # both will change together.",
+      "  ami = \"${random_pet.server.keepers.ami_id}\"",
+      "",
+      "  # ... (other aws_instance arguments) ...",
+      "}"
+    ]
+  },
+  "random-resource-shuffle": {
+    "description": "Defines shuffle",
+    "prefix": "tf-random-resource-shuffle",
+    "body": [
+      "resource \"random_shuffle\" \"az\" {",
+      "  input = [\"us-west-1a\", \"us-west-1c\", \"us-west-1d\", \"us-west-1e\"]",
+      "  result_count = 2",
+      "}",
+      "",
+      "resource \"aws_elb\" \"example\" {",
+      "  # Place the ELB in any two of the given availability zones, selected",
+      "  # at random.",
+      "  availability_zones = [\"${random_shuffle.az.result}\"]",
+      "",
+      "  # ... and other aws_elb arguments ...",
+      "}"
+    ]
+  },
+  "random-resource-string": {
+    "description": "Defines string",
+    "prefix": "tf-random-resource-string",
+    "body": [
+      "resource \"random_string\" \"password\" {",
+      "  length = 16",
+      "  special = true",
+      "  override_special = \"/@\\\" \"",
+      "}",
+      "",
+      "resource \"aws_db_instance\" \"example\" {",
+      "  password = \"${random_string.password.result}\"",
+      "}"
+    ]
+  },
+  "rundeck-resource-job": {
+    "description": "Defines job",
+    "prefix": "tf-rundeck-resource-job",
+    "body": [
+      "resource \"rundeck_job\" \"bounceweb\" {",
+      "    name = \"Bounce Web Servers\"",
+      "    project_name = \"anvils\"",
+      "    node_filter_query = \"tags: web\"",
+      "    description = \"Restart the service daemons on all the web servers\"",
+      "",
+      "    command {",
+      "        shell_command = \"sudo service anvils restart\"",
+      "    }",
+      "}"
+    ]
+  },
+  "rundeck-resource-private_key": {
+    "description": "Defines private_key",
+    "prefix": "tf-rundeck-resource-private_key",
+    "body": [
+      "resource \"rundeck_private_key\" \"anvils\" {",
+      "    path = \"anvils/id_rsa\"",
+      "    key_material = \"${file(\"/id_rsa\")}\"",
+      "}"
+    ]
+  },
+  "rundeck-resource-project": {
+    "description": "Defines project",
+    "prefix": "tf-rundeck-resource-project",
+    "body": [
+      "resource \"rundeck_project\" \"anvils\" {",
+      "    name = \"anvils\"",
+      "    description = \"Application for managing Anvils\"",
+      "",
+      "    ssh_key_storage_path = \"anvils/id_rsa\"",
+      "",
+      "    resource_model_source {",
+      "        type = \"file\"",
+      "        config = {",
+      "            format = \"resourcexml\"",
+      "            # This path is interpreted on the Rundeck server.",
+      "            file = \"/var/rundeck/projects/anvils/resources.xml\"",
+      "        }",
+      "    }",
+      "}"
+    ]
+  },
+  "rundeck-resource-public_key": {
+    "description": "Defines public_key",
+    "prefix": "tf-rundeck-resource-public_key",
+    "body": [
+      "resource \"rundeck_public_key\" \"anvils\" {",
+      "    path = \"anvils/id_rsa.pub\"",
+      "    key_material = \"ssh-rsa yada-yada-yada\"",
+      "}"
+    ]
+  },
   "scaleway-data-bootscript": {
     "description": "Defines bootscript",
     "prefix": "tf-scaleway-data-bootscript",
@@ -25348,6 +29911,174 @@
       "resource \"scaleway_volume_attachment\" \"test\" {",
       "  server = \"${scaleway_server.test.id}\"",
       "  volume = \"${scaleway_volume.test.id}\"",
+      "}"
+    ]
+  },
+  "softlayer-resource-ssh_key": {
+    "description": "Defines ssh_key",
+    "prefix": "tf-softlayer-resource-ssh_key",
+    "body": [
+      "resource \"softlayer_ssh_key\" \"test_ssh_key\" {",
+      "  name       = \"test_ssh_key_name\"",
+      "  notes      = \"test_ssh_key_notes\"",
+      "  public_key = \"ssh-rsa <rsa_public_key>\"",
+      "}"
+    ]
+  },
+  "softlayer-resource-virtual_guest": {
+    "description": "Defines virtual_guest",
+    "prefix": "tf-softlayer-resource-virtual_guest",
+    "body": [
+      "resource \"softlayer_virtual_guest\" \"twc_terraform_sample\" {",
+      "  name                     = \"twc-terraform-sample-name\"",
+      "  domain                   = \"bar.example.com\"",
+      "  image                    = \"DEBIAN_7_64\"",
+      "  region                   = \"ams01\"",
+      "  public_network_speed     = 10",
+      "  hourly_billing           = true",
+      "  private_network_only     = false",
+      "  cpu                      = 1",
+      "  ram                      = 1024",
+      "  disks                    = [25, 10, 20]",
+      "  user_data                = \"{\\\"value\\\":\\\"newvalue\\\"}\"",
+      "  dedicated_acct_host_only = true",
+      "  local_disk               = false",
+      "  frontend_vlan_id         = 1085155",
+      "  backend_vlan_id          = 1085157",
+      "}"
+    ]
+  },
+  "spotinst-resource-aws_group": {
+    "description": "Defines aws_group",
+    "prefix": "tf-spotinst-resource-aws_group",
+    "body": [
+      "# Create an AWS group",
+      "resource \"spotinst_aws_group\" \"workers\" {",
+      "  name = \"workers-group\"",
+      "  description = \"created by Terraform\"",
+      "  product = \"Linux/UNIX\"",
+      "",
+      "  capacity {",
+      "    target = 50",
+      "    minimum = 25",
+      "    maximum = 100",
+      "  }",
+      "",
+      "  strategy {",
+      "    risk = 100",
+      "  }",
+      "",
+      "  scheduled_task {",
+      "    task_type = \"scale\"",
+      "    cron_expression = \"0 5 * * 0-4\"",
+      "    scale_target_capacity = 80",
+      "  }",
+      "",
+      "  scheduled_task {",
+      "    task_type = \"backup_ami\"",
+      "    frequency = \"hourly\"",
+      "  }",
+      "",
+      "  instance_types {",
+      "    ondemand = \"c3.large\"",
+      "    spot = [\"m3.large\", \"m4.large\", \"c3.large\", \"c4.large\"]",
+      "  }",
+      "",
+      "  availability_zone {",
+      "    name = \"us-west-2b\"",
+      "    subnet_id = \"subnet-7bbbf51e\"",
+      "  }",
+      "",
+      "  launch_specification {",
+      "    monitoring = false",
+      "    image_id = \"ami-f0091d91\"",
+      "    key_pair = \"pemfile\"",
+      "    security_group_ids = [\"default\", \"allow-ssh\"]",
+      "  }",
+      "",
+      "  tags {",
+      "    foo = \"bar\"",
+      "    bar = \"baz\"",
+      "  }",
+      "",
+      "  scaling_up_policy {",
+      "    policy_name = \"Scaling Policy 1\"",
+      "    metric_name = \"CPUUtilization\"",
+      "    statistic = \"average\"",
+      "    unit = \"percent\"",
+      "    threshold = 80",
+      "    adjustment = 1",
+      "    namespace = \"AWS/EC2\"",
+      "    period = 300",
+      "    evaluation_periods = 2",
+      "    cooldown = 300",
+      "  }",
+      "",
+      "  scaling_down_policy {",
+      "    policy_name = \"Scaling Policy 2\"",
+      "    metric_name = \"CPUUtilization\"",
+      "    statistic = \"average\"",
+      "    unit = \"percent\"",
+      "    threshold = 40",
+      "    adjustment = 1",
+      "    namespace = \"AWS/EC2\"",
+      "    period = 300",
+      "    evaluation_periods = 2",
+      "    cooldown = 300",
+      "  }"
+    ]
+  },
+  "spotinst-resource-healthcheck": {
+    "description": "Defines healthcheck",
+    "prefix": "tf-spotinst-resource-healthcheck",
+    "body": [
+      "resource \"spotinst_healthcheck\" \"foo\" {",
+      "\tname = \"hc-foo\"",
+      "\tresource_id = \"sig-foo\"",
+      "\tcheck {",
+      "\t\tprotocol = \"http\"",
+      "\t\tendpoint = \"http://endpoint.com\"",
+      "\t\tport = 1337",
+      "\t\tinterval = 10",
+      "\t\ttimeout = 10",
+      "\t}",
+      "\tthreshold {",
+      "\t\thealthy = 1",
+      "\t\tunhealthy = 1",
+      "\t}",
+      "\tproxy {",
+      "\t\taddr = \"http://proxy.com\"",
+      "\t\tport = 80",
+      "\t}",
+      "}"
+    ]
+  },
+  "spotinst-resource-subscription": {
+    "description": "Defines subscription",
+    "prefix": "tf-spotinst-resource-subscription",
+    "body": [
+      "resource \"spotinst_subscription\" \"foo\" {",
+      "\tresource_id = \"sig-foo\"",
+      "\tevent_type = \"aws_ec2_instance_launch\"",
+      "\tprotocol = \"http\"",
+      "\tendpoint = \"http://endpoint.com\"",
+      "\tformat = {",
+      "\t\tinstance_id = \"%instance-id%\"",
+      "\t\ttags = \"foo,baz,baz\"",
+      "\t}",
+      "}"
+    ]
+  },
+  "statuscake-resource-test": {
+    "description": "Defines test",
+    "prefix": "tf-statuscake-resource-test",
+    "body": [
+      "resource \"statuscake_test\" \"google\" {",
+      "  website_name = \"google.com\"",
+      "  website_url  = \"www.google.com\"",
+      "  test_type    = \"HTTP\"",
+      "  check_rate   = 300",
+      "  contact_id   = 12345",
       "}"
     ]
   },
@@ -25759,6 +30490,168 @@
       "  vlan_id     = 100",
       "  name        = \"dmz\"",
       "  description = \"DMZ VLAN\"",
+      "}"
+    ]
+  },
+  "ultradns-resource-dirpool": {
+    "description": "Defines dirpool",
+    "prefix": "tf-ultradns-resource-dirpool",
+    "body": [
+      "# Create a Directional Controller pool",
+      "resource \"ultradns_dirpool\" \"pool\" {",
+      "  zone        = \"${var.ultradns_domain}\"",
+      "  name        = \"terraform-dirpool\"",
+      "  ttl         = 300",
+      "  description = \"Minimal DirPool\"",
+      "",
+      "  rdata {",
+      "    host = \"192.168.0.10\"",
+      "  }",
+      "}"
+    ]
+  },
+  "ultradns-resource-probe_http": {
+    "description": "Defines probe_http",
+    "prefix": "tf-ultradns-resource-probe_http",
+    "body": [
+      "resource \"ultradns_probe_http\" \"probe\" {",
+      "  zone        = \"${ultradns_tcpool.pool.zone}\"",
+      "  name        = \"${ultradns_tcpool.pool.name}\"",
+      "  pool_record = \"10.2.1.1\"",
+      "",
+      "  agents = [\"DALLAS\", \"AMSTERDAM\"]",
+      "",
+      "  interval  = \"ONE_MINUTE\"",
+      "  threshold = 1",
+      "",
+      "  http_probe {",
+      "    transaction {",
+      "      method           = \"POST\"",
+      "      url              = \"http://localhost/index\"",
+      "      transmitted_data = \"{}\"",
+      "      follow_redirects = true",
+      "",
+      "      limit {",
+      "        name = \"run\"",
+      "",
+      "        warning  = 1",
+      "        critical = 2",
+      "        fail     = 3",
+      "      }",
+      "",
+      "      limit {",
+      "        name = \"avgConnect\"",
+      "",
+      "        warning  = 4",
+      "        critical = 5",
+      "        fail     = 6",
+      "      }",
+      "",
+      "      limit {",
+      "        name = \"avgRun\"",
+      "",
+      "        warning  = 7",
+      "        critical = 8",
+      "        fail     = 9",
+      "      }",
+      "",
+      "      limit {",
+      "        name = \"connect\"",
+      "",
+      "        warning  = 10",
+      "        critical = 11",
+      "        fail     = 12",
+      "      }",
+      "    }",
+      "",
+      "    total_limits {",
+      "      warning  = 13",
+      "      critical = 14",
+      "      fail     = 15",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  "ultradns-resource-probe_ping": {
+    "description": "Defines probe_ping",
+    "prefix": "tf-ultradns-resource-probe_ping",
+    "body": [
+      "resource \"ultradns_probe_ping\" \"probe\" {",
+      "  zone        = \"${ultradns_tcpool.pool.zone}\"",
+      "  name        = \"${ultradns_tcpool.pool.name}\"",
+      "  pool_record = \"10.3.0.1\"",
+      "",
+      "  agents = [\"DALLAS\", \"AMSTERDAM\"]",
+      "",
+      "  interval  = \"ONE_MINUTE\"",
+      "  threshold = 1",
+      "",
+      "  ping_probe {",
+      "    packets     = 15",
+      "    packet_size = 56",
+      "",
+      "    limit {",
+      "      name     = \"lossPercent\"",
+      "      warning  = 1",
+      "      critical = 2",
+      "      fail     = 3",
+      "    }",
+      "",
+      "    limit {",
+      "      name     = \"total\"",
+      "      warning  = 2",
+      "      critical = 3",
+      "      fail     = 4",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  "ultradns-resource-rdpool": {
+    "description": "Defines rdpool",
+    "prefix": "tf-ultradns-resource-rdpool",
+    "body": [
+      "# Create a Resource Distribution pool",
+      "",
+      "resource \"ultradns_rdpool\" \"pool\" {",
+      "  zone        = \"${var.ultradns_domain}\"",
+      "  name        = \"terraform-rdpool\"",
+      "  ttl         = 600",
+      "  description = \"Example RD Pool\"",
+      "  order       = \"ROUND_ROBIN\"",
+      "  rdata       = [ \"192.168.0.10\", \"192.168.0.11\" ]",
+      "}"
+    ]
+  },
+  "ultradns-resource-record": {
+    "description": "Defines record",
+    "prefix": "tf-ultradns-resource-record",
+    "body": [
+      "# Add a record to the domain",
+      "resource \"ultradns_record\" \"foobar\" {",
+      "  zone  = \"${var.ultradns_domain}\"",
+      "  name  = \"terraform\"",
+      "  rdata = [\"192.168.0.11\"]",
+      "  type  = \"A\"",
+      "  ttl   = 3600",
+      "}"
+    ]
+  },
+  "ultradns-resource-tcpool": {
+    "description": "Defines tcpool",
+    "prefix": "tf-ultradns-resource-tcpool",
+    "body": [
+      "# Create a Traffic Controller pool",
+      "resource \"ultradns_tcpool\" \"pool\" {",
+      "  zone        = \"${var.ultradns_domain}\"",
+      "  name        = \"terraform-tcpool\"",
+      "  ttl         = 300",
+      "  description = \"Minimal TC Pool\"",
+      "",
+      "  rdata {",
+      "    host = \"192.168.0.10\"",
+      "  }",
       "}"
     ]
   },
@@ -26205,6 +31098,208 @@
       "  policy = \"write\"",
       "}",
       "EOT",
+      "}"
+    ]
+  },
+  "vcd-resource-dnat": {
+    "description": "Defines dnat",
+    "prefix": "tf-vcd-resource-dnat",
+    "body": [
+      "resource \"vcd_dnat\" \"web\" {",
+      "  edge_gateway = \"Edge Gateway Name\"",
+      "  external_ip  = \"78.101.10.20\"",
+      "  port         = 80",
+      "  internal_ip  = \"10.10.0.5\"",
+      "  translated_port = 8080",
+      "}"
+    ]
+  },
+  "vcd-resource-edgegateway_vpn": {
+    "description": "Defines edgegateway_vpn",
+    "prefix": "tf-vcd-resource-edgegateway_vpn",
+    "body": [
+      "resource \"vcd_edgegateway_vpn\" \"vpn\" {",
+      "    edge_gateway        = \"Internet_01(nti0000bi2_123-456-2)\"",
+      "    name                = \"west-to-east\"",
+      "  description         = \"Description\"",
+      "  encryption_protocol = \"AES256\"",
+      "    mtu                 = 1400",
+      "    peer_id             = \"64.121.123.11\"",
+      "    peer_ip_address     = \"64.121.123.11\"",
+      "    local_id            = \"64.121.123.10\"",
+      "    local_ip_address    = \"64.121.123.10\"",
+      "    shared_secret       = \"***********************\"",
+      "    ",
+      "    peer_subnets {",
+      "        peer_subnet_name = \"DMZ_WEST\"",
+      "        peer_subnet_gateway = \"10.0.10.1\"",
+      "        peer_subnet_mask = \"255.255.255.0\"",
+      "    }",
+      "",
+      "    peer_subnets {",
+      "        peer_subnet_name = \"WEB_WEST\"",
+      "        peer_subnet_gateway = \"10.0.20.1\"",
+      "        peer_subnet_mask = \"255.255.255.0\"",
+      "    }",
+      "",
+      "    local_subnets {",
+      "        local_subnet_name = \"DMZ_EAST\"",
+      "        local_subnet_gateway = \"10.0.1.1\"",
+      "        local_subnet_mask = \"255.255.255.0\"",
+      "    }",
+      "",
+      "    local_subnets {",
+      "        local_subnet_name = \"WEB_EAST\"",
+      "        local_subnet_gateway = \"10.0.22.1\"",
+      "        local_subnet_mask = \"255.255.255.0\"",
+      "    }",
+      "}"
+    ]
+  },
+  "vcd-resource-firewall_rules": {
+    "description": "Defines firewall_rules",
+    "prefix": "tf-vcd-resource-firewall_rules",
+    "body": [
+      "resource \"vcd_firewall_rules\" \"fw\" {",
+      "  edge_gateway   = \"Edge Gateway Name\"",
+      "  default_action = \"deny\"",
+      "",
+      "  rule {",
+      "    description      = \"deny-ftp-out\"",
+      "    policy           = \"deny\"",
+      "    protocol         = \"tcp\"",
+      "    destination_port = \"21\"",
+      "    destination_ip   = \"any\"",
+      "    source_port      = \"any\"",
+      "    source_ip        = \"10.10.0.0/24\"",
+      "  }",
+      "",
+      "  rule {",
+      "    description      = \"allow-outbound\"",
+      "    policy           = \"allow\"",
+      "    protocol         = \"any\"",
+      "    destination_port = \"any\"",
+      "    destination_ip   = \"any\"",
+      "    source_port      = \"any\"",
+      "    source_ip        = \"10.10.0.0/24\"",
+      "  }",
+      "}",
+      "",
+      "resource \"vcd_vapp\" \"web\" {",
+      "  # ...",
+      "}",
+      "",
+      "resource \"vcd_firewall_rules\" \"fw-web\" {",
+      "  edge_gateway   = \"Edge Gateway Name\"",
+      "  default_action = \"drop\"",
+      "",
+      "  rule {",
+      "    description      = \"allow-web\"",
+      "    policy           = \"allow\"",
+      "    protocol         = \"tcp\"",
+      "    destination_port = \"80\"",
+      "    destination_ip   = \"${vcd_vapp.web.ip}\"",
+      "    source_port      = \"any\"",
+      "    source_ip        = \"any\"",
+      "  }",
+      "}"
+    ]
+  },
+  "vcd-resource-network": {
+    "description": "Defines network",
+    "prefix": "tf-vcd-resource-network",
+    "body": [
+      "resource \"vcd_network\" \"net\" {",
+      "  name         = \"my-net\"",
+      "  edge_gateway = \"Edge Gateway Name\"",
+      "  gateway      = \"10.10.0.1\"",
+      "",
+      "  dhcp_pool {",
+      "    start_address = \"10.10.0.2\"",
+      "    end_address   = \"10.10.0.100\"",
+      "  }",
+      "",
+      "  static_ip_pool {",
+      "    start_address = \"10.10.0.152\"",
+      "    end_address   = \"10.10.0.254\"",
+      "  }",
+      "}"
+    ]
+  },
+  "vcd-resource-snat": {
+    "description": "Defines snat",
+    "prefix": "tf-vcd-resource-snat",
+    "body": [
+      "resource \"vcd_snat\" \"outbound\" {",
+      "  edge_gateway = \"Edge Gateway Name\"",
+      "  external_ip  = \"78.101.10.20\"",
+      "  internal_ip  = \"10.10.0.0/24\"",
+      "}"
+    ]
+  },
+  "vcd-resource-vapp": {
+    "description": "Defines vapp",
+    "prefix": "tf-vcd-resource-vapp",
+    "body": [
+      "resource \"vcd_network\" \"net\" {",
+      "  # ...",
+      "}",
+      "",
+      "resource \"vcd_vapp\" \"web\" {",
+      "  name          = \"web\"",
+      "  catalog_name  = \"Boxes\"",
+      "  template_name = \"lampstack-1.10.1-ubuntu-10.04\"",
+      "  memory        = 2048",
+      "  cpus          = 1",
+      "",
+      "  network_name = \"${vcd_network.net.name}\"",
+      "  network_href = \"${vcd_network.net.href}\"",
+      "  ip           = \"10.10.104.160\"",
+      "",
+      "  metadata {",
+      "    role    = \"web\"",
+      "    env     = \"staging\"",
+      "    version = \"v1\"",
+      "  }",
+      "",
+      "  ovf {",
+      "    hostname = \"web\"",
+      "  }",
+      "}"
+    ]
+  },
+  "vcd-resource-vapp_vm": {
+    "description": "Defines vapp_vm",
+    "prefix": "tf-vcd-resource-vapp_vm",
+    "body": [
+      "resource \"vcd_network\" \"net\" {",
+      "  # ...",
+      "}",
+      "",
+      "resource \"vcd_vapp\" \"web\" {",
+      "  name          = \"web\"",
+      "}",
+      "",
+      "resource \"vcd_vapp_vm\" \"web2\" {",
+      "  vapp_name     = \"${vcd_vapp.web.name}\"",
+      "  name          = \"web2\"",
+      "  catalog_name  = \"Boxes\"",
+      "  template_name = \"lampstack-1.10.1-ubuntu-10.04\"",
+      "  memory        = 2048",
+      "  cpus          = 1",
+      "",
+      "  ip           = \"10.10.104.161\"",
+      "}",
+      "",
+      "resource \"vcd_vapp_vm\" \"web3\" {",
+      "  vapp_name     = \"${vcd_vapp.web.name}\"",
+      "  name          = \"web3\"",
+      "  catalog_name  = \"Boxes\"",
+      "  template_name = \"lampstack-1.10.1-ubuntu-10.04\"",
+      "  memory        = 2048",
+      "  cpus          = 1",
+      "",
+      "  ip           = \"10.10.104.162\"",
       "}"
     ]
   },

@@ -4,6 +4,7 @@ import { downloadGitRepo } from "./downloadGitRepo";
 import { getAvailableProviders } from "./getAvailableProviders";
 import setup = require("./setup");
 
+const cap = 1452;
 function sortObject(o) {
   return Object.keys(o)
     .sort()
@@ -14,9 +15,8 @@ async function main() {
   const tmpDir = setup.setupWorkspace();
   const snips = {};
   getAvailableProviders(tmpDir, snips, downloadGitRepo);
-  // TODO: implement a count on markdown files to get this number?
-  // TODO: with a count, modify package.json to advertise number of snippets in description
-  const cap = 1199;
+  // TODO: find a better way to count up front the number of processed markdown files OR providers
+  await sleep(600);
   while (Object.keys(snips).length < cap) {
     console.log(`${Object.keys(snips).length} of ${cap}`);
     await sleep(20);
