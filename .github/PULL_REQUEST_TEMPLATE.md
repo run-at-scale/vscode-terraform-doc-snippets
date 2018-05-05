@@ -1,6 +1,6 @@
 # PR o'clock
 
-### Description
+## Description
 
 Please explain the changes you made here.
 
