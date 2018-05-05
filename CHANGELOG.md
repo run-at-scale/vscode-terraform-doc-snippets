@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.5](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.4...v0.1.5) (2018-05-04)
+
+* gif (🔊 Jiff 🔊) demo added to readme
+
 ## [0.1.4](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.3...v0.1.4) (2018-05-04)
 
 * provider repos now scanned from the terraform-providers organization.
