@@ -1,8 +1,9 @@
 {
   "name": "terraform-doc-snippets",
   "displayName": "Terraform doc snippets",
-  "description": "Terraform code snippets (>1400) straight from documentation for all provider resources and data sources. All providers in the terraform-providers org covered.",
-  "version": "0.1.5",
+  "description":
+    "Terraform code snippets (~1500) straight from documentation for all provider resources and data sources. All providers in the terraform-providers org covered.",
+  "version": "0.2.0",
   "icon": "assets/terraform_logo.png",
   "publisher": "run-at-scale",
   "license": "MIT",
@@ -14,9 +15,7 @@
     "email": "brandon@atscale.run",
     "url": "https://github.com/run-at-scale"
   },
-  "categories": [
-    "Snippets"
-  ],
+  "categories": ["Snippets"],
   "keywords": [
     "Terraform",
     "devops",

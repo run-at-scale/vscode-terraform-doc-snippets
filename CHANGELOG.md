@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## Future
+
+* tests added
+* types added
+* placeholders for tabbing through snippet names added to each snippet
+
+## [0.2.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.5...v0.2.0) (2018-05-10)
+
+* override and extra snippets now added through config
+* deprecated resources and data sources manually added for their successor
+* snippets file rebuilt and now has 1491 pulled from docs + a few custom snippets
+
 ## [0.1.5](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.4...v0.1.5) (2018-05-04)
 
 * gif (🔊 Jiff 🔊) demo added to readme
@@ -19,7 +31,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [0.1.2](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.1...v0.1.2) (2018-04-26)
 
-* markdown files are sometimes supplied as `.md` and othertimes `.markdown`. The code now handles both.
+* markdown files are sometimes supplied as `.md` and other times `.markdown`. The code now handles both.
 
 ## [0.1.1](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.0.4...v0.1.1) (2018-04-26)
 

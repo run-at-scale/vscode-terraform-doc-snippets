@@ -2,16 +2,13 @@ import { writeFileSync } from "fs";
 import { cleanup } from "./cleanup";
 import { downloadGitRepo } from "./downloadGitRepo";
 import { getAvailableProviders } from "./getAvailableProviders";
+import { setOverrides } from "./setOverrides";
 import setup = require("./setup");
-
-const cap = 1452;
-function sortObject(o) {
-  return Object.keys(o)
-    .sort()
-    .reduce((r, k) => ((r[k] = o[k]), r), {});
-}
+import { sortObject } from "./sortObject";
+const configuration = require("./config.json");
 
 async function main() {
+  const cap = configuration.total_snippets;
   const tmpDir = setup.setupWorkspace();
   const snips = {};
   getAvailableProviders(tmpDir, snips, downloadGitRepo);
@@ -22,7 +19,8 @@ async function main() {
     await sleep(20);
   }
   console.log(Object.keys(snips).length);
-  const sortedSnips = sortObject(snips);
+  const overrideSnipsIncluded = setOverrides(snips);
+  const sortedSnips = sortObject(overrideSnipsIncluded);
   writeFileSync(
     "snippets/terraform.json",
     JSON.stringify(sortedSnips, null, 2),
