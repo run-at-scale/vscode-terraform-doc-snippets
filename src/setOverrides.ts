@@ -1,4 +1,10 @@
 // https://github.com/chybie/ts-json/blob/master/app.ts
-var json = require("./config.json");
+const configuration = require("./config.json");
 
-export function setOverrides(o) {}
+export function setOverrides(allSnippets) {
+  const override_snippets = configuration.override_snippets;
+  for (let snippet of override_snippets) {
+    allSnippets = Object.assign(allSnippets, snippet);
+  }
+  return allSnippets;
+}

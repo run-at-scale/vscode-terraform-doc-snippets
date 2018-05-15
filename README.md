@@ -6,7 +6,7 @@
 
 ![Terraform](https://github.com/run-at-scale/vscode-terraform-doc-snippets/raw/master/assets/terraform_logo.png "Terraform doc snippets")
 
-A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured vscode snippets - 1452 snippets in total!
+A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured vscode snippets - 1478 snippets in total!
 
 ## Demo
 

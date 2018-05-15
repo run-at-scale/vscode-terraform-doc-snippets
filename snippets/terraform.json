@@ -1,9 +1,12 @@
 {
   "alicloud-data-dns_domain_groups": {
-    "description": "Defines dns_domain_groups",
-    "prefix": "tf-alicloud-data-dns_domain_groups",
+    "description": "Defines alicloud_dns_groups data source",
+    "prefix": "tf-alicloud-data-alicloud_dns_groups",
     "body": [
-      "# empty snippet",
+      "data \"alicloud_dns_groups\" \"group\" {",
+      "  name_regex = \"^y[A-Za-z]+\"",
+      "  output_file = \"groups.txt\"",
+      "}",
       ""
     ]
   },
@@ -11,7 +14,13 @@
     "description": "Defines dns_domain_records",
     "prefix": "tf-alicloud-data-dns_domain_records",
     "body": [
-      "# empty snippet",
+      "data \"alicloud_dns_records\" \"record\" {",
+      "  domain_name = \"xiaozhu.top\"",
+      "  is_locked = false",
+      "  type = \"A\"",
+      "  host_record_regex = \"^@\"",
+      "  output_file = \"records.txt\"",
+      "}",
       ""
     ]
   },
@@ -158,10 +167,12 @@
     ]
   },
   "alicloud-data-ram_alias": {
-    "description": "Defines ram_alias",
+    "description": "Defines ram_alias data source",
     "prefix": "tf-alicloud-data-ram_alias",
     "body": [
-      "# empty snippet",
+      "resource \"alicloud_ram_account_alias\" \"alias\" {",
+      "  account_alias = \"hallo\"",
+      "}",
       ""
     ]
   },
@@ -427,7 +438,17 @@
     "description": "Defines container_cluster",
     "prefix": "tf-alicloud-resource-container_cluster",
     "body": [
-      "# empty snippet",
+      "resource \"alicloud_cs_swarm\" \"my_cluster\" {",
+      "  password = \"Test12345\"",
+      "  instance_type = \"ecs.n4.small\"",
+      "  name = \"ClusterFromAlicloud\"",
+      "  node_number = 2",
+      "  disk_category = \"cloud_efficiency\"",
+      "  disk_size = 20",
+      "  cidr_block = \"172.18.0.0/24\"",
+      "  image_id = \"${var.image_id}\"",
+      "  vswitch_id = \"${var.vswitch_id}\"",
+      "}",
       ""
     ]
   },
@@ -1010,6 +1031,41 @@
       "}"
     ]
   },
+  "alicloud-resource-ots_table": {
+    "description": "Defines ots_table",
+    "prefix": "tf-alicloud-resource-ots_table",
+    "body": [
+      "# Create an OTS table",
+      "provider \"alicloud\" {",
+      "  ots_instance_name = \"${var.ots_instance_name}\"",
+      "}",
+      "",
+      "resource \"alicloud_ots_table\" \"table\" {",
+      "  provider = \"alicloud\"",
+      "  table_name = \"${var.table_name}\"",
+      "  primary_key = [",
+      "    {",
+      "      name = \"${var.primary_key_1_name}\"",
+      "      type = \"${var.primary_key_integer_type}\"",
+      "    },",
+      "    {",
+      "      name = \"${var.primary_key_2_name}\"",
+      "      type = \"${var.primary_key_integer_type}\"",
+      "    },",
+      "    {",
+      "      name = \"${var.primary_key_3_name}\"",
+      "      type = \"${var.primary_key_integer_type}\"",
+      "    },",
+      "    {",
+      "      name = \"${var.primary_key_4_name}\"",
+      "      type = \"${var.primary_key_string_type}\"",
+      "    },",
+      "  ]",
+      "  time_to_live = \"${var.time_to_live}\"",
+      "  max_version = \"${var.max_version}\"",
+      "}"
+    ]
+  },
   "alicloud-resource-ram_access_key": {
     "description": "Defines ram_access_key",
     "prefix": "tf-alicloud-resource-ram_access_key",
@@ -1044,7 +1100,10 @@
     "description": "Defines ram_alias",
     "prefix": "tf-alicloud-resource-ram_alias",
     "body": [
-      "# empty snippet",
+      "# Create a alias for cloud account.",
+      "resource \"alicloud_ram_account_alias\" \"alias\" {",
+      "  account_alias = \"hallo\"",
+      "}",
       ""
     ]
   },
@@ -1701,6 +1760,15 @@
       "}"
     ]
   },
+  "aws-data-acmpca_certificate_authority": {
+    "description": "Defines acmpca_certificate_authority",
+    "prefix": "tf-aws-data-acmpca_certificate_authority",
+    "body": [
+      "data \"aws_acmpca_certificate_authority\" \"example\" {",
+      "  arn = \"arn:aws:acm-pca:us-east-1:123456789012:certificate-authority/12345678-1234-1234-1234-123456789012\"",
+      "}"
+    ]
+  },
   "aws-data-ami": {
     "description": "Defines ami",
     "prefix": "tf-aws-data-ami",
@@ -1744,6 +1812,15 @@
     "body": [
       "data \"aws_api_gateway_rest_api\" \"my_rest_api\" {",
       "  name = \"my-rest-api\"",
+      "}"
+    ]
+  },
+  "aws-data-arn": {
+    "description": "Defines arn",
+    "prefix": "tf-aws-data-arn",
+    "body": [
+      "data \"aws_arn\" \"db_instance\" {",
+      "  arn = \"arn:aws:rds:eu-west-1:123456789012:db:mysql-db\"",
       "}"
     ]
   },
@@ -2722,6 +2799,31 @@
       "}"
     ]
   },
+  "aws-data-lambda_invocation": {
+    "description": "Defines lambda_invocation",
+    "prefix": "tf-aws-data-lambda_invocation",
+    "body": [
+      "data \"aws_lambda_invocation\" \"example\" {",
+      "  function_name = \"${aws_lambda_function.lambda_function_test.function_name}\"",
+      "",
+      "  input = <<JSON",
+      "{",
+      "  \"key1\": \"value1\",",
+      "  \"key2\": \"value2\"",
+      "}",
+      "JSON",
+      "",
+      "}",
+      "",
+      "output \"result_entry\" {",
+      "  value = \"${data.aws_lambda_invocation.result_map[\"key1\"]}\"",
+      "}",
+      "",
+      "output \"result\" {",
+      "  value = \"${data.aws_lambda_invocation.result}\"",
+      "}"
+    ]
+  },
   "aws-data-lb": {
     "description": "Defines lb",
     "prefix": "tf-aws-data-lb",
@@ -3279,6 +3381,22 @@
       "resource \"aws_lb_listener\" \"front_end\" {",
       "  # [...]",
       "  certificate_arn   = \"${aws_acm_certificate_validation.cert.certificate_arn}\"",
+      "}"
+    ]
+  },
+  "aws-resource-acmpca_certificate_authority": {
+    "description": "Defines acmpca_certificate_authority",
+    "prefix": "tf-aws-resource-acmpca_certificate_authority",
+    "body": [
+      "resource \"aws_acmpca_certificate_authority\" \"example\" {",
+      "  certificate_authority_configuration {",
+      "    key_algorithm     = \"RSA_4096\"",
+      "    signing_algorithm = \"SHA512WITHRSA\"",
+      "",
+      "    subject {",
+      "      common_name = \"example.com\"",
+      "    }",
+      "  }",
       "}"
     ]
   },
@@ -7576,6 +7694,16 @@
       "}"
     ]
   },
+  "aws-resource-glue_catalog_table": {
+    "description": "Defines glue_catalog_table",
+    "prefix": "tf-aws-resource-glue_catalog_table",
+    "body": [
+      "resource \"aws_glue_catalog_table\" \"aws_glue_catalog_table\" {",
+      "  name = \"MyCatalogTable\"",
+      "  database_name = \"MyCatalogDatabase\"",
+      "}"
+    ]
+  },
   "aws-resource-glue_connection": {
     "description": "Defines glue_connection",
     "prefix": "tf-aws-resource-glue_connection",
@@ -10680,6 +10808,15 @@
       "}"
     ]
   },
+  "aws-resource-sns_sms_peferences": {
+    "description": "Defines sns_sms_peferences",
+    "prefix": "tf-aws-resource-sns_sms_peferences",
+    "body": [
+      "resource \"aws_sns_sms_preferences\" \"update_sms_prefs\" {",
+      "",
+      "}"
+    ]
+  },
   "aws-resource-sns_topic": {
     "description": "Defines sns_topic",
     "prefix": "tf-aws-resource-sns_topic",
@@ -10781,20 +10918,22 @@
       "  valid_until         = \"2019-11-04T20:44:20Z\"",
       "",
       "  launch_specification {",
-      "    instance_type     = \"m4.10xlarge\"",
-      "    ami               = \"ami-1234\"",
-      "    spot_price        = \"2.793\"",
-      "    placement_tenancy = \"dedicated\"",
+      "    instance_type             = \"m4.10xlarge\"",
+      "    ami                       = \"ami-1234\"",
+      "    spot_price                = \"2.793\"",
+      "    placement_tenancy         = \"dedicated\"",
+      "    iam_instance_profile_arn  = \"${aws_iam_instance_profile.example.arn}\"",
       "  }",
       "",
       "  launch_specification {",
-      "    instance_type     = \"m4.4xlarge\"",
-      "    ami               = \"ami-5678\"",
-      "    key_name          = \"my-key\"",
-      "    spot_price        = \"1.117\"",
-      "    availability_zone = \"us-west-1a\"",
-      "    subnet_id         = \"subnet-1234\"",
-      "    weighted_capacity = 35",
+      "    instance_type             = \"m4.4xlarge\"",
+      "    ami                       = \"ami-5678\"",
+      "    key_name                  = \"my-key\"",
+      "    spot_price                = \"1.117\"",
+      "    iam_instance_profile_arn  = \"${aws_iam_instance_profile.example.arn}\"",
+      "    availability_zone         = \"us-west-1a\"",
+      "    subnet_id                 = \"subnet-1234\"",
+      "    weighted_capacity         = 35",
       "",
       "    root_block_device {",
       "      volume_size = \"300\"",
@@ -12379,6 +12518,20 @@
       "}"
     ]
   },
+  "azurerm-data-cosmosdb_account": {
+    "description": "Defines cosmosdb_account",
+    "prefix": "tf-azurerm-data-cosmosdb_account",
+    "body": [
+      "data \"azurerm_cosmosdb_account\" \"test\" {",
+      "  name                = \"tfex-cosmosdb-account\"",
+      "  resource_group_name = \"tfex-cosmosdb-account-rg\"",
+      "}",
+      "",
+      "output \"cosmosdb_account_endpoint\" {",
+      "  value = \"${data.azurerm_cosmosdb_account.jobs.endpoint}\"",
+      "}"
+    ]
+  },
   "azurerm-data-dns_zone": {
     "description": "Defines dns_zone",
     "prefix": "tf-azurerm-data-dns_zone",
@@ -12421,6 +12574,20 @@
       "}"
     ]
   },
+  "azurerm-data-key_vault": {
+    "description": "Defines key_vault",
+    "prefix": "tf-azurerm-data-key_vault",
+    "body": [
+      "data \"azurerm_key_vault\" \"test\" {",
+      "  name                = \"mykeyvault\"",
+      "  resource_group_name = \"some-resource-group\"",
+      "}",
+      "",
+      "output \"vault_uri\" {",
+      "  value = \"${data.azurerm_key_vault.test.vault_uri}\"",
+      "}"
+    ]
+  },
   "azurerm-data-key_vault_access_policy": {
     "description": "Defines key_vault_access_policy",
     "prefix": "tf-azurerm-data-key_vault_access_policy",
@@ -12431,6 +12598,30 @@
       "",
       "output \"access_policy_key_permissions\" {",
       "  value = \"${data.azurerm_key_vault_access_policy.key_permissions}\"",
+      "}"
+    ]
+  },
+  "azurerm-data-key_vault_secret": {
+    "description": "Defines key_vault_secret",
+    "prefix": "tf-azurerm-data-key_vault_secret",
+    "body": [
+      "data \"azurerm_key_vault_secret\" \"test\" {",
+      "  name      = \"secret-sauce\"",
+      "  vault_uri = \"https://rickslab.vault.azure.net/\"",
+      "}",
+      "",
+      "output \"secret_value\" {",
+      "  value = \"${data.azurerm_key_vault_secret.test.value}\"",
+      "}"
+    ]
+  },
+  "azurerm-data-kubernetes_cluster": {
+    "description": "Defines kubernetes_cluster",
+    "prefix": "tf-azurerm-data-kubernetes_cluster",
+    "body": [
+      "data \"azurerm_kubernetes_cluster\" \"test\" {",
+      "  name                = \"myakscluster\"",
+      "  resource_group_name = \"my-example-resource-group\"",
       "}"
     ]
   },
@@ -12635,6 +12826,16 @@
       "",
       "output \"custom_role_definition_id\" {",
       "  value = \"${data.azurerm_role_definition.custom.id}\"",
+      "}"
+    ]
+  },
+  "azurerm-data-route_table": {
+    "description": "Defines route_table",
+    "prefix": "tf-azurerm-data-route_table",
+    "body": [
+      "data \"azurerm_route_table\" \"test\" {",
+      "  name                = \"myroutetable\"",
+      "  resource_group_name = \"some-resource-group\"",
       "}"
     ]
   },
@@ -15423,6 +15624,29 @@
       "}"
     ]
   },
+  "azurerm-resource-relay_namespace": {
+    "description": "Defines relay_namespace",
+    "prefix": "tf-azurerm-resource-relay_namespace",
+    "body": [
+      "resource \"azurerm_resource_group\" \"test\" {",
+      "  name     = \"example-resources\"",
+      "  location = \"West Europe\"",
+      "}",
+      "",
+      "resource \"azurerm_relay_namespace\" \"test\" {",
+      "  name                = \"example-relay\"",
+      "  location            = \"${azurerm_resource_group.test.location}\"",
+      "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
+      "  sku {",
+      "    name = \"Standard\"",
+      "  }",
+      "",
+      "  tags {",
+      "    source = \"terraform\"",
+      "  }",
+      "}"
+    ]
+  },
   "azurerm-resource-resource_group": {
     "description": "Defines resource_group",
     "prefix": "tf-azurerm-resource-resource_group",
@@ -15543,7 +15767,7 @@
       "",
       "    quota {",
       "        max_job_count            = 5",
-      "        max_retry_interval       = 24",
+      "        max_recurrence_interval  = 24",
       "        max_recurrence_frequency = \"hour\"",
       "    }",
       "}",
@@ -20043,6 +20267,27 @@
       "}"
     ]
   },
+  "google-resource-cloudbuild_trigger": {
+    "description": "Defines cloudbuild_trigger",
+    "prefix": "tf-google-resource-cloudbuild_trigger",
+    "body": [
+      "resource \"google_cloudbuild_trigger\" \"build_trigger\" {",
+      "  project  = \"my-project\"",
+      "  trigger_template {",
+      "    branch_name = \"master\"",
+      "    project     = \"my-project\"",
+      "    repo_name   = \"some-repo\"",
+      "  }",
+      "  build {",
+      "    images = [\"gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA\"]",
+      "    step {",
+      "      name = \"gcr.io/cloud-builders/docker\"",
+      "      args = \"build -t gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA -f Dockerfile .\"",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
   "google-resource-cloudfunctions_function": {
     "description": "Defines cloudfunctions_function",
     "prefix": "tf-google-resource-cloudfunctions_function",
@@ -24302,6 +24547,15 @@
       "}"
     ]
   },
+  "nsxt-data-certificate": {
+    "description": "Defines certificate",
+    "prefix": "tf-nsxt-data-certificate",
+    "body": [
+      "data \"nsxt_certificate\" \"CA\" {",
+      "  display_name = \"ca-cert\"",
+      "}"
+    ]
+  },
   "nsxt-data-edge_cluster": {
     "description": "Defines edge_cluster",
     "prefix": "tf-nsxt-data-edge_cluster",
@@ -24437,6 +24691,27 @@
       "  service_binding {",
       "    target_id   = \"${nsxt_dhcp_relay_service.dr_service.id}\"",
       "    target_type = \"LogicalService\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-dhcp_server_profile": {
+    "description": "Defines dhcp_server_profile",
+    "prefix": "tf-nsxt-resource-dhcp_server_profile",
+    "body": [
+      "data \"nsxt_edge_cluster\" \"edge_cluster1\" {",
+      "  display_name = \"edgecluster\"",
+      "}",
+      "",
+      "resource \"nsxt_dhcp_server_profile\" \"dhcp_profile\" {",
+      "  description                 = \"dhcp_profile provisioned by Terraform\"",
+      "  display_name                = \"dhcp_profile\"",
+      "  edge_cluster_id             = \"${data.nsxt_edge_cluster.edge_cluster1.id}\"",
+      "  edge_cluster_member_indexes = [0, 1]",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
       "  }",
       "}"
     ]
@@ -24666,6 +24941,225 @@
       "    scope = \"color\"",
       "    tag   = \"blue\"",
       "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_http_monitor": {
+    "description": "Defines lb_http_monitor",
+    "prefix": "tf-nsxt-resource-lb_http_monitor",
+    "body": [
+      "",
+      "resource \"nsxt_lb_http_monitor\" \"lb_http_monitor\" {",
+      "  description  = \"lb_http_monitor provisioned by Terraform\"",
+      "  display_name = \"lb_http_monitor\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
+      "  fall_count            = 2",
+      "  interval              = 5",
+      "  monitor_port          = 8080",
+      "  rise_count            = 5",
+      "  timeout               = 10",
+      "  request_body          = \"ping\"",
+      "",
+      "  request_header {",
+      "    name  = \"X-healthcheck\"",
+      "    value = \"NSX\"",
+      "  }",
+      "",
+      "  request_method        = \"HEAD\"",
+      "  request_url           = \"/index.html\"",
+      "  request_version       = \"HTTP_VERSION_1_1\"",
+      "  response_body         = \"pong\"",
+      "  response_status_codes = [200, 304]",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_https_monitor": {
+    "description": "Defines lb_https_monitor",
+    "prefix": "tf-nsxt-resource-lb_https_monitor",
+    "body": [
+      "",
+      "data \"nsxt_certificate\" \"client\" {",
+      "  display_name = \"client-1\"",
+      "}",
+      "",
+      "data \"nsxt_certificate\" \"CA\" {",
+      "  display_name = \"ca-1\"",
+      "}",
+      "",
+      "resource \"nsxt_lb_https_monitor\" \"lb_https_monitor\" {",
+      "  description             = \"lb_https_monitor provisioned by Terraform\"",
+      "  display_name            = \"lb_https_monitor\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
+      "  fall_count              = 2",
+      "  interval                = 5",
+      "  monitor_port            = 8080",
+      "  rise_count              = 5",
+      "  timeout                 = 10",
+      "  certificate_chain_depth = 2",
+      "  ciphers                 = [\"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256\", \"TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384\"]",
+      "  client_certificate_id   = \"${data.nsxt_certificate.client.id}\"",
+      "  protocols               = [\"TLS_V1_2\"]",
+      "  request_body            = \"ping\"",
+      "",
+      "  request_header {",
+      "    name  = \"X-healthcheck\"",
+      "    value = \"NSX\"",
+      "  }",
+      "",
+      "  request_method          = \"HEAD\"",
+      "  request_url             = \"/index.html\"",
+      "  request_version         = \"HTTP_VERSION_1_1\"",
+      "  response_body           = \"pong\"",
+      "  response_status_codes   = [200, 304]",
+      "  server_auth             = \"REQUIRED\"",
+      "  server_auth_ca_ids      = [\"${data.nsxt_certificate.CA.id}\"]",
+      "  server_auth_crl_ids     = [\"78ba3814-bfe1-45e5-89d3-46862bed7896\"]",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_icmp_monitor": {
+    "description": "Defines lb_icmp_monitor",
+    "prefix": "tf-nsxt-resource-lb_icmp_monitor",
+    "body": [
+      "resource \"nsxt_lb_icmp_monitor\" \"lb_icmp_monitor\" {",
+      "  description  = \"lb_icmp_monitor provisioned by Terraform\"",
+      "  display_name = \"lb_icmp_monitor\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
+      "  fall_count   = 3",
+      "  interval     = 5",
+      "  monitor_port = 7887",
+      "  rise_count   = 3",
+      "  timeout      = 10",
+      "  data_length  = 56",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_tcp_monitor": {
+    "description": "Defines lb_tcp_monitor",
+    "prefix": "tf-nsxt-resource-lb_tcp_monitor",
+    "body": [
+      "resource \"nsxt_lb_tcp_monitor\" \"lb_tcp_monitor\" {",
+      "  description  = \"lb_tcp_monitor provisioned by Terraform\"",
+      "  display_name = \"lb_tcp_monitor\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
+      "  fall_count   = 3",
+      "  interval     = 5",
+      "  monitor_port = 7887",
+      "  rise_count   = 3",
+      "  timeout      = 10",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_udp_monitor": {
+    "description": "Defines lb_udp_monitor",
+    "prefix": "tf-nsxt-resource-lb_udp_monitor",
+    "body": [
+      "resource \"nsxt_lb_udp_monitor\" \"lb_udp_monitor\" {",
+      "  description  = \"lb_udp_monitor provisioned by Terraform\"",
+      "  display_name = \"lb_udp_monitor\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
+      "  fall_count   = 3",
+      "  interval     = 5",
+      "  monitor_port = 7887",
+      "  rise_count   = 3",
+      "  timeout      = 10",
+      "  send         = \"hi\"",
+      "  receive      = \"hello\"",
+      "}"
+    ]
+  },
+  "nsxt-resource-logical_dhcp_port": {
+    "description": "Defines logical_dhcp_port",
+    "prefix": "tf-nsxt-resource-logical_dhcp_port",
+    "body": [
+      "resource \"nsxt_logical_dhcp_server\" \"logical_dhcp_server\" {",
+      "  display_name    = \"logical_dhcp_server\"",
+      "  dhcp_profile_id = \"${nsxt_dhcp_server_profile.PRF.id}\"",
+      "  dhcp_server_ip  = \"1.1.1.10/24\"",
+      "  gateway_ip      = \"1.1.1.20\"",
+      "}",
+      "",
+      "resource \"nsxt_logical_switch\" \"switch\" {",
+      "  display_name      = \"LS1\"",
+      "  admin_state       = \"UP\"",
+      "  transport_zone_id = \"${data.nsxt_transport_zone.transport_zone.id}\"",
+      "}",
+      "",
+      "resource \"nsxt_logical_dhcp_port\" \"dhcp_port\" {",
+      "  admin_state       = \"UP\"",
+      "  description       = \"LP1 provisioned by Terraform\"",
+      "  display_name      = \"LP1\"",
+      "  logical_switch_id = \"${nsxt_logical_switch.switch.id}\"",
+      "  dhcp_server_id    = \"${nsxt_logical_dhcp_server.logical_dhcp_server.id}\"",
+      "",
+      "  tag {",
+      "    scope = \"color\"",
+      "    tag   = \"blue\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-logical_dhcp_server": {
+    "description": "Defines logical_dhcp_server",
+    "prefix": "tf-nsxt-resource-logical_dhcp_server",
+    "body": [
+      "data \"nsxt_edge_cluster\" \"edgecluster\" {",
+      "  display_name = \"edgecluster1\"",
+      "}",
+      "",
+      "resource \"nsxt_dhcp_server_profile\" \"serverprofile\" {",
+      "  edge_cluster_id = \"${data.nsxt_edge_cluster.edgecluster.id}\"",
+      "}",
+      "",
+      "resource \"nsxt_logical_dhcp_server\" \"logical_dhcp_server\" {",
+      "  display_name     = \"logical_dhcp_server\"",
+      "  description      = \"logical_dhcp_server provisioned by Terraform\"",
+      "  dhcp_profile_id  = \"${nsxt_dhcp_server_profile.PRF.id}\"",
+      "  dhcp_server_ip   = \"1.1.1.10/24\"",
+      "  gateway_ip       = \"1.1.1.20\"",
+      "  domain_name      = \"abc.com\"",
+      "  dns_name_servers = [\"5.5.5.5\"]",
+      "",
+      "  dhcp_option_121 {",
+      "    network  = \"6.6.6.6/24\"",
+      "    next_hop = \"1.1.1.21\"",
+      "  }",
+      "",
+      "  dhcp_generic_option {",
+      "    code = \"119\"",
+      "    values = [\"abc\"]",
+      "  }",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
       "}"
     ]
   },
@@ -24901,6 +25395,18 @@
       "    scope = \"color\"",
       "    tag   = \"blue\"",
       "  }",
+      "}"
+    ]
+  },
+  "oneandone-resource-block_storage": {
+    "description": "Defines block_storage",
+    "prefix": "tf-oneandone-resource-block_storage",
+    "body": [
+      "resource \"oneandone_block_storage\" \"storage\" {",
+      "  name = \"test_blk_storage1\"",
+      "  description = \"testing_blk_storage\"",
+      "  size = 20",
+      "  datacenter = \"US\"",
       "}"
     ]
   },
@@ -25172,6 +25678,16 @@
       "      rights = \"RW\"",
       "    }",
       "  ]",
+      "}"
+    ]
+  },
+  "oneandone-resource-ssh_key": {
+    "description": "Defines ssh_key",
+    "prefix": "tf-oneandone-resource-ssh_key",
+    "body": [
+      "resource \"oneandone_ssh_key\" \"sshkey\" {",
+      "  name = \"test_ssh_key\"",
+      "  description = \"testing_ssh_keys\"",
       "}"
     ]
   },
@@ -26306,6 +26822,20 @@
       "}"
     ]
   },
+  "openstack-resource-networking_floatingip_associate_v2": {
+    "description": "Defines networking_floatingip_associate_v2",
+    "prefix": "tf-openstack-resource-networking_floatingip_associate_v2",
+    "body": [
+      "resource \"openstack_networking_port_v2\" \"port_1\" {",
+      "  network_id = \"a5bbd213-e1d3-49b6-aed1-9df60ea94b9a\"",
+      "}",
+      "",
+      "resource \"openstack_networking_floatingip_associate_v2\" \"fip_1\" {",
+      "  floating_ip = \"1.2.3.4\"",
+      "  port_id = \"${openstack_networking_port_v2.port_1.id}\"",
+      "}"
+    ]
+  },
   "openstack-resource-networking_floatingip_v2": {
     "description": "Defines networking_floatingip_v2",
     "prefix": "tf-openstack-resource-networking_floatingip_v2",
@@ -26481,6 +27011,33 @@
       "}"
     ]
   },
+  "openstack-resource-networking_subnet_route_v2": {
+    "description": "Defines networking_subnet_route_v2",
+    "prefix": "tf-openstack-resource-networking_subnet_route_v2",
+    "body": [
+      "resource \"openstack_networking_router_v2\" \"router_1\" {",
+      "  name           = \"router_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"openstack_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"openstack_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${openstack_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"openstack_networking_subnet_route_v2\" \"subnet_route_1\" {",
+      "  subnet_id        = \"${openstack_networking_subnet_v2.subnet_1.id}\"",
+      "  destination_cidr = \"10.0.1.0/24\"",
+      "  next_hop         = \"192.168.199.254\"",
+      "}"
+    ]
+  },
   "openstack-resource-networking_subnet_v2": {
     "description": "Defines networking_subnet_v2",
     "prefix": "tf-openstack-resource-networking_subnet_v2",
@@ -26501,7 +27058,7 @@
     "prefix": "tf-openstack-resource-networking_subnetpool_v2",
     "body": [
       "resource \"openstack_networking_subnetpool_v2\" \"subnetpool_1\" {",
-      "  name = \"my_ipv6_pool\"",
+      "  name = \"subnetpool_1\"",
       "  ip_version = 6",
       "  prefixes = [\"fdf7:b13d:dead:beef::/64\", \"fd65:86cc:a334:39b7::/64\"]",
       "}"
@@ -26553,6 +27110,27 @@
       "               }",
       "JSON",
       "",
+      "}"
+    ]
+  },
+  "openstack-resource-vpnaas_endpoint_group_v2": {
+    "description": "Defines vpnaas_endpoint_group_v2",
+    "prefix": "tf-openstack-resource-vpnaas_endpoint_group_v2",
+    "body": [
+      "resource \"openstack_vpnaas_endpoint_group_v2\" \"group_1\" {",
+      "  name = \"Group 1\"",
+      "  type = \"cidr\"",
+      "  endpoints = [\"10.2.0.0/24\",",
+      "        \"10.3.0.0/24\",]",
+      "}"
+    ]
+  },
+  "openstack-resource-vpnaas_ike_policy_v2": {
+    "description": "Defines vpnaas_ike_policy_v2",
+    "prefix": "tf-openstack-resource-vpnaas_ike_policy_v2",
+    "body": [
+      "resource \"openstack_vpnaas_ike_policy_v2\" \"policy_1\" {",
+      "  name = \"my_policy\"",
       "}"
     ]
   },
@@ -26746,10 +27324,13 @@
     ]
   },
   "opentelekomcloud-data-s3_bucket_object": {
-    "description": "Defines s3_bucket_object",
+    "description": "Defines s3_bucket_object data source",
     "prefix": "tf-opentelekomcloud-data-s3_bucket_object",
     "body": [
-      "# empty snippet",
+      "data \"opentelekomcloud_s3_bucket_object\" \"${1:object_name}\" {",
+      "  bucket = \"my-test-bucket\"",
+      "  key    = \"hello-world.zip\"",
+      "}",
       ""
     ]
   },
@@ -30191,6 +30772,61 @@
       "}"
     ]
   },
+  "tf-aws": {
+    "prefix": "tf-aws",
+    "body": [
+      "/*",
+      "# tf_aws_${1:module_name}",
+      "",
+      "A terraform module to ${2:describe a thing}",
+      "*/",
+      "",
+      "provider \"aws\" {",
+      "  version = \">~ ${3:1.6.0}\"",
+      "}",
+      ""
+    ],
+    "description": "The beginnings of a main.tf"
+  },
+  "tf-conditional": {
+    "prefix": "tf-conditional",
+    "body": [
+      "${var.${1:if_this} == \"${2:equals}\" ? ${3:then} : ${4:else}}"
+    ],
+    "description": "A terraform conditional."
+  },
+  "tf-locals": {
+    "prefix": "tf-locals",
+    "body": [
+      "locals {",
+      "  ${1:key}  = \"${2:value}\"",
+      "}",
+      ""
+    ],
+    "description": "An empty definition of locals."
+  },
+  "tf-out": {
+    "prefix": "tf-out",
+    "body": [
+      "output \"${1:output}\" {",
+      "  description = \"${2:description}\"",
+      "  value       = \"${${3:value}}\"",
+      "}",
+      ""
+    ],
+    "description": "A terraform output with a description."
+  },
+  "tf-var": {
+    "prefix": "tf-var",
+    "body": [
+      "variable \"${1:variable_name}\" {",
+      "  description = \"${2:description}\"",
+      "  default     = \"${3:default}\"",
+      "}",
+      ""
+    ],
+    "description": "A terraform variable with a default and description."
+  },
   "tls-data-public_key": {
     "description": "Defines public_key",
     "prefix": "tf-tls-data-public_key",
@@ -30908,6 +31544,33 @@
       "}"
     ]
   },
+  "vault-resource-aws_auth_backend_role_tag": {
+    "description": "Defines aws_auth_backend_role_tag",
+    "prefix": "tf-vault-resource-aws_auth_backend_role_tag",
+    "body": [
+      "resource \"vault_auth_backend\" \"aws\" {",
+      "  path = \"%s\"",
+      "  type = \"aws\"",
+      "}",
+      "",
+      "resource \"vault_aws_auth_backend_role\" \"role\" {",
+      "  backend          = \"${vault_auth_backend.aws.path}\"",
+      "  role             = \"%s\"",
+      "  auth_type        = \"ec2\"",
+      "  bound_account_id = \"123456789012\"",
+      "  policies         = [\"dev\", \"prod\", \"qa\", \"test\"]",
+      "  role_tag         = \"VaultRoleTag\"",
+      "}",
+      "",
+      "resource \"vault_aws_auth_backend_role_tag\" \"test\" {",
+      "  backend     = \"${vault_auth_backend.aws.path}\"",
+      "  role        = \"${vault_aws_auth_backend_role.role.role}\"",
+      "  policies    = [\"prod\", \"dev\", \"test\"]",
+      "  max_ttl     = \"1h\"",
+      "  instance_id = \"i-1234567\"",
+      "}"
+    ]
+  },
   "vault-resource-aws_auth_backend_sts_role": {
     "description": "Defines aws_auth_backend_sts_role",
     "prefix": "tf-vault-resource-aws_auth_backend_sts_role",
@@ -31522,6 +32185,348 @@
       "}"
     ]
   },
+  "vsphere-resource-compute_cluster_host_group": {
+    "description": "Defines compute_cluster_host_group",
+    "prefix": "tf-vsphere-resource-compute_cluster_host_group",
+    "body": [
+      "variable \"datacenter\" {",
+      "  default = \"dc1\"",
+      "}",
+      "",
+      "variable \"hosts\" {",
+      "  default = [",
+      "    \"esxi1\",",
+      "    \"esxi2\",",
+      "    \"esxi3\",",
+      "  ]",
+      "}",
+      "",
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"${var.datacenter}\"",
+      "}",
+      "",
+      "data \"vsphere_host\" \"hosts\" {",
+      "  count         = \"${length(var.hosts)}\"",
+      "  name          = \"${var.hosts[count.index]}\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster\" \"compute_cluster\" {",
+      "  name            = \"terraform-compute-cluster-test\"",
+      "  datacenter_id   = \"${data.vsphere_datacenter.dc.id}\"",
+      "  host_system_ids = [\"${data.vsphere_host.hosts.*.id}\"]",
+      "",
+      "  drs_enabled          = true",
+      "  drs_automation_level = \"fullyAutomated\"",
+      "",
+      "  ha_enabled = true",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_host_group\" \"cluster_host_group\" {",
+      "  name                = \"terraform-test-cluster-host-group\"",
+      "  compute_cluster_id  = \"${vsphere_compute_cluster.compute_cluster.id}\"",
+      "  host_system_ids     = [\"${data.vsphere_host.hosts.*.id}\"]",
+      "}"
+    ]
+  },
+  "vsphere-resource-compute_cluster_vm_affinity_rule": {
+    "description": "Defines compute_cluster_vm_affinity_rule",
+    "prefix": "tf-vsphere-resource-compute_cluster_vm_affinity_rule",
+    "body": [
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"dc1\"",
+      "}",
+      "",
+      "data \"vsphere_datastore\" \"datastore\" {",
+      "  name          = \"datastore1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_compute_cluster\" \"cluster\" {",
+      "  name          = \"cluster1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_network\" \"network\" {",
+      "  name          = \"network1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_virtual_machine\" \"vm\" {",
+      "  count            = 2",
+      "  name             = \"terraform-test-${count.index}\"",
+      "  resource_pool_id = \"${data.vsphere_compute_cluster.cluster.resource_pool_id}\"",
+      "  datastore_id     = \"${data.vsphere_datastore.datastore.id}\"",
+      "",
+      "  num_cpus = 2",
+      "  memory   = 2048",
+      "  guest_id = \"other3xLinux64Guest\"",
+      "",
+      "  network_interface {",
+      "    network_id = \"${data.vsphere_network.network.id}\"",
+      "  }",
+      "",
+      "  disk {",
+      "    label = \"disk0\"",
+      "    size  = 20",
+      "  }",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_vm_affinity_rule\" \"cluster_vm_affinity_rule\" {",
+      "  name                = \"terraform-test-cluster-vm-affinity-rule\"",
+      "  compute_cluster_id  = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  virtual_machine_ids = [\"${vsphere_virtual_machine.vm.*.id}\"]",
+      "}"
+    ]
+  },
+  "vsphere-resource-compute_cluster_vm_anti_affinity_rule": {
+    "description": "Defines compute_cluster_vm_anti_affinity_rule",
+    "prefix": "tf-vsphere-resource-compute_cluster_vm_anti_affinity_rule",
+    "body": [
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"dc1\"",
+      "}",
+      "",
+      "data \"vsphere_datastore\" \"datastore\" {",
+      "  name          = \"datastore1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_compute_cluster\" \"cluster\" {",
+      "  name          = \"cluster1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_network\" \"network\" {",
+      "  name          = \"network1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_virtual_machine\" \"vm\" {",
+      "  count            = 2",
+      "  name             = \"terraform-test-${count.index}\"",
+      "  resource_pool_id = \"${data.vsphere_compute_cluster.cluster.resource_pool_id}\"",
+      "  datastore_id     = \"${data.vsphere_datastore.datastore.id}\"",
+      "",
+      "  num_cpus = 2",
+      "  memory   = 2048",
+      "  guest_id = \"other3xLinux64Guest\"",
+      "",
+      "  network_interface {",
+      "    network_id = \"${data.vsphere_network.network.id}\"",
+      "  }",
+      "",
+      "  disk {",
+      "    label = \"disk0\"",
+      "    size  = 20",
+      "  }",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_vm_anti_affinity_rule\" \"cluster_vm_anti_affinity_rule\" {",
+      "  name                = \"terraform-test-cluster-vm-anti-affinity-rule\"",
+      "  compute_cluster_id  = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  virtual_machine_ids = [\"${vsphere_virtual_machine.vm.*.id}\"]",
+      "}"
+    ]
+  },
+  "vsphere-resource-compute_cluster_vm_dependency_rule": {
+    "description": "Defines compute_cluster_vm_dependency_rule",
+    "prefix": "tf-vsphere-resource-compute_cluster_vm_dependency_rule",
+    "body": [
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"dc1\"",
+      "}",
+      "",
+      "data \"vsphere_datastore\" \"datastore\" {",
+      "  name          = \"datastore1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_compute_cluster\" \"cluster\" {",
+      "  name          = \"cluster1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_network\" \"network\" {",
+      "  name          = \"network1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_virtual_machine\" \"vm1\" {",
+      "  name             = \"terraform-test1\"",
+      "  resource_pool_id = \"${data.vsphere_compute_cluster.cluster.resource_pool_id}\"",
+      "  datastore_id     = \"${data.vsphere_datastore.datastore.id}\"",
+      "",
+      "  num_cpus = 2",
+      "  memory   = 2048",
+      "  guest_id = \"other3xLinux64Guest\"",
+      "",
+      "  network_interface {",
+      "    network_id = \"${data.vsphere_network.network.id}\"",
+      "  }",
+      "",
+      "  disk {",
+      "    label = \"disk0\"",
+      "    size  = 20",
+      "  }",
+      "}",
+      "",
+      "resource \"vsphere_virtual_machine\" \"vm2\" {",
+      "  name             = \"terraform-test2\"",
+      "  resource_pool_id = \"${data.vsphere_compute_cluster.cluster.resource_pool_id}\"",
+      "  datastore_id     = \"${data.vsphere_datastore.datastore.id}\"",
+      "",
+      "  num_cpus = 2",
+      "  memory   = 2048",
+      "  guest_id = \"other3xLinux64Guest\"",
+      "",
+      "  network_interface {",
+      "    network_id = \"${data.vsphere_network.network.id}\"",
+      "  }",
+      "",
+      "  disk {",
+      "    label = \"disk0\"",
+      "    size  = 20",
+      "  }",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_vm_group\" \"cluster_vm_group1\" {",
+      "  name                = \"terraform-test-cluster-vm-group1\"",
+      "  compute_cluster_id  = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  virtual_machine_ids = [\"${vsphere_virtual_machine.vm1.id}\"]",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_vm_group\" \"cluster_vm_group2\" {",
+      "  name                = \"terraform-test-cluster-vm-group2\"",
+      "  compute_cluster_id  = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  virtual_machine_ids = [\"${vsphere_virtual_machine.vm2.id}\"]",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_vm_dependency_rule\" \"cluster_vm_dependency_rule\" {",
+      "  compute_cluster_id       = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  name                     = \"terraform-test-cluster-vm-dependency-rule\"",
+      "  dependency_vm_group_name = \"${vsphere_compute_cluster_vm_group.cluster_vm_group1.name}\"",
+      "  vm_group_name            = \"${vsphere_compute_cluster_vm_group.cluster_vm_group2.name}\"",
+      "}"
+    ]
+  },
+  "vsphere-resource-compute_cluster_vm_group": {
+    "description": "Defines compute_cluster_vm_group",
+    "prefix": "tf-vsphere-resource-compute_cluster_vm_group",
+    "body": [
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"dc1\"",
+      "}",
+      "",
+      "data \"vsphere_datastore\" \"datastore\" {",
+      "  name          = \"datastore1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_compute_cluster\" \"cluster\" {",
+      "  name          = \"cluster1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_network\" \"network\" {",
+      "  name          = \"network1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_virtual_machine\" \"vm\" {",
+      "  count            = 2",
+      "  name             = \"terraform-test-${count.index}\"",
+      "  resource_pool_id = \"${data.vsphere_compute_cluster.cluster.resource_pool_id}\"",
+      "  datastore_id     = \"${data.vsphere_datastore.datastore.id}\"",
+      "",
+      "  num_cpus = 2",
+      "  memory   = 2048",
+      "  guest_id = \"other3xLinux64Guest\"",
+      "",
+      "  network_interface {",
+      "    network_id = \"${data.vsphere_network.network.id}\"",
+      "  }",
+      "",
+      "  disk {",
+      "    label = \"disk0\"",
+      "    size  = 20",
+      "  }",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_vm_group\" \"cluster_vm_group\" {",
+      "  name                = \"terraform-test-cluster-vm-group\"",
+      "  compute_cluster_id  = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  virtual_machine_ids = [\"${vsphere_virtual_machine.vm.*.id}\"]",
+      "}"
+    ]
+  },
+  "vsphere-resource-compute_cluster_vm_host_rule": {
+    "description": "Defines compute_cluster_vm_host_rule",
+    "prefix": "tf-vsphere-resource-compute_cluster_vm_host_rule",
+    "body": [
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"dc1\"",
+      "}",
+      "",
+      "data \"vsphere_datastore\" \"datastore\" {",
+      "  name          = \"datastore1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_compute_cluster\" \"cluster\" {",
+      "  name          = \"cluster1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_host\" \"host\" {",
+      "  name          = \"esxi1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_network\" \"network\" {",
+      "  name          = \"network1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_virtual_machine\" \"vm\" {",
+      "  name             = \"terraform-test\"",
+      "  resource_pool_id = \"${data.vsphere_compute_cluster.cluster.resource_pool_id}\"",
+      "  datastore_id     = \"${data.vsphere_datastore.datastore.id}\"",
+      "",
+      "  num_cpus = 2",
+      "  memory   = 2048",
+      "  guest_id = \"other3xLinux64Guest\"",
+      "",
+      "  network_interface {",
+      "    network_id = \"${data.vsphere_network.network.id}\"",
+      "  }",
+      "",
+      "  disk {",
+      "    label = \"disk0\"",
+      "    size  = 20",
+      "  }",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_vm_group\" \"cluster_vm_group\" {",
+      "  name                = \"terraform-test-cluster-vm-group\"",
+      "  compute_cluster_id  = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  virtual_machine_ids = [\"${vsphere_virtual_machine.vm.id}\"]",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_host_group\" \"cluster_host_group\" {",
+      "  name               = \"terraform-test-cluster-vm-group\"",
+      "  compute_cluster_id = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  host_system_ids    = [\"${data.vsphere_host.host.id}\"]",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster_vm_host_rule\" \"cluster_vm_host_rule\" {",
+      "  compute_cluster_id       = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  name                     = \"terraform-test-cluster-vm-host-rule\"",
+      "  vm_group_name            = \"${vsphere_compute_cluster_vm_group.cluster_vm_group.name}\"",
+      "  affinity_host_group_name = \"${vsphere_compute_cluster_host_group.cluster_host_group.name}\"",
+      "}"
+    ]
+  },
   "vsphere-resource-custom_attribute": {
     "description": "Defines custom_attribute",
     "prefix": "tf-vsphere-resource-custom_attribute",
@@ -31585,6 +32590,56 @@
       "  type         = \"NFS\"",
       "  remote_hosts = [\"nfs\"]",
       "  remote_path  = \"/export/terraform-test2\"",
+      "}"
+    ]
+  },
+  "vsphere-resource-datastore_cluster_vm_anti_affinity_rule": {
+    "description": "Defines datastore_cluster_vm_anti_affinity_rule",
+    "prefix": "tf-vsphere-resource-datastore_cluster_vm_anti_affinity_rule",
+    "body": [
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"dc1\"",
+      "}",
+      "",
+      "data \"vsphere_datastore_cluster\" \"datastore_cluster\" {",
+      "  name          = \"datastore-cluster1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_compute_cluster\" \"cluster\" {",
+      "  name          = \"cluster1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_network\" \"network\" {",
+      "  name          = \"network1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_virtual_machine\" \"vm\" {",
+      "  count                = 2",
+      "  name                 = \"terraform-test-${count.index}\"",
+      "  resource_pool_id     = \"${data.vsphere_compute_cluster.cluster.resource_pool_id}\"",
+      "  datastore_cluster_id = \"${data.vsphere_datastore_cluster.datastore_cluster.id}\"",
+      "",
+      "  num_cpus = 2",
+      "  memory   = 2048",
+      "  guest_id = \"other3xLinux64Guest\"",
+      "",
+      "  network_interface {",
+      "    network_id = \"${data.vsphere_network.network.id}\"",
+      "  }",
+      "",
+      "  disk {",
+      "    label = \"disk0\"",
+      "    size  = 20",
+      "  }",
+      "}",
+      "",
+      "resource \"vsphere_datastore_cluster_vm_anti_affinity_rule\" \"cluster_vm_anti_affinity_rule\" {",
+      "  name                 = \"terraform-test-datastore-cluster-vm-anti-affinity-rule\"",
+      "  datastore_cluster_id = \"${data.vsphere_datastore_cluster.datastore_cluster.id}\"",
+      "  virtual_machine_ids  = [\"${vsphere_virtual_machine.vm.*.id}\"]",
       "}"
     ]
   },
@@ -31707,6 +32762,49 @@
       "}"
     ]
   },
+  "vsphere-resource-dpm_host_override": {
+    "description": "Defines dpm_host_override",
+    "prefix": "tf-vsphere-resource-dpm_host_override",
+    "body": [
+      "variable \"datacenter\" {",
+      "  default = \"dc1\"",
+      "}",
+      "",
+      "variable \"hosts\" {",
+      "  default = [",
+      "    \"esxi1\",",
+      "    \"esxi2\",",
+      "    \"esxi3\",",
+      "  ]",
+      "}",
+      "",
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"${var.datacenter}\"",
+      "}",
+      "",
+      "data \"vsphere_host\" \"hosts\" {",
+      "  count         = \"${length(var.hosts)}\"",
+      "  name          = \"${var.hosts[count.index]}\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_compute_cluster\" \"compute_cluster\" {",
+      "  name            = \"terraform-compute-cluster-test\"",
+      "  datacenter_id   = \"${data.vsphere_datacenter.dc.id}\"",
+      "  host_system_ids = [\"${data.vsphere_host.hosts.*.id}\"]",
+      "",
+      "  drs_enabled          = true",
+      "  drs_automation_level = \"fullyAutomated\"",
+      "}",
+      "",
+      "resource \"vsphere_dpm_host_override\" \"dpm_host_override\" {",
+      "  compute_cluster_id   = \"${vsphere_compute_cluster.compute_cluster.id}\"",
+      "  host_system_id       = \"${data.vsphere_host.hosts.0.id}\"",
+      "  dpm_enabled          = true",
+      "  dpm_automation_level = \"automated\"",
+      "}"
+    ]
+  },
   "vsphere-resource-drs_vm_override": {
     "description": "Defines drs_vm_override",
     "prefix": "tf-vsphere-resource-drs_vm_override",
@@ -31784,6 +32882,56 @@
       "  path          = \"terraform-test-folder\"",
       "  type          = \"vm\"",
       "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}"
+    ]
+  },
+  "vsphere-resource-ha_vm_override": {
+    "description": "Defines ha_vm_override",
+    "prefix": "tf-vsphere-resource-ha_vm_override",
+    "body": [
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"dc1\"",
+      "}",
+      "",
+      "data \"vsphere_datastore\" \"datastore\" {",
+      "  name          = \"datastore1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_compute_cluster\" \"cluster\" {",
+      "  name          = \"cluster1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "data \"vsphere_network\" \"network\" {",
+      "  name          = \"network1\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_virtual_machine\" \"vm\" {",
+      "  name             = \"terraform-test\"",
+      "  resource_pool_id = \"${data.vsphere_compute_cluster.cluster.resource_pool_id}\"",
+      "  datastore_id     = \"${data.vsphere_datastore.datastore.id}\"",
+      "",
+      "  num_cpus = 2",
+      "  memory   = 2048",
+      "  guest_id = \"other3xLinux64Guest\"",
+      "",
+      "  network_interface {",
+      "    network_id = \"${data.vsphere_network.network.id}\"",
+      "  }",
+      "",
+      "  disk {",
+      "    label = \"disk0\"",
+      "    size  = 20",
+      "  }",
+      "}",
+      "",
+      "resource \"vsphere_ha_vm_override\" \"ha_vm_override\" {",
+      "  compute_cluster_id = \"${data.vsphere_compute_cluster.cluster.id}\"",
+      "  virtual_machine_id = \"${vsphere_virtual_machine.vm.id}\"",
+      "",
+      "  ha_vm_restart_priority = \"highest\"",
       "}"
     ]
   },
