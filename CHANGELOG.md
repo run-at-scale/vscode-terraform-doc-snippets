@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 * override and extra snippets now added through config
 * deprecated resources and data sources manually added for their successor
+* snippets file rebuilt and now has 1491 pulled from docs.
 
 ## [0.1.5](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.4...v0.1.5) (2018-05-04)
 
