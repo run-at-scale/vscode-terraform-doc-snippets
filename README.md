@@ -6,7 +6,7 @@
 
 ![Terraform](https://github.com/run-at-scale/vscode-terraform-doc-snippets/raw/master/assets/terraform_logo.png "Terraform doc snippets")
 
-A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured vscode snippets - ~1500 snippets in total!
+A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured VS Code snippets. Over 1600 snippets in total.
 
 ## Demo
 
@@ -23,15 +23,15 @@ excellent context which is important for understanding how infrastructure primit
 
 ## Features
 
-* All resources and data source snippets gathered from documentation. As docs improve, so do the snippets.
-* All snippets are delivered as a precompiled bundle - no dynamic lookups so your editor stays speedy.
-* Resource and data source name collisions avoided by including `data` or `resource` in each snippet prefix.
-* All providers listed in the terraform-providers organization are covered.
-* Ability to override or add additional snippets through configuration.
+- All resources and data source snippets gathered from documentation. As docs improve, so do the snippets.
+- All snippets are delivered as a pre-compiled bundle - no dynamic lookups so your editor stays speedy.
+- Resource and data source name collisions avoided by including `data` or `resource` in each snippet prefix.
+- All providers listed in the terraform-providers organization are covered.
+- Ability to override or add additional snippets through configuration.
 
 ## Known Issues
 
-* Issue #1 is probably that this is my first node project and I'm not to be trusted with the language. Help and review wanted! Tests needed.
+- Issue #1 is probably that this is my first node project and I'm not to be trusted with the language. Help and review wanted! Tests needed.
 
 ## Contributing
 

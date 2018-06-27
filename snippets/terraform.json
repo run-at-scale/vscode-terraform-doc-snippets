@@ -1,4 +1,20 @@
 {
+  "alicloud-data-db_instances": {
+    "description": "Defines db_instances",
+    "prefix": "tf-alicloud-data-db_instances",
+    "body": [
+      "data \"alicloud_db_instances\" \"dbs\" {",
+      "  name_regex = \"data-\\\\d+\"",
+      "  status     = \"Running\"",
+      "  tags       = <<EOF",
+      "{",
+      "  \"type\": \"database\",",
+      "  \"size\": \"tiny\"",
+      "}",
+      "EOF",
+      "}"
+    ]
+  },
   "alicloud-data-dns_domain_groups": {
     "description": "Defines alicloud_dns_groups data source",
     "prefix": "tf-alicloud-data-alicloud_dns_groups",
@@ -985,6 +1001,77 @@
       "  description = \"Hello KMS\"",
       "  deletion_window_in_days = \"7\"",
       "  is_enabled = true",
+      "}"
+    ]
+  },
+  "alicloud-resource-log_machine_group": {
+    "description": "Defines log_machine_group",
+    "prefix": "tf-alicloud-resource-log_machine_group",
+    "body": [
+      "resource \"alicloud_log_project\" \"example\" {",
+      "  name       = \"tf-log\"",
+      "  description = \"created by terraform\"",
+      "}",
+      "resource \"alicloud_log_machine_group\" \"example\" {",
+      "    project = \"${alicloud_log_project.example.name}\"",
+      "    name = \"tf-machine-group\"",
+      "    identify_type = \"ip\"",
+      "    topic = \"terraform\"",
+      "    identify_list = [\"10.0.0.1\", \"10.0.0.2\"]",
+      "}"
+    ]
+  },
+  "alicloud-resource-log_project": {
+    "description": "Defines log_project",
+    "prefix": "tf-alicloud-resource-log_project",
+    "body": [
+      "resource \"alicloud_log_project\" \"example\" {",
+      "  name       = \"tf-log\"",
+      "  description = \"created by terraform\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-log_store": {
+    "description": "Defines log_store",
+    "prefix": "tf-alicloud-resource-log_store",
+    "body": [
+      "resource \"alicloud_log_project\" \"example\" {",
+      "  name       = \"tf-log\"",
+      "  description = \"created by terraform\"",
+      "}",
+      "resource \"alicloud_log_store\" \"example\" {",
+      "  project = \"${alicloud_log_project.example.name}\"",
+      "  name       = \"tf-log-store\"",
+      "  description = \"created by terraform\"",
+      "}"
+    ]
+  },
+  "alicloud-resource-log_store_index": {
+    "description": "Defines log_store_index",
+    "prefix": "tf-alicloud-resource-log_store_index",
+    "body": [
+      "resource \"alicloud_log_project\" \"example\" {",
+      "  name       = \"tf-log\"",
+      "  description = \"created by terraform\"",
+      "}",
+      "resource \"alicloud_log_store\" \"example\" {",
+      "  project = \"${alicloud_log_project.example.name}\"",
+      "  name       = \"tf-log-store\"",
+      "  description = \"created by terraform\"",
+      "}",
+      "resource \"alicloud_log_store_index\" \"example\" {",
+      "  project = \"${alicloud_log_project.example.name}\"",
+      "  logstore = \"${alicloud_log_store.example.name}\"",
+      "  full_text {",
+      "    case_sensitive = true",
+      "    token = \" #$%^*\\r\\n\\t\"",
+      "  }",
+      "  field_search = [",
+      "    {",
+      "      name = \"terraform\"",
+      "      enable_analytics = true",
+      "    }",
+      "  ]",
       "}"
     ]
   },
@@ -2015,6 +2102,21 @@
       "}"
     ]
   },
+  "aws-data-cloudformation_export": {
+    "description": "Defines cloudformation_export",
+    "prefix": "tf-aws-data-cloudformation_export",
+    "body": [
+      "data \"aws_cloudformation_export\" \"subnet_id\" {",
+      "  name = \"my:subnet_id:export\"",
+      "}",
+      "",
+      "resource \"aws_instance\" \"web\" {",
+      "  ami           = \"ami-abb07bcb\"",
+      "  instance_type = \"t1.micro\"",
+      "  subnet_id     = \"${data.aws_cloudformation_export.subnet_id.value}\"",
+      "}"
+    ]
+  },
   "aws-data-cloudformation_stack": {
     "description": "Defines cloudformation_stack",
     "prefix": "tf-aws-data-cloudformation_stack",
@@ -2081,6 +2183,15 @@
       "}"
     ]
   },
+  "aws-data-codecommit_repository": {
+    "description": "Defines codecommit_repository",
+    "prefix": "tf-aws-data-codecommit_repository",
+    "body": [
+      "data \"aws_codecommit_repository\" \"test\" {",
+      "  repository_name = \"MyTestRepository\"",
+      "}"
+    ]
+  },
   "aws-data-cognito_user_pools": {
     "description": "Defines cognito_user_pools",
     "prefix": "tf-aws-data-cognito_user_pools",
@@ -2139,6 +2250,15 @@
       "  lifecycle {",
       "    ignore_changes = [\"snapshot_identifier\"]",
       "  }",
+      "}"
+    ]
+  },
+  "aws-data-dx_gateway": {
+    "description": "Defines dx_gateway",
+    "prefix": "tf-aws-data-dx_gateway",
+    "body": [
+      "data \"aws_dx_gateway\" \"example\" {",
+      "  name = \"example\"",
       "}"
     ]
   },
@@ -2237,6 +2357,16 @@
       "}"
     ]
   },
+  "aws-data-ecs_service": {
+    "description": "Defines ecs_service",
+    "prefix": "tf-aws-data-ecs_service",
+    "body": [
+      "data \"aws_ecs_service\" \"example\" {",
+      "  service_name = \"example\"",
+      "  cluster_arn  = \"${data.aws_ecs_cluster.example.arn}\"",
+      "}"
+    ]
+  },
   "aws-data-ecs_task_definition": {
     "description": "Defines ecs_task_definition",
     "prefix": "tf-aws-data-ecs_task_definition",
@@ -2323,6 +2453,23 @@
       "resource \"aws_eip_association\" \"proxy_eip\" {",
       "  instance_id   = \"${var.instance_id}\"",
       "  allocation_id = \"${data.aws_eip.proxy_ip.id}\"",
+      "}"
+    ]
+  },
+  "aws-data-eks_cluster": {
+    "description": "Defines eks_cluster",
+    "prefix": "tf-aws-data-eks_cluster",
+    "body": [
+      "data \"aws_eks_cluster\" \"example\" {",
+      "  name  = \"example\"",
+      "}",
+      "",
+      "output \"endpoint\" {",
+      "  value = \"${data.aws_eks_cluster.example.endpoint}\"",
+      "}",
+      "",
+      "output \"kubeconfig-certificate-authority-data\" {",
+      "  value = \"${data.aws_eks_cluster.example.certificate_authority.0.data}\"",
       "}"
     ]
   },
@@ -2442,6 +2589,27 @@
       "    lb_port           = 80",
       "    lb_protocol       = \"http\"",
       "  }",
+      "}"
+    ]
+  },
+  "aws-data-glue_script": {
+    "description": "Defines glue_script",
+    "prefix": "tf-aws-data-glue_script",
+    "body": [
+      "data \"aws_glue_script\" \"example\" {",
+      "  language = \"PYTHON\"",
+      "",
+      "  dag_edge = [",
+      "    # ...",
+      "  ]",
+      "",
+      "  dag_node = [",
+      "    # ...",
+      "  ]",
+      "}",
+      "",
+      "output \"python_script\" {",
+      "  value = \"${data.aws_glue_script.example.python_script}\"",
       "}"
     ]
   },
@@ -2924,6 +3092,19 @@
       "}"
     ]
   },
+  "aws-data-network_acls": {
+    "description": "Defines network_acls",
+    "prefix": "tf-aws-data-network_acls",
+    "body": [
+      "data \"aws_network_acls\" \"example\" {",
+      "  vpc_id = \"${var.vpc_id}\"",
+      "}",
+      "",
+      "output \"example\" {",
+      "  value = \"${data.aws_network_acls.example.ids}\"",
+      "}"
+    ]
+  },
   "aws-data-network_interface": {
     "description": "Defines network_interface",
     "prefix": "tf-aws-data-network_interface",
@@ -3069,6 +3250,27 @@
       "data \"aws_region\" \"current\" {}"
     ]
   },
+  "aws-data-route": {
+    "description": "Defines route",
+    "prefix": "tf-aws-data-route",
+    "body": [
+      "variable \"subnet_id\" {}",
+      "",
+      "",
+      "data \"aws_route_table\" \"selected\" {",
+      "  subnet_id = \"${var.subnet_id}\"",
+      "}",
+      "",
+      "data \"aws_route\" \"route\"{",
+      "  route_table_id = \"${aws_route_table.selected.id}\"",
+      "  destination_cidr_block = \"10.0.1.0/24\"",
+      "}",
+      "",
+      "data \"aws_network_interface\" \"interface\" {",
+      "    network_interface_id = \"${data.aws_route.route.network_interface_id}\"",
+      "}"
+    ]
+  },
   "aws-data-route53_zone": {
     "description": "Defines route53_zone",
     "prefix": "tf-aws-data-route53_zone",
@@ -3102,6 +3304,24 @@
       "  destination_cidr_block    = \"10.0.1.0/22\"",
       "  vpc_peering_connection_id = \"pcx-45ff3dc1\"",
       "}"
+    ]
+  },
+  "aws-data-route_tables": {
+    "description": "Defines route_tables",
+    "prefix": "tf-aws-data-route_tables",
+    "body": [
+      "",
+      "data \"aws_route_tables\" \"rts\" {",
+      "  vpc_id = \"${var.vpc_id}\"",
+      "}",
+      "",
+      "resource \"aws_route\" \"r\" {",
+      "  count                  = \"${length(data.aws_route_tables.rts.ids)}\"",
+      "  route_table_id         = \"${data.aws_route_tables.rts.ids[count.index]}\"",
+      "  destination_cidr_block = \"10.0.1.0/22\"",
+      "  vpc_peering_connection_id = \"pcx-0e9a7a9ecd137dc54\"",
+      "}",
+      ""
     ]
   },
   "aws-data-s3_bucket": {
@@ -3262,6 +3482,15 @@
       "}"
     ]
   },
+  "aws-data-vpc_dhcp_options": {
+    "description": "Defines vpc_dhcp_options",
+    "prefix": "tf-aws-data-vpc_dhcp_options",
+    "body": [
+      "data \"aws_vpc_dhcp_options\" \"example\" {",
+      "  dhcp_options_id = \"dopts-12345678\"",
+      "}"
+    ]
+  },
   "aws-data-vpc_endpoint": {
     "description": "Defines vpc_endpoint",
     "prefix": "tf-aws-data-vpc_endpoint",
@@ -3322,6 +3551,21 @@
       "}"
     ]
   },
+  "aws-data-vpcs": {
+    "description": "Defines vpcs",
+    "prefix": "tf-aws-data-vpcs",
+    "body": [
+      "data \"aws_vpcs\" \"foo\" {",
+      "  tags {",
+      "    service = \"production\"",
+      "  }",
+      "}",
+      "",
+      "output \"foo\" {",
+      "  value = \"${data.aws_vpcs.foo.ids}\"",
+      "}"
+    ]
+  },
   "aws-data-vpn_gateway": {
     "description": "Defines vpn_gateway",
     "prefix": "tf-aws-data-vpn_gateway",
@@ -3343,10 +3587,15 @@
     "prefix": "tf-aws-resource-acm_certificate",
     "body": [
       "resource \"aws_acm_certificate\" \"cert\" {",
-      "  domain_name = \"example.com\"",
+      "  domain_name       = \"example.com\"",
       "  validation_method = \"DNS\"",
+      "",
       "  tags {",
       "    Environment = \"test\"",
+      "  }",
+      "",
+      "  lifecycle {",
+      "    create_before_destroy = true",
       "  }",
       "}"
     ]
@@ -4835,10 +5084,14 @@
       "  }",
       "}",
       "",
+      "locals {",
+      "  s3_origin_id = \"myS3Origin\"",
+      "}",
+      "",
       "resource \"aws_cloudfront_distribution\" \"s3_distribution\" {",
       "  origin {",
-      "    domain_name = \"${aws_s3_bucket.b.bucket_domain_name}\"",
-      "    origin_id   = \"myS3Origin\"",
+      "    domain_name = \"${aws_s3_bucket.b.bucket_regional_domain_name}\"",
+      "    origin_id   = \"${local.s3_origin_id}\"",
       "",
       "    s3_origin_config {",
       "      origin_access_identity = \"origin-access-identity/cloudfront/ABCDEFG1234567\"",
@@ -4861,7 +5114,7 @@
       "  default_cache_behavior {",
       "    allowed_methods  = [\"DELETE\", \"GET\", \"HEAD\", \"OPTIONS\", \"PATCH\", \"POST\", \"PUT\"]",
       "    cached_methods   = [\"GET\", \"HEAD\"]",
-      "    target_origin_id = \"myS3Origin\"",
+      "    target_origin_id = \"${local.s3_origin_id}\"",
       "",
       "    forwarded_values {",
       "      query_string = false",
@@ -4882,7 +5135,7 @@
       "    path_pattern     = \"/content/immutable/*\"",
       "    allowed_methods  = [\"GET\", \"HEAD\", \"OPTIONS\"]",
       "    cached_methods   = [\"GET\", \"HEAD\", \"OPTIONS\"]",
-      "    target_origin_id = \"myS3Origin\"",
+      "    target_origin_id = \"${local.s3_origin_id}\"",
       "",
       "    forwarded_values {",
       "      query_string = false",
@@ -4904,7 +5157,7 @@
       "    path_pattern     = \"/content/*\"",
       "    allowed_methods  = [\"GET\", \"HEAD\", \"OPTIONS\"]",
       "    cached_methods   = [\"GET\", \"HEAD\"]",
-      "    target_origin_id = \"myS3Origin\"",
+      "    target_origin_id = \"${local.s3_origin_id}\"",
       "",
       "    forwarded_values {",
       "      query_string = false",
@@ -5285,13 +5538,13 @@
     "description": "Defines codebuild_project",
     "prefix": "tf-aws-resource-codebuild_project",
     "body": [
-      "resource \"aws_s3_bucket\" \"foo\" {",
-      "  bucket = \"test-bucket\"",
+      "resource \"aws_s3_bucket\" \"example\" {",
+      "  bucket = \"example\"",
       "  acl    = \"private\"",
       "}",
       "",
-      "resource \"aws_iam_role\" \"codebuild_role\" {",
-      "  name = \"codebuild-role-\"",
+      "resource \"aws_iam_role\" \"example\" {",
+      "  name = \"example\"",
       "",
       "  assume_role_policy = <<EOF",
       "{",
@@ -5309,10 +5562,8 @@
       "EOF",
       "}",
       "",
-      "resource \"aws_iam_policy\" \"codebuild_policy\" {",
-      "  name        = \"codebuild-policy\"",
-      "  path        = \"/service-role/\"",
-      "  description = \"Policy used in trust relationship with CodeBuild\"",
+      "resource \"aws_iam_role_policy\" \"example\" {",
+      "  role        = \"${aws_iam_role.example.name}\"",
       "",
       "  policy = <<POLICY",
       "{",
@@ -5328,23 +5579,40 @@
       "        \"logs:CreateLogStream\",",
       "        \"logs:PutLogEvents\"",
       "      ]",
+      "    },",
+      "    {",
+      "      \"Effect\": \"Allow\",",
+      "      \"Action\": [",
+      "        \"ec2:CreateNetworkInterface\",",
+      "        \"ec2:DescribeDhcpOptions\",",
+      "        \"ec2:DescribeNetworkInterfaces\",",
+      "        \"ec2:DeleteNetworkInterface\",",
+      "        \"ec2:DescribeSubnets\",",
+      "        \"ec2:DescribeSecurityGroups\",",
+      "        \"ec2:DescribeVpcs\"",
+      "      ],",
+      "      \"Resource\": \"*\"",
+      "    },",
+      "    {",
+      "      \"Effect\": \"Allow\",",
+      "      \"Action\": [",
+      "        \"s3:*\"",
+      "      ],",
+      "      \"Resource\": [",
+      "        \"${aws_s3_bucket.example.arn}\",",
+      "        \"${aws_s3_bucket.example.arn}/*\"",
+      "      ]",
       "    }",
       "  ]",
       "}",
       "POLICY",
       "}",
       "",
-      "resource \"aws_iam_policy_attachment\" \"codebuild_policy_attachment\" {",
-      "  name       = \"codebuild-policy-attachment\"",
-      "  policy_arn = \"${aws_iam_policy.codebuild_policy.arn}\"",
-      "  roles      = [\"${aws_iam_role.codebuild_role.id}\"]",
-      "}",
-      "",
-      "resource \"aws_codebuild_project\" \"foo\" {",
+      "resource \"aws_codebuild_project\" \"example\" {",
       "  name         = \"test-project\"",
       "  description  = \"test_codebuild_project\"",
       "  build_timeout      = \"5\"",
-      "  service_role = \"${aws_iam_role.codebuild_role.arn}\"",
+      "  service_role = \"${aws_iam_role.example.arn}\"",
       "",
       "  artifacts {",
       "    type = \"NO_ARTIFACTS\"",
@@ -5352,7 +5620,7 @@
       "",
       "  cache {",
       "    type     = \"S3\"",
-      "    location = \"${aws_s3_bucket.foo.bucket}\"",
+      "    location = \"${aws_s3_bucket.example.bucket}\"",
       "  }",
       "",
       "  environment {",
@@ -5368,12 +5636,14 @@
       "    environment_variable {",
       "      \"name\"  = \"SOME_KEY2\"",
       "      \"value\" = \"SOME_VALUE2\"",
+      "      \"type\"  = \"PARAMETER_STORE\"",
       "    }",
       "  }",
       "",
       "  source {",
-      "    type     = \"GITHUB\"",
-      "    location = \"https://github.com/mitchellh/packer.git\"",
+      "    type            = \"GITHUB\"",
+      "    location        = \"https://github.com/mitchellh/packer.git\"",
+      "    git_clone_depth = 1",
       "  }",
       "",
       "  vpc_config {",
@@ -5393,6 +5663,15 @@
       "  tags {",
       "    \"Environment\" = \"Test\"",
       "  }",
+      "}"
+    ]
+  },
+  "aws-resource-codebuild_webhook": {
+    "description": "Defines codebuild_webhook",
+    "prefix": "tf-aws-resource-codebuild_webhook",
+    "body": [
+      "resource \"aws_codebuild_webhook\" \"example\" {",
+      "  name = \"${aws_codebuild_project.example.name}\"",
       "}"
     ]
   },
@@ -5810,6 +6089,49 @@
       "}"
     ]
   },
+  "aws-resource-cognito_identity_provider": {
+    "description": "Defines cognito_identity_provider",
+    "prefix": "tf-aws-resource-cognito_identity_provider",
+    "body": [
+      "resource \"aws_cognito_user_pool\" \"example\" {",
+      "  name                      = \"example-pool\"",
+      "  auto_verified_attributes  = [\"email\"]",
+      "}",
+      "",
+      "resource \"aws_cognito_identity_provider\" \"example_provider\" {",
+      "  user_pool_id  = \"${aws_cognito_user_pool.example.id}\"",
+      "  provider_name = \"Google\"",
+      "  provider_type = \"Google\"",
+      "",
+      "  provider_details {",
+      "    authorize_scopes  = \"email\"",
+      "    client_id         = \"your client_id\"",
+      "    client_secret     = \"your client_secret\"",
+      "  }",
+      "",
+      "  attribute_mapping {",
+      "    email    = \"email\"",
+      "    username = \"sub\"",
+      "  }",
+      "}"
+    ]
+  },
+  "aws-resource-cognito_resource_server": {
+    "description": "Defines cognito_resource_server",
+    "prefix": "tf-aws-resource-cognito_resource_server",
+    "body": [
+      "resource \"aws_cognito_user_pool\" \"pool\" {",
+      "  name = \"pool\"",
+      "}",
+      "",
+      "resource \"aws_cognito_resource_server\" \"resource\" {",
+      "  identifier = \"https://example.com\"",
+      "  name       = \"example\"",
+      "",
+      "  user_pool_id = \"${aws_cognito_user_pool.pool.id}\"",
+      "}"
+    ]
+  },
   "aws-resource-cognito_user_group": {
     "description": "Defines cognito_user_group",
     "prefix": "tf-aws-resource-cognito_user_group",
@@ -5892,6 +6214,16 @@
       "}"
     ]
   },
+  "aws-resource-config_aggregate_authorization": {
+    "description": "Defines config_aggregate_authorization",
+    "prefix": "tf-aws-resource-config_aggregate_authorization",
+    "body": [
+      "resource \"aws_config_aggregate_authorization\" \"example\" {",
+      "  account_id = \"123456789012\"",
+      "  region     = \"eu-west-2\"",
+      "}"
+    ]
+  },
   "aws-resource-config_config_rule": {
     "description": "Defines config_config_rule",
     "prefix": "tf-aws-resource-config_config_rule",
@@ -5949,6 +6281,20 @@
       "  ]",
       "}",
       "POLICY",
+      "}"
+    ]
+  },
+  "aws-resource-config_configuration_aggregator": {
+    "description": "Defines config_configuration_aggregator",
+    "prefix": "tf-aws-resource-config_configuration_aggregator",
+    "body": [
+      "resource \"aws_config_configuration_aggregator\" \"account\" {",
+      "  name = \"example\"",
+      "",
+      "  account_aggregation_source {",
+      "    account_ids = [\"123456789012\"]",
+      "    regions     = [\"us-west-2\"]",
+      "  }",
       "}"
     ]
   },
@@ -6213,7 +6559,7 @@
     "description": "Defines db_option_group",
     "prefix": "tf-aws-resource-db_option_group",
     "body": [
-      "resource \"aws_db_option_group\" \"bar\" {",
+      "resource \"aws_db_option_group\" \"example\" {",
       "  name                     = \"option-group-test-terraform\"",
       "  option_group_description = \"Terraform Option Group\"",
       "  engine_name              = \"sqlserver-ee\"",
@@ -6225,6 +6571,15 @@
       "    option_settings {",
       "      name  = \"TIME_ZONE\"",
       "      value = \"UTC\"",
+      "    }",
+      "  }",
+      "",
+      "  option {",
+      "    option_name = \"SQLSERVER_BACKUP_RESTORE\"",
+      "",
+      "    option_settings {",
+      "      name  = \"IAM_ROLE_ARN\"",
+      "      value = \"${aws_iam_role.example.arn}\"",
       "    }",
       "  }",
       "",
@@ -6553,6 +6908,10 @@
       "  subnet_ids = [",
       "    \"subnet-12345678\",",
       "  ]",
+      "",
+      "  tags {",
+      "    Name = \"test\"",
+      "  }",
       "}"
     ]
   },
@@ -6612,6 +6971,166 @@
       "}"
     ]
   },
+  "aws-resource-dx_gateway": {
+    "description": "Defines dx_gateway",
+    "prefix": "tf-aws-resource-dx_gateway",
+    "body": [
+      "resource \"aws_dx_gateway\" \"example\" {",
+      "  name = \"tf-dxg-example\"",
+      "  amazon_side_asn = \"64512\"",
+      "}"
+    ]
+  },
+  "aws-resource-dx_gateway_association": {
+    "description": "Defines dx_gateway_association",
+    "prefix": "tf-aws-resource-dx_gateway_association",
+    "body": [
+      "resource \"aws_dx_gateway\" \"example\" {",
+      "  name = \"example\"",
+      "  amazon_side_asn = \"64512\"",
+      "}",
+      "",
+      "resource \"aws_vpc\" \"example\" {",
+      "  cidr_block = \"10.255.255.0/28\"",
+      "}",
+      "",
+      "resource \"aws_vpn_gateway\" \"example\" {",
+      "  vpc_id = \"${aws_vpc.test.id}\"",
+      "}",
+      "",
+      "resource \"aws_dx_gateway_association\" \"example\" {",
+      "  dx_gateway_id = \"${aws_dx_gateway.example.id}\"",
+      "  vpn_gateway_id = \"${aws_vpn_gateway.example.id}\"",
+      "}"
+    ]
+  },
+  "aws-resource-dx_hosted_private_virtual_interface": {
+    "description": "Defines dx_hosted_private_virtual_interface",
+    "prefix": "tf-aws-resource-dx_hosted_private_virtual_interface",
+    "body": [
+      "resource \"aws_dx_hosted_private_virtual_interface\" \"foo\" {",
+      "  connection_id    = \"dxcon-zzzzzzzz\"",
+      "",
+      "  name           = \"vif-foo\"",
+      "  vlan           = 4094",
+      "  address_family = \"ipv4\"",
+      "  bgp_asn        = 65352",
+      "}"
+    ]
+  },
+  "aws-resource-dx_hosted_private_virtual_interface_accepter": {
+    "description": "Defines dx_hosted_private_virtual_interface_accepter",
+    "prefix": "tf-aws-resource-dx_hosted_private_virtual_interface_accepter",
+    "body": [
+      "provider \"aws\" {",
+      "  # Creator's credentials.",
+      "}",
+      "",
+      "provider \"aws\" {",
+      "  alias = \"accepter\"",
+      "",
+      "  # Accepter's credentials.",
+      "}",
+      "",
+      "data \"aws_caller_identity\" \"accepter\" {",
+      "  provider = \"aws.accepter\"",
+      "}",
+      "",
+      "# Creator's side of the VIF",
+      "resource \"aws_dx_hosted_private_virtual_interface\" \"creator\" {",
+      "  connection_id    = \"dxcon-zzzzzzzz\"",
+      "  owner_account_id = \"${data.aws_caller_identity.accepter.account_id}\"",
+      "",
+      "  name           = \"vif-foo\"",
+      "  vlan           = 4094",
+      "  address_family = \"ipv4\"",
+      "  bgp_asn        = 65352",
+      "}",
+      "",
+      "# Accepter's side of the VIF.",
+      "resource \"aws_vpn_gateway\" \"vpn_gw\" {",
+      "  provider = \"aws.accepter\"",
+      "}",
+      "",
+      "resource \"aws_dx_hosted_private_virtual_interface_accepter\" \"accepter\" {",
+      "  provider             = \"aws.accepter\"",
+      "  virtual_interface_id = \"${aws_dx_hosted_private_virtual_interface.creator.id}\"",
+      "  vpn_gateway_id       = \"${aws_vpn_gateway.vpn_gw.id}\"",
+      "",
+      "  tags {",
+      "    Side = \"Accepter\"",
+      "  }",
+      "}"
+    ]
+  },
+  "aws-resource-dx_hosted_public_virtual_interface": {
+    "description": "Defines dx_hosted_public_virtual_interface",
+    "prefix": "tf-aws-resource-dx_hosted_public_virtual_interface",
+    "body": [
+      "resource \"aws_dx_hosted_public_virtual_interface\" \"foo\" {",
+      "  connection_id    = \"dxcon-zzzzzzzz\"",
+      "",
+      "  name           = \"vif-foo\"",
+      "  vlan           = 4094",
+      "  address_family = \"ipv4\"",
+      "  bgp_asn        = 65352",
+      "",
+      "  customer_address = \"175.45.176.1/30\"",
+      "  amazon_address   = \"175.45.176.2/30\"",
+      "  route_filter_prefixes = [",
+      "      \"210.52.109.0/24\",",
+      "      \"175.45.176.0/22\"",
+      "  ]",
+      "}"
+    ]
+  },
+  "aws-resource-dx_hosted_public_virtual_interface_accepter": {
+    "description": "Defines dx_hosted_public_virtual_interface_accepter",
+    "prefix": "tf-aws-resource-dx_hosted_public_virtual_interface_accepter",
+    "body": [
+      "provider \"aws\" {",
+      "  # Creator's credentials.",
+      "}",
+      "",
+      "provider \"aws\" {",
+      "  alias = \"accepter\"",
+      "",
+      "  # Accepter's credentials.",
+      "}",
+      "",
+      "data \"aws_caller_identity\" \"accepter\" {",
+      "  provider = \"aws.accepter\"",
+      "}",
+      "",
+      "# Creator's side of the VIF",
+      "resource \"aws_dx_hosted_public_virtual_interface\" \"creator\" {",
+      "  connection_id    = \"dxcon-zzzzzzzz\"",
+      "  owner_account_id = \"${data.aws_caller_identity.accepter.account_id}\"",
+      "",
+      "  name           = \"vif-foo\"",
+      "  vlan           = 4094",
+      "  address_family = \"ipv4\"",
+      "  bgp_asn        = 65352",
+      "",
+      "  customer_address = \"175.45.176.1/30\"",
+      "  amazon_address   = \"175.45.176.2/30\"",
+      "  route_filter_prefixes = [",
+      "      \"210.52.109.0/24\",",
+      "      \"175.45.176.0/22\"",
+      "  ]",
+      "}",
+      "",
+      "# Accepter's side of the VIF.",
+      "resource \"aws_dx_hosted_public_virtual_interface_accepter\" \"accepter\" {",
+      "  provider             = \"aws.accepter\"",
+      "  virtual_interface_id = \"${aws_dx_hosted_public_virtual_interface.creator.id}\"",
+      "",
+      "  tags {",
+      "    Side = \"Accepter\"",
+      "  }",
+      "}"
+    ]
+  },
   "aws-resource-dx_lag": {
     "description": "Defines dx_lag",
     "prefix": "tf-aws-resource-dx_lag",
@@ -6622,6 +7141,41 @@
       "  location = \"EqDC2\"",
       "  number_of_connections = 2",
       "  force_destroy = true",
+      "}"
+    ]
+  },
+  "aws-resource-dx_private_virtual_interface": {
+    "description": "Defines dx_private_virtual_interface",
+    "prefix": "tf-aws-resource-dx_private_virtual_interface",
+    "body": [
+      "resource \"aws_dx_private_virtual_interface\" \"foo\" {",
+      "  connection_id = \"dxcon-zzzzzzzz\"",
+      "",
+      "  name           = \"vif-foo\"",
+      "  vlan           = 4094",
+      "  address_family = \"ipv4\"",
+      "  bgp_asn        = 65352",
+      "}"
+    ]
+  },
+  "aws-resource-dx_public_virtual_interface": {
+    "description": "Defines dx_public_virtual_interface",
+    "prefix": "tf-aws-resource-dx_public_virtual_interface",
+    "body": [
+      "resource \"aws_dx_public_virtual_interface\" \"foo\" {",
+      "  connection_id    = \"dxcon-zzzzzzzz\"",
+      "",
+      "  name           = \"vif-foo\"",
+      "  vlan           = 4094",
+      "  address_family = \"ipv4\"",
+      "  bgp_asn        = 65352",
+      "",
+      "  customer_address = \"175.45.176.1/30\"",
+      "  amazon_address   = \"175.45.176.2/30\"",
+      "  route_filter_prefixes = [",
+      "      \"210.52.109.0/24\",",
+      "      \"175.45.176.0/22\"",
+      "  ]",
       "}"
     ]
   },
@@ -7024,6 +7578,28 @@
       "}"
     ]
   },
+  "aws-resource-eks_cluster": {
+    "description": "Defines eks_cluster",
+    "prefix": "tf-aws-resource-eks_cluster",
+    "body": [
+      "resource \"aws_eks_cluster\" \"example\" {",
+      "  name     = \"example\"",
+      "  role_arn = \"${aws_iam_role.example.arn}\"",
+      "",
+      "  vpc_config {",
+      "    subnet_ids  = [\"${aws_subnet.example1.id}\", \"${aws_subnet.example2.id}\"]",
+      "  }",
+      "}",
+      "",
+      "output \"endpoint\" {",
+      "  value = \"${aws_eks_cluster.example.endpoint}\"",
+      "}",
+      "",
+      "output \"kubeconfig-certificate-authority-data\" {",
+      "  value = \"${aws_eks_cluster.example.certificate_authority.0.data}\"",
+      "}"
+    ]
+  },
   "aws-resource-elastic_beanstalk_application": {
     "description": "Defines elastic_beanstalk_application",
     "prefix": "tf-aws-resource-elastic_beanstalk_application",
@@ -7344,7 +7920,7 @@
       "            \"Condition\": {",
       "                \"IpAddress\": {\"aws:SourceIp\": \"127.0.0.1/32\"}",
       "            },",
-      "            \"Resource\": \"${aws_elasticsearch_domain.example.arn}\"",
+      "            \"Resource\": \"${aws_elasticsearch_domain.example.arn}/*\"",
       "        }",
       "    ]",
       "}",
@@ -7421,6 +7997,14 @@
       "  name          = \"emr-test-arn\"",
       "  release_label = \"emr-4.6.0\"",
       "  applications  = [\"Spark\"]",
+      "  additional_info = <<EOF",
+      "{",
+      "  \"instanceAwsClientConfiguration\": {",
+      "    \"proxyPort\": 8099,",
+      "    \"proxyHost\": \"myproxy.example.com\"",
+      "  }",
+      "}",
+      "EOF",
       "",
       "  termination_protection = false",
       "  keep_job_flow_alive_when_no_steps = true",
@@ -7704,6 +8288,20 @@
       "}"
     ]
   },
+  "aws-resource-glue_classifier": {
+    "description": "Defines glue_classifier",
+    "prefix": "tf-aws-resource-glue_classifier",
+    "body": [
+      "resource \"aws_glue_classifier\" \"example\" {",
+      "  name = \"example\"",
+      "",
+      "  grok_classifier {",
+      "    classification = \"example\"",
+      "    grok_pattern   = \"example\"",
+      "  }",
+      "}"
+    ]
+  },
   "aws-resource-glue_connection": {
     "description": "Defines glue_connection",
     "prefix": "tf-aws-resource-glue_connection",
@@ -7719,6 +8317,22 @@
       "}"
     ]
   },
+  "aws-resource-glue_crawler": {
+    "description": "Defines glue_crawler",
+    "prefix": "tf-aws-resource-glue_crawler",
+    "body": [
+      "resource \"aws_glue_crawler\" \"example\" {",
+      "  database_name = \"${aws_glue_catalog_database.example.name}\"",
+      "  name          = \"example\"",
+      "  role          = \"${aws_iam_role.example.name}\"",
+      "",
+      "  jdbc_target {",
+      "    connection_name = \"${aws_glue_connection.example.name}\"",
+      "    path            = \"database-name/%\"",
+      "  }",
+      "}"
+    ]
+  },
   "aws-resource-glue_job": {
     "description": "Defines glue_job",
     "prefix": "tf-aws-resource-glue_job",
@@ -7729,6 +8343,27 @@
       "",
       "  command {",
       "    script_location = \"s3://${aws_s3_bucket.example.bucket}/example.py\"",
+      "  }",
+      "}"
+    ]
+  },
+  "aws-resource-glue_trigger": {
+    "description": "Defines glue_trigger",
+    "prefix": "tf-aws-resource-glue_trigger",
+    "body": [
+      "resource \"aws_glue_trigger\" \"example\" {",
+      "  name     = \"example\"",
+      "  type     = \"CONDITIONAL\"",
+      "",
+      "  actions {",
+      "    job_name = \"${aws_glue_job.example1.name}\"",
+      "  }",
+      "",
+      "  predicate {",
+      "    conditions {",
+      "      job_name = \"${aws_glue_job.example2.name}\"",
+      "      state    = \"SUCCEEDED\"",
+      "    }",
       "  }",
       "}"
     ]
@@ -7785,9 +8420,11 @@
       "}",
       "",
       "resource \"aws_guardduty_member\" \"member\" {",
-      "  account_id  = \"${aws_guardduty_detector.member.account_id}\"",
-      "  detector_id = \"${aws_guardduty_detector.master.id}\"",
-      "  email       = \"required@example.com\"",
+      "  account_id         = \"${aws_guardduty_detector.member.account_id}\"",
+      "  detector_id        = \"${aws_guardduty_detector.master.id}\"",
+      "  email              = \"required@example.com\"",
+      "  invite             = true",
+      "  invitation_message = \"please accept guardduty invitation\"",
       "}"
     ]
   },
@@ -8256,7 +8893,7 @@
     "description": "Defines iam_user_group_membership",
     "prefix": "tf-aws-resource-iam_user_group_membership",
     "body": [
-      "resource \"aws_iam_user_group_membership\" {",
+      "resource \"aws_iam_user_group_membership\" \"example1\" {",
       "  user = \"${aws_iam_user.user1.name}\"",
       "",
       "  groups = [",
@@ -8265,7 +8902,7 @@
       "  ]",
       "}",
       "",
-      "resource \"aws_iam_user_group_membership\" {",
+      "resource \"aws_iam_user_group_membership\" \"example2\" {",
       "  user = \"${aws_iam_user.user1.name}\"",
       "",
       "  groups = [",
@@ -9525,6 +10162,51 @@
       "}"
     ]
   },
+  "aws-resource-neptune_cluster_parameter_group": {
+    "description": "Defines neptune_cluster_parameter_group",
+    "prefix": "tf-aws-resource-neptune_cluster_parameter_group",
+    "body": [
+      "resource \"aws_neptune_cluster_parameter_group\" \"example\" {",
+      "  family = \"neptune1\"",
+      "  name   = \"example\"",
+      "  description = \"neptune cluster parameter group\"",
+      "",
+      "  parameter {",
+      "    name         = \"neptune_enable_audit_log\"",
+      "    value        = 1",
+      "  }",
+      "}"
+    ]
+  },
+  "aws-resource-neptune_parameter_group": {
+    "description": "Defines neptune_parameter_group",
+    "prefix": "tf-aws-resource-neptune_parameter_group",
+    "body": [
+      "resource \"aws_neptune_parameter_group\" \"example\" {",
+      "  family = \"neptune1\"",
+      "  name   = \"example\"",
+      "",
+      "  parameter {",
+      "    name         = \"neptune_query_timeout\"",
+      "    value        = \"25\"",
+      "  }",
+      "}"
+    ]
+  },
+  "aws-resource-neptune_subnet_group": {
+    "description": "Defines neptune_subnet_group",
+    "prefix": "tf-aws-resource-neptune_subnet_group",
+    "body": [
+      "resource \"aws_neptune_subnet_group\" \"default\" {",
+      "  name       = \"main\"",
+      "  subnet_ids = [\"${aws_subnet.frontend.id}\", \"${aws_subnet.backend.id}\"]",
+      "",
+      "  tags {",
+      "    Name = \"My neptune subnet group\"",
+      "  }",
+      "}"
+    ]
+  },
   "aws-resource-network_acl": {
     "description": "Defines network_acl",
     "prefix": "tf-aws-resource-network_acl",
@@ -9646,7 +10328,7 @@
       "resource \"aws_opsworks_application\" \"foo-app\" {",
       "  name        = \"foobar application\"",
       "  short_name  = \"foobar\"",
-      "  stack_id    = \"${aws_opsworks_stack.stack.id}\"",
+      "  stack_id    = \"${aws_opsworks_stack.main.id}\"",
       "  type        = \"rails\"",
       "  description = \"This is a Rails application\"",
       "",
@@ -9716,7 +10398,7 @@
     "prefix": "tf-aws-resource-opsworks_instance",
     "body": [
       "resource \"aws_opsworks_instance\" \"my-instance\" {",
-      "  stack_id = \"${aws_opsworks_stack.my-stack.id}\"",
+      "  stack_id = \"${aws_opsworks_stack.main.id}\"",
       "",
       "  layer_ids = [",
       "    \"${aws_opsworks_custom_layer.my-layer.id}\",",
@@ -10588,7 +11270,7 @@
       "}",
       "",
       "resource \"aws_route53_record\" \"example_amazonses_verification_record\" {",
-      "  zone_id = \"${aws_route53_zone.example.id}\"",
+      "  zone_id = \"${aws_route53_zone.example.zone_id}\"",
       "  name    = \"_amazonses.${aws_ses_domain_identity.example.id}\"",
       "  type    = \"TXT\"",
       "  ttl     = \"600\"",
@@ -10639,23 +11321,9 @@
     "description": "Defines ses_event_destination",
     "prefix": "tf-aws-resource-ses_event_destination",
     "body": [
-      "# Add a firehose event destination to a configuration set",
-      "resource \"aws_ses_event_destination\" \"kinesis\" {",
-      "  name                   = \"event-destination-kinesis\"",
-      "  configuration_set_name = \"${aws_ses_configuration_set.test.name}\"",
-      "  enabled                = true",
-      "  matching_types         = [\"bounce\", \"send\"]",
-      "",
-      "  kinesis_destination = {",
-      "    stream_arn = \"${aws_kinesis_firehose_delivery_stream.test_stream.arn}\"",
-      "    role_arn   = \"${aws_iam_role.firehose_role.arn}\"",
-      "  }",
-      "}",
-      "",
-      "# CloudWatch event destination",
       "resource \"aws_ses_event_destination\" \"cloudwatch\" {",
       "  name                   = \"event-destination-cloudwatch\"",
-      "  configuration_set_name = \"${aws_ses_configuration_set.test.name}\"",
+      "  configuration_set_name = \"${aws_ses_configuration_set.example.name}\"",
       "  enabled                = true",
       "  matching_types         = [\"bounce\", \"send\"]",
       "",
@@ -10808,9 +11476,9 @@
       "}"
     ]
   },
-  "aws-resource-sns_sms_peferences": {
-    "description": "Defines sns_sms_peferences",
-    "prefix": "tf-aws-resource-sns_sms_peferences",
+  "aws-resource-sns_sms_preferences": {
+    "description": "Defines sns_sms_preferences",
+    "prefix": "tf-aws-resource-sns_sms_preferences",
     "body": [
       "resource \"aws_sns_sms_preferences\" \"update_sms_prefs\" {",
       "",
@@ -11235,10 +11903,9 @@
       "                }",
       "            }",
       "        }",
-      "      ]",
-      "  }",
-      "  EOF",
+      "    ]",
       "}",
+      "EOF",
       "",
       "resource \"aws_ssm_resource_data_sync\" \"foo\" {",
       "  name = \"foo\"",
@@ -11651,6 +12318,11 @@
       "    type  = \"IPV4\"",
       "    value = \"192.0.7.0/24\"",
       "  }",
+      "",
+      "  ip_set_descriptors {",
+      "    type  = \"IPV4\"",
+      "    value = \"10.16.16.0/16\"",
+      "  }",
       "}"
     ]
   },
@@ -11913,9 +12585,15 @@
     "body": [
       "resource \"aws_wafregional_ipset\" \"ipset\" {",
       "  name = \"tfIPSet\"",
+      "",
       "  ip_set_descriptor {",
       "    type = \"IPV4\"",
       "    value = \"192.0.7.0/24\"",
+      "  }",
+      "",
+      "  ip_set_descriptor {",
+      "    type  = \"IPV4\"",
+      "    value = \"10.16.16.0/16\"",
       "  }",
       "}"
     ]
@@ -12101,6 +12779,7 @@
       "    ",
       "    priority = 1",
       "    rule_id  = \"${aws_wafregional_rule.wafrule.id}\"",
+      "    type     = \"REGULAR\"",
       "  }",
       "}"
     ]
@@ -12532,6 +13211,20 @@
       "}"
     ]
   },
+  "azurerm-data-data_lake_store": {
+    "description": "Defines data_lake_store",
+    "prefix": "tf-azurerm-data-data_lake_store",
+    "body": [
+      "data \"azurerm_data_lake_store\" \"test\" {",
+      "  name                = \"testdatalake\"",
+      "  resource_group_name = \"testdatalake\"",
+      "}",
+      "",
+      "output \"data_lake_store_id\" {",
+      "  value = \"${data.azurerm_data_lake_store.test.id}\"",
+      "}"
+    ]
+  },
   "azurerm-data-dns_zone": {
     "description": "Defines dns_zone",
     "prefix": "tf-azurerm-data-dns_zone",
@@ -12874,6 +13567,60 @@
       "",
       "output \"storage_account_tier\" {",
       "  value = \"${data.azurerm_storage_account.test.account_tier}\"",
+      "}"
+    ]
+  },
+  "azurerm-data-storage_account_sas": {
+    "description": "Defines storage_account_sas",
+    "prefix": "tf-azurerm-data-storage_account_sas",
+    "body": [
+      "resource \"azurerm_resource_group\" \"testrg\" {",
+      "  name     = \"resourceGroupName\"",
+      "  location = \"westus\"",
+      "}",
+      "",
+      "resource \"azurerm_storage_account\" \"testsa\" {",
+      "  name                     = \"storageaccountname\"",
+      "  resource_group_name      = \"${azurerm_resource_group.testrg.name}\"",
+      "  location                 = \"westus\"",
+      "  account_tier             = \"Standard\"",
+      "  account_replication_type = \"GRS\"",
+      "",
+      "  tags {",
+      "    environment = \"staging\"",
+      "  }",
+      "}",
+      "",
+      "data \"azurerm_storage_account_sas\" \"test\" {",
+      "    connection_string = \"${azurerm_storage_account.testsa.primary_connection_string}\"",
+      "    https_only        = true",
+      "    resource_types {",
+      "        service   = true",
+      "        container = false",
+      "        object    = false",
+      "    }",
+      "    services {",
+      "        blob  = true",
+      "        queue = false",
+      "        table = false",
+      "        file  = false",
+      "    }",
+      "    start   = \"2018-03-21\"",
+      "    expiry  = \"2020-03-21\"",
+      "    permissions {",
+      "        read    = true",
+      "        write   = true",
+      "        delete  = false",
+      "        list    = false",
+      "        add     = true",
+      "        create  = true",
+      "        update  = false",
+      "        process = false",
+      "    }",
+      "}",
+      "",
+      "output \"sas_url_query_string\" {",
+      "  value = \"${data.azurerm_storage_account_sas.test.sas}\"",
       "}"
     ]
   },
@@ -13405,12 +14152,12 @@
     "prefix": "tf-azurerm-resource-automation_schedule",
     "body": [
       "resource \"azurerm_resource_group\" \"example\" {",
-      " name = \"resourceGroup1\"",
+      " name     = \"tfex-automation-account\"",
       " location = \"West Europe\"",
       "}",
       "",
       "resource \"azurerm_automation_account\" \"example\" {",
-      "  name                = \"account1\"",
+      "  name                = \"tfex-automation-account\"",
       "  location            = \"${azurerm_resource_group.example.location}\"",
       "  resource_group_name = \"${azurerm_resource_group.example.name}\"",
       "  sku {",
@@ -13419,13 +14166,14 @@
       "}",
       "",
       "resource \"azurerm_automation_schedule\" \"example\" {",
-      "  name                = \"schedule1\"",
-      "  resource_group_name = \"${azurerm_resource_group.example.name}\"",
-      "  account_name        = \"${azurerm_automation_account.example.name}\"",
-      "  frequency           = \"OneTime\"",
-      "  timezone            = \"Central Europe Standard Time\"",
-      "  start_time\t      = \"2014-04-15T18:00:15+02:00\"",
-      "  description         = \"This is an example schedule\"",
+      "  name                    = \"tfex-automation-schedule\"",
+      "  resource_group_name     = \"${azurerm_resource_group.example.name}\"",
+      "  automation_account_name = \"${azurerm_automation_account.example.name}\"",
+      "  frequency               = \"Hour\"",
+      "  interval                = 1",
+      "  timezone                = \"Central Europe Standard Time\"",
+      "  start_time              = \"2014-04-15T18:00:15+02:00\"",
+      "  description             = \"This is an example schedule\"",
       "}"
     ]
   },
@@ -13694,6 +14442,36 @@
       "}"
     ]
   },
+  "azurerm-resource-data_lake_store": {
+    "description": "Defines data_lake_store",
+    "prefix": "tf-azurerm-resource-data_lake_store",
+    "body": [
+      "# Pay As You Go",
+      "resource \"azurerm_resource_group\" \"test\" {",
+      "  name     = \"test\"",
+      "  location = \"northeurope\"",
+      "}",
+      "",
+      "resource \"azurerm_data_lake_store\" \"consumption\" {",
+      "  name                = \"consumptiondatalake\"",
+      "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
+      "  location            = \"northeurope\"",
+      "}",
+      "",
+      "# Monthly Commitment Tier",
+      "resource \"azurerm_resource_group\" \"test\" {",
+      "  name     = \"test\"",
+      "  location = \"westeurope\"",
+      "}",
+      "",
+      "resource \"azurerm_data_lake_store\" \"monthly\" {",
+      "  name                = \"monthlydatalake\"",
+      "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
+      "  location            = \"westeurope\"",
+      "  tier                = \"Commitment_1TB\"",
+      "}"
+    ]
+  },
   "azurerm-resource-dns_a_record": {
     "description": "Defines dns_a_record",
     "prefix": "tf-azurerm-resource-dns_a_record",
@@ -13737,6 +14515,56 @@
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "  ttl                 = 300",
       "  records             = [\"2607:f8b0:4009:1803::1005\"]",
+      "}"
+    ]
+  },
+  "azurerm-resource-dns_caa_record": {
+    "description": "Defines dns_caa_record",
+    "prefix": "tf-azurerm-resource-dns_caa_record",
+    "body": [
+      "resource \"azurerm_resource_group\" \"test\" {",
+      "  name     = \"acceptanceTestResourceGroup1\"",
+      "  location = \"West US\"",
+      "}",
+      "",
+      "resource \"azurerm_dns_zone\" \"test\" {",
+      "  name                = \"mydomain.com\"",
+      "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
+      "}",
+      "",
+      "resource \"azurerm_dns_caa_record\" \"test\" {",
+      "  name                = \"test\"",
+      "  zone_name           = \"${azurerm_dns_zone.test.name}\"",
+      "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
+      "  ttl                 = 300",
+      "",
+      "  record {",
+      "    flags = 0",
+      "    tag   = \"issue\"",
+      "    value = \"example.com\"",
+      "  }",
+      "\t",
+      "  record {",
+      "    flags = 0",
+      "    tag   = \"issue\"",
+      "    value = \"example.net\"",
+      "  }",
+      "",
+      "  record {",
+      "    flags = 0",
+      "    tag   = \"issuewild\"",
+      "    value = \";\"",
+      "  }",
+      "",
+      "  record {",
+      "    flags = 0",
+      "    tag   = \"iodef\"",
+      "    value = \"mailto:terraform@nonexisting.tld\"",
+      "  }",
+      "",
+      "  tags {",
+      "    Environment = \"Production\"",
+      "  }",
       "}"
     ]
   },
@@ -13819,13 +14647,7 @@
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "  ttl                 = 300",
       "",
-      "  record {",
-      "    nsdname = \"ns1.contoso.com\"",
-      "  }",
-      "",
-      "  record {",
-      "    nsdname = \"ns2.contoso.com\"",
-      "  }",
+      "  records = [\"ns1.contoso.com\", \"ns2.contoso.com\"]",
       "",
       "  tags {",
       "    Environment = \"Production\"",
@@ -14544,7 +15366,7 @@
       "  agent_pool_profile {",
       "    name            = \"default\"",
       "    count           = 1",
-      "    vm_size         = \"Standard_A0\"",
+      "    vm_size         = \"Standard_D1_v2\"",
       "    os_type         = \"Linux\"",
       "    os_disk_size_gb = 30",
       "  }",
@@ -14877,7 +15699,7 @@
     "prefix": "tf-azurerm-resource-managed_disk",
     "body": [
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name = \"acctestrg\"",
+      "  name = \"acctestRG\"",
       "  location = \"West US 2\"",
       "}",
       "",
@@ -14961,15 +15783,21 @@
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "",
       "  sku {",
-      "    name = \"MYSQLB50\"",
-      "    capacity = 50",
+      "    name = \"B_Gen4_2\"",
+      "    capacity = 2",
       "    tier = \"Basic\"",
+      "    family = \"Gen4\"",
+      "  }",
+      "",
+      "  storage_profile {",
+      "    storage_mb = 5120",
+      "    backup_retention_days = 7",
+      "    geo_redundant_backup = \"Disabled\"",
       "  }",
       "",
       "  administrator_login = \"psqladminun\"",
       "  administrator_login_password = \"H@Sh1CoR3!\"",
       "  version = \"5.7\"",
-      "  storage_mb = \"51200\"",
       "  ssl_enforcement = \"Enabled\"",
       "}",
       "",
@@ -14996,15 +15824,21 @@
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "",
       "  sku {",
-      "    name = \"MYSQLB50\"",
-      "    capacity = 50",
+      "    name = \"B_Gen4_2\"",
+      "    capacity = 2",
       "    tier = \"Basic\"",
+      "    family = \"Gen4\"",
+      "  }",
+      "",
+      "  storage_profile {",
+      "    storage_mb = 5120",
+      "    backup_retention_days = 7",
+      "    geo_redundant_backup = \"Disabled\"",
       "  }",
       "",
       "  administrator_login = \"mysqladminun\"",
       "  administrator_login_password = \"H@Sh1CoR3!\"",
       "  version = \"5.7\"",
-      "  storage_mb = \"51200\"",
       "  ssl_enforcement = \"Enabled\"",
       "}",
       "",
@@ -15054,15 +15888,21 @@
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "",
       "  sku {",
-      "    name = \"MYSQLB50\"",
-      "    capacity = 50",
+      "    name = \"B_Gen4_2\"",
+      "    capacity = 2",
       "    tier = \"Basic\"",
+      "    family = \"Gen4\"",
+      "  }",
+      "",
+      "  storage_profile {",
+      "    storage_mb = 5120",
+      "    backup_retention_days = 7",
+      "    geo_redundant_backup = \"Disabled\"",
       "  }",
       "",
       "  administrator_login = \"mysqladminun\"",
       "  administrator_login_password = \"H@Sh1CoR3!\"",
       "  version = \"5.7\"",
-      "  storage_mb = \"51200\"",
       "  ssl_enforcement = \"Enabled\"",
       "}"
     ]
@@ -15404,15 +16244,21 @@
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "",
       "  sku {",
-      "    name = \"PGSQLB50\"",
-      "    capacity = 50",
+      "    name = \"B_Gen4_2\"",
+      "    capacity = 2",
       "    tier = \"Basic\"",
+      "    family = \"Gen4\"",
+      "  }",
+      "",
+      "  storage_profile {",
+      "    storage_mb = 5120",
+      "    backup_retention_days = 7",
+      "    geo_redundant_backup = \"Disabled\"",
       "  }",
       "",
       "  administrator_login = \"psqladminun\"",
       "  administrator_login_password = \"H@Sh1CoR3!\"",
       "  version = \"9.5\"",
-      "  storage_mb = \"51200\"",
       "  ssl_enforcement = \"Enabled\"",
       "}",
       "",
@@ -15439,15 +16285,21 @@
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "",
       "  sku {",
-      "    name = \"PGSQLB50\"",
-      "    capacity = 50",
+      "    name = \"B_Gen4_2\"",
+      "    capacity = 2",
       "    tier = \"Basic\"",
+      "    family = \"Gen4\"",
+      "  }",
+      "",
+      "  storage_profile {",
+      "    storage_mb = 5120",
+      "    backup_retention_days = 7",
+      "    geo_redundant_backup = \"Disabled\"",
       "  }",
       "",
       "  administrator_login = \"psqladminun\"",
       "  administrator_login_password = \"H@Sh1CoR3!\"",
       "  version = \"9.5\"",
-      "  storage_mb = \"51200\"",
       "  ssl_enforcement = \"Enabled\"",
       "}",
       "",
@@ -15497,15 +16349,21 @@
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "",
       "  sku {",
-      "    name = \"PGSQLB50\"",
-      "    capacity = 50",
+      "    name = \"B_Gen4_2\"",
+      "    capacity = 2",
       "    tier = \"Basic\"",
+      "    family = \"Gen4\"",
+      "  }",
+      "",
+      "  storage_profile {",
+      "    storage_mb = 5120",
+      "    backup_retention_days = 7",
+      "    geo_redundant_backup = \"Disabled\"",
       "  }",
       "",
       "  administrator_login = \"psqladminun\"",
       "  administrator_login_password = \"H@Sh1CoR3!\"",
       "  version = \"9.5\"",
-      "  storage_mb = \"51200\"",
       "  ssl_enforcement = \"Enabled\"",
       "}"
     ]
@@ -15553,31 +16411,20 @@
     "description": "Defines redis_cache",
     "prefix": "tf-azurerm-resource-redis_cache",
     "body": [
-      "resource \"random_id\" \"server\" {",
-      "  keepers = {",
-      "    azi_id = 1",
-      "  }",
-      "",
-      "  byte_length = 8",
-      "}",
-      "",
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name     = \"acceptanceTestResourceGroup1\"",
+      "  name     = \"redis-resources\"",
       "  location = \"West US\"",
       "}",
       "",
+      "# NOTE: the Name used for Redis needs to be globally unique",
       "resource \"azurerm_redis_cache\" \"test\" {",
-      "  name                = \"${random_id.server.hex}\"",
+      "  name                = \"tf-redis-basic\"",
       "  location            = \"${azurerm_resource_group.test.location}\"",
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
       "  capacity            = 0",
       "  family              = \"C\"",
       "  sku_name            = \"Basic\"",
       "  enable_non_ssl_port = false",
-      "",
-      "  redis_configuration {",
-      "    maxclients = 256",
-      "  }",
       "}"
     ]
   },
@@ -15683,7 +16530,6 @@
       "data \"azurerm_subscription\" \"primary\" {}",
       "",
       "resource \"azurerm_role_definition\" \"test\" {",
-      "  role_definition_id = \"12345678-1234-5678-1234-123456780123\"",
       "  name               = \"my-custom-role\"",
       "  scope              = \"${data.azurerm_subscription.primary.id}\"",
       "  description        = \"This is a custom role created via Terraform\"",
@@ -15736,6 +16582,8 @@
       "  name                = \"acceptanceTestSecurityGroup1\"",
       "  location            = \"${azurerm_resource_group.test.location}\"",
       "  resource_group_name = \"${azurerm_resource_group.test.name}\"",
+      "",
+      "disable_bgp_route_propagation = false",
       "",
       "  route {",
       "    name           = \"route1\"",
@@ -16277,7 +17125,7 @@
     "prefix": "tf-azurerm-resource-storage_blob",
     "body": [
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name     = \"acctestrg-d\"",
+      "  name     = \"acctestRG-d\"",
       "  location = \"westus\"",
       "}",
       "",
@@ -16313,7 +17161,7 @@
     "prefix": "tf-azurerm-resource-storage_container",
     "body": [
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name     = \"acctestrg\"",
+      "  name     = \"acctestRG\"",
       "  location = \"westus\"",
       "}",
       "",
@@ -16342,7 +17190,7 @@
     "prefix": "tf-azurerm-resource-storage_queue",
     "body": [
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name     = \"acctestrg-%d\"",
+      "  name     = \"acctestRG-%d\"",
       "  location = \"westus\"",
       "}",
       "",
@@ -16441,7 +17289,7 @@
     "prefix": "tf-azurerm-resource-template_deployment",
     "body": [
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name     = \"acctestrg-01\"",
+      "  name     = \"acctestRG-01\"",
       "  location = \"West US\"",
       "}",
       "",
@@ -16611,7 +17459,7 @@
     "prefix": "tf-azurerm-resource-virtual_machine",
     "body": [
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name     = \"acctestrg\"",
+      "  name     = \"acctestRG\"",
       "  location = \"West US 2\"",
       "}",
       "",
@@ -16715,7 +17563,7 @@
     "prefix": "tf-azurerm-resource-virtual_machine_extension",
     "body": [
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name     = \"acctestrg\"",
+      "  name     = \"acctestRG\"",
       "  location = \"West US\"",
       "}",
       "",
@@ -16826,7 +17674,7 @@
     "prefix": "tf-azurerm-resource-virtual_machine_scale_set",
     "body": [
       "resource \"azurerm_resource_group\" \"test\" {",
-      "  name     = \"acctestrg\"",
+      "  name     = \"acctestRG\"",
       "  location = \"West US 2\"",
       "}",
       "",
@@ -18552,16 +19400,16 @@
     "description": "Defines nodes",
     "prefix": "tf-consul-data-nodes",
     "body": [
-      "data \"consul_catalog_nodes\" \"read-dc1-nodes\" {",
+      "data \"consul_nodes\" \"read-dc1-nodes\" {",
       "  query_options {",
-      "    # Optional parameter: implicitly uses the current datacenter of the agent  ",
+      "    # Optional parameter: implicitly uses the current datacenter of the agent",
       "    datacenter = \"dc1\"",
       "  }",
       "}",
       "",
       "# Set the description to a whitespace delimited list of the node names",
       "resource \"example_resource\" \"app\" {",
-      "  description = \"${join(\" \", formatlist(\"%s\", data.consul_catalog_nodes.node_names))}\"",
+      "  description = \"${join(\" \", formatlist(\"%s\", data.consul_nodes.node_names))}\"",
       "",
       "  # ...",
       "}"
@@ -18571,9 +19419,9 @@
     "description": "Defines service",
     "prefix": "tf-consul-data-service",
     "body": [
-      "data \"consul_catalog_service\" \"read-consul-dc1\" {",
+      "data \"consul_service\" \"read-consul-dc1\" {",
       "  query_options {",
-      "    # Optional parameter: implicitly uses the current datacenter of the agent  ",
+      "    # Optional parameter: implicitly uses the current datacenter of the agent",
       "    datacenter = \"dc1\"",
       "  }",
       "",
@@ -18582,7 +19430,7 @@
       "",
       "# Set the description to a whitespace delimited list of the node names",
       "resource \"example_resource\" \"app\" {",
-      "  description = \"${join(\" \", data.consul_catalog_service.nodes)}\"",
+      "  description = \"${join(\" \", data.consul_service.nodes)}\"",
       "",
       "  # ...",
       "}"
@@ -18592,16 +19440,16 @@
     "description": "Defines services",
     "prefix": "tf-consul-data-services",
     "body": [
-      "data \"consul_catalog_services\" \"read-dc1\" {",
+      "data \"consul_services\" \"read-dc1\" {",
       "  query_options {",
-      "    # Optional parameter: implicitly uses the current datacenter of the agent  ",
+      "    # Optional parameter: implicitly uses the current datacenter of the agent",
       "    datacenter = \"dc1\"",
       "  }",
       "}",
       "",
       "# Set the description to a whitespace delimited list of the services",
       "resource \"example_resource\" \"app\" {",
-      "  description = \"${join(\" \", data.consul_catalog_services.names)}\"",
+      "  description = \"${join(\" \", data.consul_services.names)}\"",
       "",
       "  # ...",
       "}"
@@ -18634,6 +19482,17 @@
       "    port    = 8000",
       "    tags    = [\"master\", \"v1\"]",
       "  }",
+      "}"
+    ]
+  },
+  "consul-resource-intention": {
+    "description": "Defines intention",
+    "prefix": "tf-consul-resource-intention",
+    "body": [
+      "resource \"consul_intention\" \"database\" {",
+      "  source_name      = \"api\"",
+      "  destination_name = \"db\"",
+      "  action           = \"allow\"",
       "}"
     ]
   },
@@ -18748,10 +19607,15 @@
     "prefix": "tf-consul-resource-service",
     "body": [
       "resource \"consul_service\" \"google\" {",
-      "  address = \"www.google.com\"",
       "  name    = \"google\"",
+      "  node    = \"${consul_node.compute.name}\"",
       "  port    = 80",
-      "  tags    = [\"tag0\", \"tag1\"]",
+      "  tags    = [\"tag0\"]",
+      "}",
+      "",
+      "resource \"consul_node\" \"compute\" {",
+      "  name    = \"compute-google\"",
+      "  address = \"www.google.com\"",
       "}"
     ]
   },
@@ -18885,6 +19749,19 @@
       "  email  = \"new@example.com\"",
       "  handle = \"new@example.com\"",
       "  name   = \"New User\"",
+      "}"
+    ]
+  },
+  "digitalocean-data-domain": {
+    "description": "Defines domain",
+    "prefix": "tf-digitalocean-data-domain",
+    "body": [
+      "data \"digitalocean_domain\" \"example\" {",
+      "  name = \"example.com\"",
+      "}",
+      "",
+      "output \"domain_output\" {",
+      "  value = \"${data.digitalocean_domain.example.zone_file}\"",
       "}"
     ]
   },
@@ -19315,6 +20192,17 @@
       "}"
     ]
   },
+  "docker-resource-config": {
+    "description": "Defines config",
+    "prefix": "tf-docker-resource-config",
+    "body": [
+      "# Creates a config",
+      "resource \"docker_config\" \"foo_config\" {",
+      "  name = \"foo_config\"",
+      "  data = \"ewogICJzZXJIfQo=\"",
+      "}"
+    ]
+  },
   "docker-resource-container": {
     "description": "Defines container",
     "prefix": "tf-docker-resource-container",
@@ -19355,6 +20243,37 @@
       "",
       "# Access it somewhere else with ${docker_network.private_network.name}",
       ""
+    ]
+  },
+  "docker-resource-secret": {
+    "description": "Defines secret",
+    "prefix": "tf-docker-resource-secret",
+    "body": [
+      "# Creates a secret",
+      "resource \"docker_secret\" \"foo_secret\" {",
+      "  name = \"foo_secret\"",
+      "  data = \"ewogICJzZXJsaasIfQo=\"",
+      "}"
+    ]
+  },
+  "docker-resource-service": {
+    "description": "Defines service",
+    "prefix": "tf-docker-resource-service",
+    "body": [
+      "resource \"docker_service\" \"foo\" {",
+      "    name     = \"foo-service\"",
+      "    task_spec {",
+      "        container_spec {",
+      "            image = \"repo.mycompany.com:8080/foo-service:v1\"",
+      "        }",
+      "    }",
+      "",
+      "    endpoint_spec {",
+      "      ports {",
+      "        target_port = \"8080\"",
+      "      }",
+      "    }",
+      "}"
     ]
   },
   "docker-resource-volume": {
@@ -19421,6 +20340,690 @@
       "  }",
       "",
       "  force_destroy = true",
+      "}"
+    ]
+  },
+  "flexibleengine-data-networking_network_v2": {
+    "description": "Defines networking_network_v2",
+    "prefix": "tf-flexibleengine-data-networking_network_v2",
+    "body": [
+      "data \"flexibleengine_networking_network_v2\" \"network\" {",
+      "  name = \"tf_test_network\"",
+      "}"
+    ]
+  },
+  "flexibleengine-data-networking_secgroup_v2": {
+    "description": "Defines networking_secgroup_v2",
+    "prefix": "tf-flexibleengine-data-networking_secgroup_v2",
+    "body": [
+      "data \"flexibleengine_networking_secgroup_v2\" \"secgroup\" {",
+      "  name = \"tf_test_secgroup\"",
+      "}"
+    ]
+  },
+  "flexibleengine-data-rds_flavors_v1": {
+    "description": "Defines rds_flavors_v1",
+    "prefix": "tf-flexibleengine-data-rds_flavors_v1",
+    "body": [
+      "data \"flexibleengine_rds_flavors_v1\" \"flavor\" {",
+      "    region = \"eu-de\"",
+      "    datastore_name = \"PostgreSQL\"",
+      "    datastore_version = \"9.5.5\"",
+      "    speccode = \"rds.pg.s1.medium\"",
+      "}"
+    ]
+  },
+  "flexibleengine-data-s3_bucket_object": {
+    "description": "Defines s3_bucket_object",
+    "prefix": "tf-flexibleengine-data-s3_bucket_object",
+    "body": [
+      "#XXX empty snippet",
+      ""
+    ]
+  },
+  "flexibleengine-resource-as_configuration_v1": {
+    "description": "Defines as_configuration_v1",
+    "prefix": "tf-flexibleengine-resource-as_configuration_v1",
+    "body": [
+      "resource \"flexibleengine_as_configuration_v1\" \"my_as_config\" {",
+      "  scaling_configuration_name = \"my_as_config\"",
+      "  instance_config = {",
+      "    flavor = \"${var.flavor}\"",
+      "    image = \"${var.image_id}\"",
+      "    disk = [",
+      "      {size = 40",
+      "      volume_type = \"SATA\"",
+      "      disk_type = \"SYS\"}",
+      "    ]",
+      "    key_name = \"${var.keyname}\"",
+      "    user_data = \"${file(\"userdata.txt\")}\"",
+      "  }",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-as_group_v1": {
+    "description": "Defines as_group_v1",
+    "prefix": "tf-flexibleengine-resource-as_group_v1",
+    "body": [
+      "resource \"flexibleengine_as_group_v1\" \"my_as_group\" {",
+      "  scaling_group_name = \"my_as_group\"",
+      "  scaling_configuration_id = \"37e310f5-db9d-446e-9135-c625f9c2bbfc\"",
+      "  desire_instance_number = 2",
+      "  min_instance_number = 0",
+      "  max_instance_number = 10",
+      "  networks = [{id = \"ad091b52-742f-469e-8f3c-fd81cadf0743\"}]",
+      "  security_groups = [{id = \"45e4c6de-6bf0-4843-8953-2babde3d4810\"}]",
+      "  vpc_id = \"1d8f7e7c-fe04-4cf5-85ac-08b478c290e9\"",
+      "  delete_publicip = true",
+      "  delete_instances = \"yes\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-as_policy_v1": {
+    "description": "Defines as_policy_v1",
+    "prefix": "tf-flexibleengine-resource-as_policy_v1",
+    "body": [
+      "resource \"flexibleengine_as_policy_v1\" \"hth_aspolicy\"{",
+      "  scaling_policy_name = \"hth_aspolicy\"",
+      "  scaling_group_id = \"4579f2f5-cbe8-425a-8f32-53dcb9d9053a\"",
+      "  cool_down_time = 900",
+      "  scaling_policy_type = \"RECURRENCE\"",
+      "  scaling_policy_action = {",
+      "    operation = \"ADD\"",
+      "    instance_number = 1",
+      "  }",
+      "  scheduled_policy = {",
+      "    launch_time = \"07:00\"",
+      "    recurrence_type = \"Daily\"",
+      "    start_time = \"2017-11-30T12:00Z\"",
+      "    end_time = \"2017-12-30T12:00Z\"",
+      "  }",
+      "}",
+      ""
+    ]
+  },
+  "flexibleengine-resource-blockstorage_volume_v2": {
+    "description": "Defines blockstorage_volume_v2",
+    "prefix": "tf-flexibleengine-resource-blockstorage_volume_v2",
+    "body": [
+      "resource \"flexibleengine_blockstorage_volume_v2\" \"volume_1\" {",
+      "  region      = \"RegionOne\"",
+      "  name        = \"volume_1\"",
+      "  description = \"first test volume\"",
+      "  size        = 3",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-compute_floatingip_associate_v2": {
+    "description": "Defines compute_floatingip_associate_v2",
+    "prefix": "tf-flexibleengine-resource-compute_floatingip_associate_v2",
+    "body": [
+      "resource \"flexibleengine_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  image_id        = \"ad091b52-742f-469e-8f3c-fd81cadf0743\"",
+      "  flavor_id       = 3",
+      "  key_pair        = \"my_key_pair_name\"",
+      "  security_groups = [\"default\"]",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_floatingip_v2\" \"fip_1\" {",
+      "  pool = \"my_pool\"",
+      "}",
+      "",
+      "resource \"flexibleengine_compute_floatingip_associate_v2\" \"fip_1\" {",
+      "  floating_ip = \"${flexibleengine_networking_floatingip_v2.fip_1.address}\"",
+      "  instance_id = \"${flexibleengine_compute_instance_v2.instance_1.id}\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-compute_floatingip_v2": {
+    "description": "Defines compute_floatingip_v2",
+    "prefix": "tf-flexibleengine-resource-compute_floatingip_v2",
+    "body": [
+      "resource \"flexibleengine_compute_floatingip_v2\" \"floatip_1\" {",
+      "  pool = \"public\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-compute_instance_v2": {
+    "description": "Defines compute_instance_v2",
+    "prefix": "tf-flexibleengine-resource-compute_instance_v2",
+    "body": [
+      "resource \"flexibleengine_compute_instance_v2\" \"basic\" {",
+      "  name            = \"basic\"",
+      "  image_id        = \"ad091b52-742f-469e-8f3c-fd81cadf0743\"",
+      "  flavor_id       = \"3\"",
+      "  key_pair        = \"my_key_pair_name\"",
+      "  security_groups = [\"default\"]",
+      "",
+      "  metadata {",
+      "    this = \"that\"",
+      "  }",
+      "",
+      "  network {",
+      "    name = \"my_network\"",
+      "  }",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-compute_keypair_v2": {
+    "description": "Defines compute_keypair_v2",
+    "prefix": "tf-flexibleengine-resource-compute_keypair_v2",
+    "body": [
+      "resource \"flexibleengine_compute_keypair_v2\" \"test-keypair\" {",
+      "  name       = \"my-keypair\"",
+      "  public_key = \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLotBCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAnOfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZqd9LvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TaIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIF61p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-compute_servergroup_v2": {
+    "description": "Defines compute_servergroup_v2",
+    "prefix": "tf-flexibleengine-resource-compute_servergroup_v2",
+    "body": [
+      "resource \"flexibleengine_compute_servergroup_v2\" \"test-sg\" {",
+      "  name     = \"my-sg\"",
+      "  policies = [\"anti-affinity\"]",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-compute_volume_attach_v2": {
+    "description": "Defines compute_volume_attach_v2",
+    "prefix": "tf-flexibleengine-resource-compute_volume_attach_v2",
+    "body": [
+      "resource \"flexibleengine_blockstorage_volume_v2\" \"volume_1\" {",
+      "  name = \"volume_1\"",
+      "  size = 1",
+      "}",
+      "",
+      "resource \"flexibleengine_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  security_groups = [\"default\"]",
+      "}",
+      "",
+      "resource \"flexibleengine_compute_volume_attach_v2\" \"va_1\" {",
+      "  instance_id = \"${flexibleengine_compute_instance_v2.instance_1.id}\"",
+      "  volume_id   = \"${flexibleengine_blockstorage_volume_v2.volume_1.id}\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-dns_recordset_v2": {
+    "description": "Defines dns_recordset_v2",
+    "prefix": "tf-flexibleengine-resource-dns_recordset_v2",
+    "body": [
+      "resource \"flexibleengine_dns_zone_v2\" \"example_zone\" {",
+      "  name = \"example.com.\"",
+      "  email = \"email2@example.com\"",
+      "  description = \"a zone\"",
+      "  ttl = 6000",
+      "  type = \"PRIMARY\"",
+      "}",
+      "",
+      "resource \"flexibleengine_dns_recordset_v2\" \"rs_example_com\" {",
+      "  zone_id = \"${flexibleengine_dns_zone_v2.example_zone.id}\"",
+      "  name = \"rs.example.com.\"",
+      "  description = \"An example record set\"",
+      "  ttl = 3000",
+      "  type = \"A\"",
+      "  records = [\"10.0.0.1\"]",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-dns_zone_v2": {
+    "description": "Defines dns_zone_v2",
+    "prefix": "tf-flexibleengine-resource-dns_zone_v2",
+    "body": [
+      "resource \"flexibleengine_dns_zone_v2\" \"example.com\" {",
+      "  name = \"example.com.\"",
+      "  email = \"jdoe@example.com\"",
+      "  description = \"An example zone\"",
+      "  ttl = 3000",
+      "  type = \"PRIMARY\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-elb_backend": {
+    "description": "Defines elb_backend",
+    "prefix": "tf-flexibleengine-resource-elb_backend",
+    "body": [
+      "resource \"flexibleengine_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"flexibleengine_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  protocol_port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${flexibleengine_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}",
+      "",
+      "resource \"flexibleengine_elb_backend\" \"backend\" {",
+      "  address = \"192.168.0.211\"",
+      "  listener_id = \"${flexibleengine_elb_listener.listener.id}\"",
+      "  server_id = \"8f7a32f1-f66c-4d13-9b17-3a13f9f0bb8d\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-elb_health": {
+    "description": "Defines elb_health",
+    "prefix": "tf-flexibleengine-resource-elb_health",
+    "body": [
+      "resource \"flexibleengine_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"flexibleengine_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  protocol_port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${flexibleengine_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}",
+      "",
+      "resource \"flexibleengine_elb_health\" \"healthcheck\" {",
+      "  listener_id = \"${flexibleengine_elb_listener.listener.id}\"",
+      "  healthcheck_protocol = \"TCP\"",
+      "  healthcheck_connect_porta = 22",
+      "  healthy_threshold = 5",
+      "  healthcheck_timeout = 25",
+      "  healthcheck_interval = 3",
+      "  timeouts {",
+      "    create = \"5m\"",
+      "    update = \"5m\"",
+      "    delete = \"5m\"",
+      "  }",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-elb_listener": {
+    "description": "Defines elb_listener",
+    "prefix": "tf-flexibleengine-resource-elb_listener",
+    "body": [
+      "resource \"flexibleengine_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"flexibleengine_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  protocol_port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${flexibleengine_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-elb_loadbalancer": {
+    "description": "Defines elb_loadbalancer",
+    "prefix": "tf-flexibleengine-resource-elb_loadbalancer",
+    "body": [
+      "resource \"flexibleengine_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_floatingip_v2": {
+    "description": "Defines networking_floatingip_v2",
+    "prefix": "tf-flexibleengine-resource-networking_floatingip_v2",
+    "body": [
+      "resource \"flexibleengine_networking_floatingip_v2\" \"floatip_1\" {",
+      "  pool = \"public\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_network_v2": {
+    "description": "Defines networking_network_v2",
+    "prefix": "tf-flexibleengine-resource-networking_network_v2",
+    "body": [
+      "resource \"flexibleengine_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_subnet_v2\" \"subnet_1\" {",
+      "  name       = \"subnet_1\"",
+      "  network_id = \"${flexibleengine_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"flexibleengine_compute_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"a security group\"",
+      "",
+      "  rule {",
+      "    from_port   = 22",
+      "    to_port     = 22",
+      "    ip_protocol = \"tcp\"",
+      "    cidr        = \"0.0.0.0/0\"",
+      "  }",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_port_v2\" \"port_1\" {",
+      "  name               = \"port_1\"",
+      "  network_id         = \"${flexibleengine_networking_network_v2.network_1.id}\"",
+      "  admin_state_up     = \"true\"",
+      "  security_group_ids = [\"${flexibleengine_compute_secgroup_v2.secgroup_1.id}\"]",
+      "",
+      "  fixed_ip {",
+      "    \"subnet_id\"  = \"${flexibleengine_networking_subnet_v2.subnet_1.id}\"",
+      "    \"ip_address\" = \"192.168.199.10\"",
+      "  }",
+      "}",
+      "",
+      "resource \"flexibleengine_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  security_groups = [\"${flexibleengine_compute_secgroup_v2.secgroup_1.name}\"]",
+      "",
+      "  network {",
+      "    port = \"${flexibleengine_networking_port_v2.port_1.id}\"",
+      "  }",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_port_v2": {
+    "description": "Defines networking_port_v2",
+    "prefix": "tf-flexibleengine-resource-networking_port_v2",
+    "body": [
+      "resource \"flexibleengine_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_port_v2\" \"port_1\" {",
+      "  name           = \"port_1\"",
+      "  network_id     = \"${flexibleengine_networking_network_v2.network_1.id}\"",
+      "  admin_state_up = \"true\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_router_interface_v2": {
+    "description": "Defines networking_router_interface_v2",
+    "prefix": "tf-flexibleengine-resource-networking_router_interface_v2",
+    "body": [
+      "resource \"flexibleengine_networking_network_v2\" \"network_1\" {",
+      "  name           = \"tf_test_network\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${flexibleengine_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_router_v2\" \"router_1\" {",
+      "  name             = \"my_router\"",
+      "  external_gateway = \"f67f0d72-0ddf-11e4-9d95-e1f29f417e2f\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_router_interface_v2\" \"router_interface_1\" {",
+      "  router_id = \"${flexibleengine_networking_router_v2.router_1.id}\"",
+      "  subnet_id = \"${flexibleengine_networking_subnet_v2.subnet_1.id}\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_router_route_v2": {
+    "description": "Defines networking_router_route_v2",
+    "prefix": "tf-flexibleengine-resource-networking_router_route_v2",
+    "body": [
+      "resource \"flexibleengine_networking_router_v2\" \"router_1\" {",
+      "  name           = \"router_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${flexibleengine_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_router_interface_v2\" \"int_1\" {",
+      "  router_id = \"${flexibleengine_networking_router_v2.router_1.id}\"",
+      "  subnet_id = \"${flexibleengine_networking_subnet_v2.subnet_1.id}\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_router_route_v2\" \"router_route_1\" {",
+      "  depends_on       = [\"flexibleengine_networking_router_interface_v2.int_1\"]",
+      "  router_id        = \"${flexibleengine_networking_router_v2.router_1.id}\"",
+      "  destination_cidr = \"10.0.1.0/24\"",
+      "  next_hop         = \"192.168.199.254\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_router_v2": {
+    "description": "Defines networking_router_v2",
+    "prefix": "tf-flexibleengine-resource-networking_router_v2",
+    "body": [
+      "resource \"flexibleengine_networking_router_v2\" \"router_1\" {",
+      "  name             = \"my_router\"",
+      "  external_gateway = \"f67f0d72-0ddf-11e4-9d95-e1f29f417e2f\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_secgroup_rule_v2": {
+    "description": "Defines networking_secgroup_rule_v2",
+    "prefix": "tf-flexibleengine-resource-networking_secgroup_rule_v2",
+    "body": [
+      "resource \"flexibleengine_networking_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"My neutron security group\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_secgroup_rule_v2\" \"secgroup_rule_1\" {",
+      "  direction         = \"ingress\"",
+      "  ethertype         = \"IPv4\"",
+      "  protocol          = \"tcp\"",
+      "  port_range_min    = 22",
+      "  port_range_max    = 22",
+      "  remote_ip_prefix  = \"0.0.0.0/0\"",
+      "  security_group_id = \"${flexibleengine_networking_secgroup_v2.secgroup_1.id}\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_secgroup_v2": {
+    "description": "Defines networking_secgroup_v2",
+    "prefix": "tf-flexibleengine-resource-networking_secgroup_v2",
+    "body": [
+      "resource \"flexibleengine_networking_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"My neutron security group\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-networking_subnet_v2": {
+    "description": "Defines networking_subnet_v2",
+    "prefix": "tf-flexibleengine-resource-networking_subnet_v2",
+    "body": [
+      "resource \"flexibleengine_networking_network_v2\" \"network_1\" {",
+      "  name           = \"tf_test_network\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"flexibleengine_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${flexibleengine_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-rds_instance_v1": {
+    "description": "Defines rds_instance_v1",
+    "prefix": "tf-flexibleengine-resource-rds_instance_v1",
+    "body": [
+      "data \"flexibleengine_rds_flavors_v1\" \"flavor\" {",
+      "    region = \"eu-west-0\"",
+      "    datastore_name = \"SQLServer\"",
+      "    datastore_version = \"2014 SP2 SE\"",
+      "    speccode = \"rds.mssql.s1.2xlarge\"",
+      "}",
+      "",
+      "resource \"flexibleengine_compute_secgroup_v2\" \"secgrp_rds\" {",
+      "  name        = \"secgrp-rds-instance\"",
+      "  description = \"Rds Security Group\"",
+      "}",
+      "",
+      "resource \"flexibleengine_rds_instance_v1\" \"instance\" {",
+      "  name = \"rds-instance\"",
+      "  datastore {",
+      "    type = \"SQLServer\"",
+      "    version = \"2014 SP2 SE\"",
+      "  }",
+      "  flavorref = \"${data.flexibleengine_rds_flavors_v1.flavor.id}\"",
+      "  volume {",
+      "    type = \"COMMON\"",
+      "    size = 200",
+      "  }",
+      "  region = \"eu-west-0\"",
+      "  availabilityzone = \"eu-west-0a\"",
+      "  vpc = \"c1095fe7-03df-4205-ad2d-6f4c181d436e\"",
+      "  nics {",
+      "    subnetid = \"b65f8d25-c533-47e2-8601-cfaa265a3e3e\"",
+      "  }",
+      "  securitygroup {",
+      "    id = \"${flexibleengine_compute_secgroup_v2.secgrp_rds.id}\"",
+      "  }",
+      "  dbport = \"8635\"",
+      "  backupstrategy = {",
+      "    starttime = \"04:00:00\"",
+      "    keepdays = 4",
+      "  }",
+      "  dbrtpd = \"Huangwei!120521\"",
+      "  depends_on = [\"flexibleengine_compute_secgroup_v2.secgrp_rds\"]",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-s3_bucket": {
+    "description": "Defines s3_bucket",
+    "prefix": "tf-flexibleengine-resource-s3_bucket",
+    "body": [
+      "resource \"flexibleengine_s3_bucket\" \"b\" {",
+      "  bucket = \"my-tf-test-bucket\"",
+      "  acl    = \"private\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-s3_bucket_object": {
+    "description": "Defines s3_bucket_object",
+    "prefix": "tf-flexibleengine-resource-s3_bucket_object",
+    "body": [
+      "resource \"flexibleengine_s3_bucket_object\" \"object\" {",
+      "  bucket = \"your_bucket_name\"",
+      "  key    = \"new_object_key\"",
+      "  source = \"path/to/file\"",
+      "  etag   = \"${md5(file(\"path/to/file\"))}\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-s3_bucket_policy": {
+    "description": "Defines s3_bucket_policy",
+    "prefix": "tf-flexibleengine-resource-s3_bucket_policy",
+    "body": [
+      "resource \"flexibleengine_s3_bucket\" \"b\" {",
+      "  bucket = \"my_tf_test_bucket\"",
+      "}",
+      "",
+      "resource \"flexibleengine_s3_bucket_policy\" \"b\" {",
+      "  bucket = \"${flexibleengine_s3_bucket.b.id}\"",
+      "  policy =<<POLICY",
+      "{",
+      "  \"Version\": \"2012-10-17\",",
+      "  \"Id\": \"MYBUCKETPOLICY\",",
+      "  \"Statement\": [",
+      "    {",
+      "      \"Sid\": \"IPAllow\",",
+      "      \"Effect\": \"Deny\",",
+      "      \"Principal\": \"*\",",
+      "      \"Action\": \"s3:*\",",
+      "      \"Resource\": \"arn:aws:s3:::my_tf_test_bucket/*\",",
+      "      \"Condition\": {",
+      "         \"IpAddress\": {\"aws:SourceIp\": \"8.8.8.8/32\"}",
+      "      } ",
+      "    } ",
+      "  ]",
+      "}",
+      "POLICY",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-smn_subscription_v2": {
+    "description": "Defines smn_subscription_v2",
+    "prefix": "tf-flexibleengine-resource-smn_subscription_v2",
+    "body": [
+      "resource \"flexibleengine_smn_topic_v2\" \"topic_1\" {",
+      "  name\t\t  = \"topic_1\"",
+      "  display_name    = \"The display name of topic_1\"",
+      "}",
+      "",
+      "resource \"flexibleengine_smn_subscription_v2\" \"subscription_1\" {",
+      "  topic_urn       = \"${flexibleengine_smn_topic_v2.topic_1.id}\"",
+      "  endpoint        = \"mailtest@gmail.com\"",
+      "  protocol        = \"email\"",
+      "  remark          = \"O&M\"",
+      "}",
+      "",
+      "resource \"flexibleengine_smn_subscription_v2\" \"subscription_2\" {",
+      "  topic_urn       = \"${flexibleengine_smn_topic_v2.topic_1.id}\"",
+      "  endpoint        = \"13600000000\"",
+      "  protocol        = \"sms\"",
+      "  remark          = \"O&M\"",
+      "}"
+    ]
+  },
+  "flexibleengine-resource-smn_topic_v2": {
+    "description": "Defines smn_topic_v2",
+    "prefix": "tf-flexibleengine-resource-smn_topic_v2",
+    "body": [
+      "resource \"flexibleengine_smn_topic_v2\" \"topic_1\" {",
+      "  name            = \"topic_1\"",
+      "  display_name    = \"The display name of topic_1\"",
       "}"
     ]
   },
@@ -19642,6 +21245,24 @@
       "}"
     ]
   },
+  "gitlab-data-project": {
+    "description": "Defines project",
+    "prefix": "tf-gitlab-data-project",
+    "body": [
+      "data \"gitlab_project\" \"example\" {",
+      "\tid = 30",
+      "}"
+    ]
+  },
+  "gitlab-data-user": {
+    "description": "Defines user",
+    "prefix": "tf-gitlab-data-user",
+    "body": [
+      "data \"gitlab_user\" \"example\" {",
+      "\temail = \"test@aaa.com\"",
+      "}"
+    ]
+  },
   "gitlab-resource-deploy_key": {
     "description": "Defines deploy_key",
     "prefix": "tf-gitlab-resource-deploy_key",
@@ -19703,6 +21324,17 @@
       "  project               = \"example/hooked\"",
       "  url                   = \"https://example.com/hook/example\"",
       "  merge_requests_events = true",
+      "}"
+    ]
+  },
+  "gitlab-resource-project_membership": {
+    "description": "Defines project_membership",
+    "prefix": "tf-gitlab-resource-project_membership",
+    "body": [
+      "resource \"gitlab_project_membership\" \"test\" {",
+      "project_id = \"Test Project\"",
+      "user_id = \"Test User\"",
+      "access_level = \"guest\"",
       "}"
     ]
   },
@@ -19895,6 +21527,52 @@
       "}"
     ]
   },
+  "google-data-datasource_google_netblock_ip_ranges": {
+    "description": "Defines datasource_google_netblock_ip_ranges",
+    "prefix": "tf-google-data-datasource_google_netblock_ip_ranges",
+    "body": [
+      "data \"google_netblock_ip_ranges\" \"netblock\" {}",
+      "",
+      "output \"cidr_blocks\" {",
+      "  value = \"${data.google_netblock_ip_ranges.netblock.cidr_blocks}\"",
+      "}",
+      "",
+      "output \"cidr_blocks_ipv4\" {",
+      "  value = \"${data.google_netblock_ip_ranges.netblock.cidr_blocks_ipv4}\"",
+      "}",
+      "",
+      "output \"cidr_blocks_ipv6\" {",
+      "  value = \"${data.google_netblock_ip_ranges.netblock.cidr_blocks_ipv6}\"",
+      "}"
+    ]
+  },
+  "google-data-datasource_google_service_account": {
+    "description": "Defines datasource_google_service_account",
+    "prefix": "tf-google-data-datasource_google_service_account",
+    "body": [
+      "data \"google_service_account\" \"object_viewer\" {",
+      "  account_id = \"object-viewer\"",
+      "}"
+    ]
+  },
+  "google-data-datasource_google_service_account_key": {
+    "description": "Defines datasource_google_service_account_key",
+    "prefix": "tf-google-data-datasource_google_service_account_key",
+    "body": [
+      "data \"google_service_account\" \"myaccount\" {",
+      "  account_id = \"myaccount\"",
+      "}",
+      "",
+      "data \"google_service_account_key\" \"mykey\" {",
+      "  service_account_id = \"${data.google_service_account.myaccount.name}\"",
+      "  public_key_type = \"TYPE_X509_PEM_FILE\"",
+      "}",
+      "",
+      "output \"mykey_public_key\" {",
+      "  value = \"${data.google_service_account_key.mykey.public_key}\"",
+      "}"
+    ]
+  },
   "google-data-dns_managed_zone": {
     "description": "Defines dns_managed_zone",
     "prefix": "tf-google-data-dns_managed_zone",
@@ -19960,6 +21638,21 @@
       "data \"google_compute_instance_group\" \"all\" {",
       "\tname = \"instance-group-name\"",
       "\tzone = \"us-central1-a\"",
+      "}"
+    ]
+  },
+  "google-data-google_compute_regions": {
+    "description": "Defines google_compute_regions",
+    "prefix": "tf-google-data-google_compute_regions",
+    "body": [
+      "data \"google_compute_regions\" \"available\" {}",
+      "",
+      "resource \"google_compute_subnetwork\" \"cluster\" {",
+      "  count = \"${length(data.google_compute_regions.available.names)}\"",
+      "  name          = \"my-network\"",
+      "  ip_cidr_range = \"10.36.${count.index}.0/24\"",
+      "  network       = \"my-network\"",
+      "  region        = \"${data.google_compute_regions.available.names[count.index]}\"",
       "}"
     ]
   },
@@ -20333,11 +22026,11 @@
       "  name = \"default-registry\"",
       "",
       "  event_notification_config = {",
-      "    pubsub_topic_name = \"${google_pubsub_topic.default-devicestatus.id}\"",
+      "    pubsub_topic_name = \"${google_pubsub_topic.default-telemetry.id}\"",
       "  }",
       "",
       "  state_notification_config = {",
-      "    pubsub_topic_name = \"${google_pubsub_topic.default-telemetry.id}\"",
+      "    pubsub_topic_name = \"${google_pubsub_topic.default-devicestatus.id}\"",
       "  }",
       "",
       "  http_config = {",
@@ -20364,7 +22057,7 @@
     "prefix": "tf-google-resource-compute_address",
     "body": [
       "resource \"google_compute_address\" \"default\" {",
-      "  name = \"test-address\"",
+      "  name = \"my-address\"",
       "}"
     ]
   },
@@ -21289,16 +22982,21 @@
     "description": "Defines compute_subnetwork",
     "prefix": "tf-google-resource-compute_subnetwork",
     "body": [
-      "resource \"google_compute_subnetwork\" \"default-us-east1\" {",
-      "  name          = \"default-us-east1\"",
-      "  ip_cidr_range = \"10.0.0.0/16\"",
-      "  network       = \"${google_compute_network.default.self_link}\"",
-      "  region        = \"us-east1\"",
-      "}",
+      "  resource \"google_compute_network\" \"custom-test\" {",
+      "    name                    = \"test-network\"",
+      "    auto_create_subnetworks = false",
+      "  }",
       "",
-      "resource \"google_compute_network\" \"default\" {",
-      "  name = \"test\"",
-      "}"
+      "  resource \"google_compute_subnetwork\" \"network-with-private-secondary-ip-ranges\" {",
+      "    name          = \"test-subnetwork\"",
+      "    ip_cidr_range = \"10.2.0.0/16\"",
+      "    region        = \"us-central1\"",
+      "    network       = \"${google_compute_network.custom-test.self_link}\"",
+      "    secondary_ip_range {",
+      "      range_name    = \"tf-test-secondary-range-update1\"",
+      "      ip_cidr_range = \"192.168.10.0/24\"",
+      "    }",
+      "  }"
     ]
   },
   "google-resource-compute_subnetwork_iam": {
@@ -22148,7 +23846,7 @@
     "prefix": "tf-google-resource-google_kms_crypto_key_iam_binding",
     "body": [
       "resource \"google_kms_crypto_key_iam_binding\" \"crypto_key\" {",
-      "  crypto_key_id = \"your-crypto-key-id\"",
+      "  crypto_key_id = \"my-gcp-project/us-central1/my-key-ring/my-crypto-key\"",
       "  role          = \"roles/editor\"",
       "",
       "  members = [",
@@ -22381,14 +24079,29 @@
     "description": "Defines google_service_account_key",
     "prefix": "tf-google-resource-google_service_account_key",
     "body": [
-      "resource \"google_service_account\" \"acceptance\" {",
-      "  account_id = \"%v\"",
-      "  display_name = \"%v\"",
+      "resource \"google_service_account\" \"myaccount\" {",
+      "  account_id = \"myaccount\"",
+      "  display_name = \"My Service Account\"",
       "}",
       "",
-      "resource \"google_service_account_key\" \"acceptance\" {",
-      "  service_account_id = \"${google_service_account.acceptance.name}\"",
+      "resource \"google_service_account_key\" \"mykey\" {",
+      "  service_account_id = \"${google_service_account.myaccount.name}\"",
       "  public_key_type = \"TYPE_X509_PEM_FILE\"",
+      "}"
+    ]
+  },
+  "google-resource-logging_billing_account_exclusion": {
+    "description": "Defines logging_billing_account_exclusion",
+    "prefix": "tf-google-resource-logging_billing_account_exclusion",
+    "body": [
+      "resource \"google_logging_billing_account_exclusion\" \"my-exclusion\" {",
+      "    name            = \"my-instance-debug-exclusion\"",
+      "    billing_account = \"ABCDEF-012345-GHIJKL\"",
+      "",
+      "    description     = \"Exclude GCE instance debug logs\"",
+      "",
+      "    # Exclude all DEBUG or lower severity messages relating to instances",
+      "    filter          = \"resource.type = gce_instance AND severity <= DEBUG\"",
       "}"
     ]
   },
@@ -22414,6 +24127,26 @@
       "    members = [",
       "        \"${google_logging_billing_account_sink.my-sink.writer_identity}\",",
       "    ]",
+      "}"
+    ]
+  },
+  "google-resource-logging_folder_exclusion": {
+    "description": "Defines logging_folder_exclusion",
+    "prefix": "tf-google-resource-logging_folder_exclusion",
+    "body": [
+      "resource \"google_logging_folder_exclusion\" \"my-exclusion\" {",
+      "    name        = \"my-instance-debug-exclusion\"",
+      "    folder      = \"${google_folder.my-folder.name}\"",
+      "",
+      "    description = \"Exclude GCE instance debug logs\"",
+      "",
+      "    # Exclude all DEBUG or lower severity messages relating to instances",
+      "    filter      = \"resource.type = gce_instance AND severity <= DEBUG\"",
+      "}",
+      "",
+      "resource \"google_folder\" \"my-folder\" {",
+      "    display_name = \"My folder\"",
+      "    parent       = \"organizations/123456\"",
       "}"
     ]
   },
@@ -22450,6 +24183,21 @@
       "}"
     ]
   },
+  "google-resource-logging_organization_exclusion": {
+    "description": "Defines logging_organization_exclusion",
+    "prefix": "tf-google-resource-logging_organization_exclusion",
+    "body": [
+      "resource \"google_logging_organization_exclusion\" \"my-exclusion\" {",
+      "    name        = \"my-instance-debug-exclusion\"",
+      "    org_id      = \"123456789\"",
+      "",
+      "    description = \"Exclude GCE instance debug logs\"",
+      "",
+      "    # Exclude all DEBUG or lower severity messages relating to instances",
+      "    filter      = \"resource.type = gce_instance AND severity <= DEBUG\"",
+      "}"
+    ]
+  },
   "google-resource-logging_organization_sink": {
     "description": "Defines logging_organization_sink",
     "prefix": "tf-google-resource-logging_organization_sink",
@@ -22475,6 +24223,20 @@
       "    members = [",
       "        \"${google_logging_organization_sink.my-sink.writer_identity}\",",
       "    ]",
+      "}"
+    ]
+  },
+  "google-resource-logging_project_exclusion": {
+    "description": "Defines logging_project_exclusion",
+    "prefix": "tf-google-resource-logging_project_exclusion",
+    "body": [
+      "resource \"google_logging_project_exclusion\" \"my-exclusion\" {",
+      "    name = \"my-instance-debug-exclusion\"",
+      "",
+      "    description = \"Exclude GCE instance debug logs\"",
+      "",
+      "    # Exclude all DEBUG or lower severity messages relating to instances",
+      "    filter = \"resource.type = gce_instance AND severity <= DEBUG\"",
       "}"
     ]
   },
@@ -22564,6 +24326,37 @@
       "resource \"google_pubsub_topic_iam_policy\" \"editor\" {",
       "  topic       = \"your-topic-name\"",
       "  policy_data = \"${data.google_iam_policy.admin.policy_data}\"",
+      "}"
+    ]
+  },
+  "google-resource-redis_instance": {
+    "description": "Defines redis_instance",
+    "prefix": "tf-google-resource-redis_instance",
+    "body": [
+      "resource \"google_redis_instance\" \"test\" {",
+      "  name           = \"%s\"",
+      "  memory_size_gb = 1",
+      "}"
+    ]
+  },
+  "google-resource-resourcemanager_lien": {
+    "description": "Defines resourcemanager_lien",
+    "prefix": "tf-google-resource-resourcemanager_lien",
+    "body": [
+      "resource \"random_id\" \"r\" {",
+      "  byte_length = 8",
+      "}",
+      "",
+      "resource \"google_project\" \"project\" {",
+      "  project_id = \"project-${random_id.r.hex}\"",
+      "  name = \"A very important project!\"",
+      "}",
+      "",
+      "resource \"google_resourcemanager_lien\" \"lien\" {",
+      "  parent = \"projects/${google_project.project.number}\"",
+      "  restrictions = [\"resourcemanager.projects.delete\"]",
+      "  origin = \"machine-readable-explanation\"",
+      "  reason = \"This project is very important to me!\"",
       "}"
     ]
   },
@@ -22839,7 +24632,7 @@
       "\tbucket            = \"${google_storage_bucket.bucket.name}\"",
       "\tpayload_format    = \"JSON_API_V1\"",
       "\ttopic             = \"${google_pubsub_topic.topic.id}\"",
-      "\tevent_types       = [\"%s\",\"%s\"]",
+      "\tevent_types       = [\"OBJECT_FINALIZE\", \"OBJECT_METADATA_UPDATE\"]",
       "\tcustom_attributes {",
       "\t\tnew-attribute = \"new-attribute-value\"",
       "\t}",
@@ -22927,7 +24720,7 @@
     "prefix": "tf-heroku-data-app",
     "body": [
       "# Create a new Heroku app",
-      "data \"heroku_app\" \"default\"",
+      "data \"heroku_app\" \"default\" {",
       "  name   = \"my-cool-app\"",
       "}"
     ]
@@ -22937,8 +24730,25 @@
     "prefix": "tf-heroku-data-space",
     "body": [
       "# Look up a Heroku Private Space",
-      "data \"heroku_space\" \"default\"",
+      "data \"heroku_space\" \"default\" {",
       "  name   = \"my-secret-space\"",
+      "}"
+    ]
+  },
+  "heroku-data-space_peering_info": {
+    "description": "Defines space_peering_info",
+    "prefix": "tf-heroku-data-space_peering_info",
+    "body": [
+      "# Look up a Heroku Private Space's peering info. ",
+      "data \"heroku_space_peering_info\" \"default\" {",
+      "  name   = \"my-secret-space\"",
+      "}",
+      "",
+      "# Initiate a VPC peering connection request.",
+      "resource \"aws_vpc_peering_connection\" \"foo\" {",
+      "  peer_owner_id = \"${data.heroku_space_peering_info.default.aws_account_id}\"",
+      "  peer_vpc_id   = \"${data.heroku_space_peering_info.default.vpc_id}\"",
+      "  vpc_id        = \"${aws_vpc.foo.id}\"",
       "}"
     ]
   },
@@ -23007,6 +24817,23 @@
       "}"
     ]
   },
+  "heroku-resource-app_release": {
+    "description": "Defines app_release",
+    "prefix": "tf-heroku-resource-app_release",
+    "body": [
+      "resource \"heroku_app\" \"foobar\" {",
+      "    name = \"foobar\"",
+      "    region = \"us\"",
+      "}",
+      "",
+      "# Upload your slug",
+      "",
+      "resource \"heroku_app_release\" \"foobar-release\" {",
+      "    app = \"${heroku_app.foobar.name}\"",
+      "    slug_id = \"01234567-89ab-cdef-0123-456789abcdef\"",
+      "}"
+    ]
+  },
   "heroku-resource-cert": {
     "description": "Defines cert",
     "prefix": "tf-heroku-resource-cert",
@@ -23054,6 +24881,34 @@
       "resource \"heroku_drain\" \"default\" {",
       "  app = \"test-app\"",
       "  url = \"syslog://terraform.example.com:1234\"",
+      "}"
+    ]
+  },
+  "heroku-resource-formation": {
+    "description": "Defines formation",
+    "prefix": "tf-heroku-resource-formation",
+    "body": [
+      "# Creates a new application called foobar",
+      "resource \"heroku_app\" \"foobar\" {",
+      "    name = \"foobar\"",
+      "    region = \"us\"",
+      "}",
+      "",
+      "# Creates a new release for application foobar using a slug id",
+      "resource \"heroku_app_release\" \"foobar-release\" {",
+      "    app = \"${heroku_app.foobar.name}\"",
+      "    slug_id = \"01234567-89ab-cdef-0123-456789abcdef\"",
+      "}",
+      "",
+      "# Update the web formation for the foobar application's web",
+      "resource \"heroku_formation\" \"foobar-web\" {",
+      "    app = \"${heroku_app.foobar.name}\"",
+      "    type = \"web\"",
+      "    quantity = 2",
+      "    size = \"standard-2x\"",
+      "",
+      "    # Tells Terraform that this formation must be created/updated only after the app release has been created",
+      "    depends_on = [\"heroku_app_release.foobar-release\"]",
       "}"
     ]
   },
@@ -23139,6 +24994,41 @@
       "  organization = {",
       "    name = \"my-company\"",
       "  }",
+      "}"
+    ]
+  },
+  "heroku-resource-space_peering_connection_accepter": {
+    "description": "Defines space_peering_connection_accepter",
+    "prefix": "tf-heroku-resource-space_peering_connection_accepter",
+    "body": [
+      "# Fetch the peering information for the Heroku Private Space.",
+      "data \"heroku_space_peering_info\" \"peer_space\" {",
+      "  name = \"my-fancy-space\"",
+      "}",
+      "",
+      "# Initiate the request.",
+      "resource \"aws_vpc_peering_connection\" \"request\" {",
+      "  peer_owner_id = \"${data.heroku_space_peering_info.peer_space.aws_account_id}\"",
+      "  peer_vpc_id   = \"${data.heroku_space_peering_info.peer_space.vpc_id}\"",
+      "  vpc_id        = \"${aws_vpc.main.id}\"",
+      "}",
+      "",
+      "# Accept the request.",
+      "resource \"heroku_space_peering_connection_accepter\" \"accept\" {",
+      "  space                     = \"${heroku_space.peer_space.name}\"",
+      "  vpc_peering_connection_id = \"${aws_vpc_peering_connection.request.id}\"",
+      "}"
+    ]
+  },
+  "heroku-resource-team_collaborator": {
+    "description": "Defines team_collaborator",
+    "prefix": "tf-heroku-resource-team_collaborator",
+    "body": [
+      "# Create a new team collaborator for the foobar application that has view, operate, manage permissions",
+      "resource \"heroku_team_collaborator\" \"foobar-collaborator\" {",
+      "\tapp = \"${heroku_app.foobar.name}\"",
+      "\temail = \"collaborator@foobar.com\"",
+      "\tpermissions = [\"view\", \"operate\", \"manage\"]",
       "}"
     ]
   },
@@ -24217,6 +26107,32 @@
       "}"
     ]
   },
+  "newrelic-resource-infra_alert_condition": {
+    "description": "Defines infra_alert_condition",
+    "prefix": "tf-newrelic-resource-infra_alert_condition",
+    "body": [
+      "resource \"newrelic_alert_policy\" \"foo\" {",
+      "  name = \"foo\"",
+      "}",
+      "",
+      "resource \"newrelic_infra_alert_condition\" \"foo\" {",
+      "  policy_id = \"${newrelic_alert_policy.foo.id}\"",
+      "",
+      "  name       = \"High disk usage\"",
+      "  type       = \"infra_metric\"",
+      "  event      = \"StorageSample\"",
+      "  select     = \"diskUsedPercent\"",
+      "  comparison = \"above\"",
+      "  where      = \"(`hostname` LIKE '%frontend%')\"",
+      "",
+      "  critical {",
+      "    duration      = 25",
+      "    value         = 90",
+      "    time_function = \"all\"",
+      "  }",
+      "}"
+    ]
+  },
   "newrelic-resource-nrql_alert_condition": {
     "description": "Defines nrql_alert_condition",
     "prefix": "tf-newrelic-resource-nrql_alert_condition",
@@ -24754,12 +26670,14 @@
       "  stateful     = true",
       "",
       "  rule {",
-      "    display_name = \"out_rule\"",
-      "    description  = \"Out going rule\"",
-      "    action       = \"ALLOW\"",
-      "    logged       = true",
-      "    ip_protocol  = \"IPV4\"",
-      "    direction    = \"OUT\"",
+      "    display_name          = \"out_rule\"",
+      "    description           = \"Out going rule\"",
+      "    action                = \"ALLOW\"",
+      "    logged                = true",
+      "    ip_protocol           = \"IPV4\"",
+      "    direction             = \"OUT\"",
+      "    destinations_excluded = \"false\"",
+      "    sources_excluded      = \"true\"",
       "",
       "    source {",
       "      target_type = \"LogicalSwitch\"",
@@ -24944,37 +26862,470 @@
       "}"
     ]
   },
-  "nsxt-resource-lb_http_monitor": {
-    "description": "Defines lb_http_monitor",
-    "prefix": "tf-nsxt-resource-lb_http_monitor",
+  "nsxt-resource-lb_client_ssl_profile": {
+    "description": "Defines lb_client_ssl_profile",
+    "prefix": "tf-nsxt-resource-lb_client_ssl_profile",
     "body": [
+      "resource \"nsxt_lb_client_ssl_profile\" \"lb_client_ssl_profile\" {",
+      "  description           = \"lb_client_ssl_profile provisioned by Terraform\"",
+      "  display_name          = \"lb_client_ssl_profile\"",
+      "  protocols             = [\"TLS_V1_2\"]",
+      "  ciphers               = [\"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256\", \"TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384\"]",
+      "  prefer_server_ciphers = true",
+      "  session_cache_enabled = true",
+      "  session_cache_timeout = 200",
       "",
-      "resource \"nsxt_lb_http_monitor\" \"lb_http_monitor\" {",
-      "  description  = \"lb_http_monitor provisioned by Terraform\"",
-      "  display_name = \"lb_http_monitor\"",
+      "  tag {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_cookie_persistence_profile": {
+    "description": "Defines lb_cookie_persistence_profile",
+    "prefix": "tf-nsxt-resource-lb_cookie_persistence_profile",
+    "body": [
+      "resource \"nsxt_lb_cookie_persistence_profile\" \"lb_cookie_persistence_profile\" {",
+      "  description        = \"lb_cookie_persistence_profile provisioned by Terraform\"",
+      "  display_name       = \"lb_cookie_persistence_profile\"",
+      "  persistence_shared = \"false\"",
+      "  cookie_fallback    = \"false\"",
+      "  cookie_garble      = \"false\"",
+      "  cookie_mode        = \"INSERT\"",
+      "",
+      "  insert_mode_params {",
+      "    cookie_name        = \"my_cookie\"",
+      "    cookie_domain      = \".example2.com\"",
+      "    cookie_path        = \"/subfolder\"",
+      "    cookie_expiry_type = \"SESSION_COOKIE_TIME\"",
+      "    max_idle_time      = \"1000\"",
+      "    max_life_time      = \"2000\"",
+      "  }",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_fast_tcp_application_profile": {
+    "description": "Defines lb_fast_tcp_application_profile",
+    "prefix": "tf-nsxt-resource-lb_fast_tcp_application_profile",
+    "body": [
+      "resource \"nsxt_lb_fast_tcp_profile\" \"lb_fast_tcp_profile\" {",
+      "  description       = \"lb_fast_tcp_profile provisioned by Terraform\"",
+      "  display_name      = \"lb_fast_tcp_profile\"",
+      "  close_timeout     = \"8\"",
+      "  idle_timeout      = \"1800\"",
+      "  ha_flow_mirroring = \"false\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_fast_udp_application_profile": {
+    "description": "Defines lb_fast_udp_application_profile",
+    "prefix": "tf-nsxt-resource-lb_fast_udp_application_profile",
+    "body": [
+      "resource \"nsxt_lb_fast_udp_profile\" \"lb_fast_udp_profile\" {",
+      "  description       = \"lb_fast_udp_profile provisioned by Terraform\"",
+      "  display_name      = \"lb_fast_udp_profile\"",
+      "  idle_timeout      = \"1800\"",
+      "  ha_flow_mirroring = \"false\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_http_application_profile": {
+    "description": "Defines lb_http_application_profile",
+    "prefix": "tf-nsxt-resource-lb_http_application_profile",
+    "body": [
+      "resource \"nsxt_lb_http_application_profile\" \"lb_http_application_profile\" {",
+      "  description            = \"lb_http_application_profile provisioned by Terraform\"",
+      "  display_name           = \"lb_http_application_profile\"",
+      "  http_redirect_to       = \"http://www.example.com\"",
+      "  http_redirect_to_https = \"false\"",
+      "  idle_timeout           = \"15\"",
+      "  request_body_size      = \"100\"",
+      "  request_header_size    = \"1024\"",
+      "  response_timeout       = \"60\"",
+      "  x_forwarded_for        = \"INSERT\"",
+      "  ntlm                   = \"true\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_http_forwarding_rule": {
+    "description": "Defines lb_http_forwarding_rule",
+    "prefix": "tf-nsxt-resource-lb_http_forwarding_rule",
+    "body": [
+      "resource \"nsxt_lb_http_forwarding_rule\" \"lb_rule\" {",
+      "  description = \"lb_rule provisioned by Terraform\"",
+      "  display_name = \"lb_rule\"",
+      "  match_strategy = \"ANY\"",
       "",
       "  tag = {",
       "    scope = \"color\"",
       "    tag   = \"red\"",
       "  }",
       "",
+      "  body_condition {",
+      "    value          = \"XXX\"",
+      "    match_type     = \"CONTAINS\"",
+      "    case_sensitive = false",
+      "  }",
+      "",
+      "  header_condition {",
+      "    name       = \"header1\"",
+      "    value      = \"bad\"",
+      "    match_type = \"EQUALS\"",
+      "    inverse    = true",
+      "  }",
+      "",
+      "  cookie_condition {",
+      "    name           = \"name\"",
+      "    value          = \"cookie1\"",
+      "    match_type     = \"STARTS_WITH\"",
+      "    case_sensitive = true",
+      "  }",
+      "",
+      "  cookie_condition {",
+      "    name           = \"name\"",
+      "    value          = \"cookie2\"",
+      "    match_type     = \"STARTS_WITH\"",
+      "    case_sensitive = true",
+      "  }",
+      "",
+      "  method_condition {",
+      "    method = \"HEAD\"",
+      "  }",
+      "",
+      "  version_condition {",
+      "    version = \"HTTP_VERSION_1_0\"",
+      "    inverse = true",
+      "  }",
+      "",
+      "  uri_condition {",
+      "    uri        = \"/index.html\"",
+      "    match_type = \"EQUALS\"",
+      "  }",
+      "",
+      "  ip_condition {",
+      "    source_address = \"1.1.1.1\"",
+      "  }",
+      "",
+      "  tcp_condition {",
+      "    source_port = 7887",
+      "  }",
+      "",
+      "  http_reject_action {",
+      "    reply_status  = \"500\"",
+      "    reply_message = \"rejected\"",
+      "  }",
+      "",
+      "  http_redirect_action {",
+      "    redirect_status = \"200\"",
+      "    redirect_url    = \"/abc.com\"",
+      "  }",
+      "",
+      "  select_pool_action {",
+      "    pool_id  = \"${nsxt_lb_pool.pool.id}\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_http_monitor": {
+    "description": "Defines lb_http_monitor",
+    "prefix": "tf-nsxt-resource-lb_http_monitor",
+    "body": [
+      "",
+      "resource \"nsxt_lb_http_monitor\" \"lb_http_monitor\" {",
+      "  description           = \"lb_http_monitor provisioned by Terraform\"",
+      "  display_name          = \"lb_http_monitor\"",
       "  fall_count            = 2",
       "  interval              = 5",
       "  monitor_port          = 8080",
       "  rise_count            = 5",
       "  timeout               = 10",
       "  request_body          = \"ping\"",
-      "",
-      "  request_header {",
-      "    name  = \"X-healthcheck\"",
-      "    value = \"NSX\"",
-      "  }",
-      "",
       "  request_method        = \"HEAD\"",
       "  request_url           = \"/index.html\"",
       "  request_version       = \"HTTP_VERSION_1_1\"",
       "  response_body         = \"pong\"",
       "  response_status_codes = [200, 304]",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
+      "  request_header {",
+      "    name  = \"X-healthcheck\"",
+      "    value = \"NSX\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_http_request_rewrite_rule": {
+    "description": "Defines lb_http_request_rewrite_rule",
+    "prefix": "tf-nsxt-resource-lb_http_request_rewrite_rule",
+    "body": [
+      "resource \"nsxt_lb_http_request_rewrite_rule\" \"lb_rule\" {",
+      "  description = \"lb_rule provisioned by Terraform\"",
+      "  display_name = \"lb_rule\"",
+      "  match_strategy = \"ANY\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
+      "  body_condition {",
+      "    value      = \"XXX\"",
+      "    match_type = \"CONTAINS\"",
+      "    case_sensitive = false",
+      "  }",
+      "",
+      "  header_condition {",
+      "    name       = \"header1\"",
+      "    value      = \"bad\"",
+      "    match_type = \"EQUALS\"",
+      "    inverse    = true",
+      "  }",
+      "",
+      "  cookie_condition {",
+      "    name           = \"name\"",
+      "    value          = \"cookie1\"",
+      "    match_type     = \"STARTS_WITH\"",
+      "    case_sensitive = true",
+      "  }",
+      "",
+      "  cookie_condition {",
+      "    name           = \"name\"",
+      "    value          = \"cookie2\"",
+      "    match_type     = \"STARTS_WITH\"",
+      "    case_sensitive = true",
+      "  }",
+      "",
+      "  method_condition {",
+      "    method = \"HEAD\"",
+      "  }",
+      "",
+      "  version_condition {",
+      "    version = \"HTTP_VERSION_1_0\"",
+      "    inverse = true",
+      "  }",
+      "",
+      "  uri_condition {",
+      "    uri        = \"/index.html\"",
+      "    match_type = \"EQUALS\"",
+      "  }",
+      "",
+      "  uri_arguments_condition {",
+      "    uri_arguments = \"delete\"",
+      "    match_type    = \"CONTAINS\"",
+      "    inverse       = true",
+      "  }",
+      "",
+      "  ip_condition {",
+      "    source_address = \"1.1.1.1\"",
+      "  }",
+      "",
+      "  tcp_condition {",
+      "    source_port = 7887",
+      "  }",
+      "",
+      "  header_rewrite_action {",
+      "    name  = \"header1\"",
+      "    value = \"value2\"",
+      "  }",
+      "",
+      "  uri_rewrite_action {",
+      "    uri           = \"new.html\"",
+      "    uri_arguments = \"redirect=true\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_http_response_rewrite_rule": {
+    "description": "Defines lb_http_response_rewrite_rule",
+    "prefix": "tf-nsxt-resource-lb_http_response_rewrite_rule",
+    "body": [
+      "resource \"nsxt_lb_http_response_rewrite_rule\" \"lb_rule\" {",
+      "  description = \"lb_rule provisioned by Terraform\"",
+      "  display_name = \"lb_rule\"",
+      "  match_strategy = \"ALL\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"blue\"",
+      "  }",
+      "",
+      "  request_header_condition {",
+      "    name       = \"header1\"",
+      "    value      = \"bad\"",
+      "    match_type = \"EQUALS\"",
+      "    inverse    = true",
+      "  }",
+      "",
+      "  response_header_condition {",
+      "    name       = \"header1\"",
+      "    value      = \"good\"",
+      "    match_type = \"EQUALS\"",
+      "    inverse    = false",
+      "  }",
+      "",
+      "  cookie_condition {",
+      "    name           = \"name1\"",
+      "    value          = \"cookie1\"",
+      "    match_type     = \"STARTS_WITH\"",
+      "    case_sensitive = true",
+      "  }",
+      "",
+      "  cookie_condition {",
+      "    name           = \"name2\"",
+      "    value          = \"cookie2\"",
+      "    match_type     = \"STARTS_WITH\"",
+      "    case_sensitive = true",
+      "  }",
+      "",
+      "  method_condition {",
+      "    method = \"HEAD\"",
+      "  }",
+      "",
+      "  version_condition {",
+      "    version = \"HTTP_VERSION_1_1\"",
+      "    inverse = true",
+      "  }",
+      "",
+      "  uri_condition {",
+      "    uri        = \"/index.html\"",
+      "    match_type = \"EQUALS\"",
+      "  }",
+      "",
+      "  uri_arguments_condition {",
+      "    uri_arguments = \"delete\"",
+      "    match_type    = \"CONTAINS\"",
+      "    inverse       = true",
+      "  }",
+      "",
+      "  ip_condition {",
+      "    source_address = \"1.1.1.1\"",
+      "  }",
+      "",
+      "  tcp_condition {",
+      "    source_port = 7887",
+      "  }",
+      "",
+      "  header_rewrite_action {",
+      "    name  = \"header1\"",
+      "    value = \"even better\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_http_virtual_server": {
+    "description": "Defines lb_http_virtual_server",
+    "prefix": "tf-nsxt-resource-lb_http_virtual_server",
+    "body": [
+      "resource \"nsxt_lb_http_application_profile\" \"http_xff\" {",
+      "  x_forwarded_for = \"INSERT\"",
+      "}",
+      "",
+      "resource \"nsxt_lb_cookie_persistence_profile\" \"session_persistence\" {",
+      "  cookie_name = \"SESSION\"",
+      "}",
+      "",
+      "resource \"nsxt_lb_pool\" \"pool1\" {",
+      "  algorithm = LEAST_CONNECTION",
+      "  member {",
+      "    ip_address = \"3.0.0.1\"",
+      "    port       = \"443\"",
+      "  }",
+      "  member {",
+      "    ip_address = \"3.0.0.2\"",
+      "    port       = \"443\"",
+      "  }",
+      "}",
+      "",
+      "resource \"nsxt_lb_pool\" \"sorry_pool\" {",
+      "  member {",
+      "    ip_address = \"3.0.0.15\"",
+      "    port       = \"443\"",
+      "  }",
+      "}",
+      "",
+      "resource \"nsxt_lb_http_request_rewrite_rule\" \"redirect_post\" {",
+      "  match_strategy = \"ALL\"",
+      "  method_condition {",
+      "    method = \"POST\"",
+      "  }",
+      "",
+      "  uri_rewrite_action {",
+      "    uri = \"/sorry_page.html\"",
+      "  }",
+      "}",
+      "",
+      "resource \"nsxt_lb_client_ssl_profile\" \"ssl1\" {",
+      "  prefer_server_ciphers = true",
+      "}",
+      "",
+      "resource \"nsxt_lb_server_ssl_profile\" \"ssl1\" {",
+      "  session_cache_enabled = false",
+      "}",
+      "",
+      "resource \"nsxt_lb_http_virtual_server\" \"lb_virtual_server\" {",
+      "  description                = \"lb_virtual_server provisioned by terraform\"",
+      "  display_name               = \"virtual server 1\"",
+      "  access_log_enabled         = true",
+      "  application_profile_id     = \"${nsxt_lb_http_application_profile.http_xff.id}\"",
+      "  enabled                    = true",
+      "  ip_address                 = \"10.0.0.2\"",
+      "  port                       = \"443\"",
+      "  default_pool_member_port   = \"8888\"",
+      "  max_concurrent_connections = 50",
+      "  max_new_connection_rate    = 20",
+      "  persistence_profile_id     = \"${nsxt_lb_cookie_persistence_profile.session_persistence.id}\"",
+      "  pool_id                    = \"${nsxt_lb_pool.pool1.id}\"",
+      "  sorry_pool_id              = \"${nsxt_lb_pool.sorry_pool.id}\"",
+      "  rule_ids                   = \"[${nsxt_lb_http_request_rewrite_rule.redirect_post.id}\"]",
+      "",
+      "  client_ssl {",
+      "    client_ssl_profile_id   = \"${nsxt_lb_client_ssl_profile.ssl1.id}\"",
+      "    default_certificate_id  = \"${data.nsxt_certificate.cert1.id}\"",
+      "    certificate_chain_depth = 2",
+      "    client_auth             = true",
+      "    ca_ids                  = [\"${data.nsxt_certificate.ca.id}\"]",
+      "    crl_ids                 = [\"${data.nsxt_certificate.crl.id}\"]",
+      "    sni_certificate_ids     = [\"${data.nsxt_certificate.sni.id}\"]",
+      "  }",
+      "",
+      "  server_ssl {",
+      "    server_ssl_profile_id   = \"${nsxt_lb_server_ssl_profile.ssl1.id}\"",
+      "    client_certificate_id   = \"${data.nsxt_certificate.client.id}\"",
+      "    certificate_chain_depth = 2",
+      "    server_auth             = true",
+      "    ca_ids                  = [\"${data.nsxt_certificate.server_ca.id}\"]",
+      "    crl_ids                 = [\"${data.nsxt_certificate.crl.id}\"]",
+      "  }",
+      "",
+      "  tag {",
+      "    scope = \"color\"",
+      "    tag   = \"green\"",
+      "  }",
       "}"
     ]
   },
@@ -24994,12 +27345,6 @@
       "resource \"nsxt_lb_https_monitor\" \"lb_https_monitor\" {",
       "  description             = \"lb_https_monitor provisioned by Terraform\"",
       "  display_name            = \"lb_https_monitor\"",
-      "",
-      "  tag = {",
-      "    scope = \"color\"",
-      "    tag   = \"red\"",
-      "  }",
-      "",
       "  fall_count              = 2",
       "  interval                = 5",
       "  monitor_port            = 8080",
@@ -25010,12 +27355,6 @@
       "  client_certificate_id   = \"${data.nsxt_certificate.client.id}\"",
       "  protocols               = [\"TLS_V1_2\"]",
       "  request_body            = \"ping\"",
-      "",
-      "  request_header {",
-      "    name  = \"X-healthcheck\"",
-      "    value = \"NSX\"",
-      "  }",
-      "",
       "  request_method          = \"HEAD\"",
       "  request_url             = \"/index.html\"",
       "  request_version         = \"HTTP_VERSION_1_1\"",
@@ -25024,6 +27363,16 @@
       "  server_auth             = \"REQUIRED\"",
       "  server_auth_ca_ids      = [\"${data.nsxt_certificate.CA.id}\"]",
       "  server_auth_crl_ids     = [\"78ba3814-bfe1-45e5-89d3-46862bed7896\"]",
+      "",
+      "  request_header {",
+      "    name  = \"X-healthcheck\"",
+      "    value = \"NSX\"",
+      "  }",
+      "",
+      "  tag {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
       "}"
     ]
   },
@@ -25034,18 +27383,195 @@
       "resource \"nsxt_lb_icmp_monitor\" \"lb_icmp_monitor\" {",
       "  description  = \"lb_icmp_monitor provisioned by Terraform\"",
       "  display_name = \"lb_icmp_monitor\"",
-      "",
-      "  tag = {",
-      "    scope = \"color\"",
-      "    tag   = \"red\"",
-      "  }",
-      "",
       "  fall_count   = 3",
       "  interval     = 5",
       "  monitor_port = 7887",
       "  rise_count   = 3",
       "  timeout      = 10",
       "  data_length  = 56",
+      "",
+      "  tag {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_passive_monitor": {
+    "description": "Defines lb_passive_monitor",
+    "prefix": "tf-nsxt-resource-lb_passive_monitor",
+    "body": [
+      "resource \"nsxt_lb_passive_monitor\" \"lb_passive_monitor\" {",
+      "  description  = \"lb_passive_monitor provisioned by Terraform\"",
+      "  display_name = \"lb_passive_monitor\"",
+      "  max_fails    = 3",
+      "  timeout      = 10",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_pool": {
+    "description": "Defines lb_pool",
+    "prefix": "tf-nsxt-resource-lb_pool",
+    "body": [
+      "resource \"nsxt_lb_icmp_monitor\" \"lb_icmp_monitor\" {",
+      "  display_name = \"lb_icmp_monitor\"",
+      "  fall_count   = 3",
+      "  interval     = 5",
+      "}",
+      "",
+      "resource \"nsxt_lb_passive_monitor\" \"lb_passive_monitor\" {",
+      "  display_name = \"lb_passive_monitor\"",
+      "  max_fails    = 3",
+      "  timeout      = 10",
+      "}",
+      "",
+      "resource \"nsxt_lb_pool\" \"lb_pool\" {",
+      "  description              = \"lb_pool provisioned by Terraform\"",
+      "  display_name             = \"lb_pool\"",
+      "  algorithm                = \"WEIGHTED_ROUND_ROBIN\"",
+      "  min_active_members       = 1",
+      "  tcp_multiplexing_enabled = false",
+      "  tcp_multiplexing_number  = 3",
+      "  active_monitor_id        = \"${nsxt_lb_icmp_monitor.lb_icmp_monitor.id}\"",
+      "  passive_monitor_id       = \"${nsxt_lb_passive_monitor.lb_passive_monitor.id}\"",
+      " ",
+      "  member {",
+      "    admin_state                = \"ENABLED\"",
+      "    backup_member              = \"false\"",
+      "    display_name               = \"1st-member\"",
+      "    ip_address                 = \"1.1.1.1\"",
+      "    max_concurrent_connections = \"1\"",
+      "    port                       = \"87\"",
+      "    weight                     = \"1\"",
+      "  }",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}",
+      "",
+      "resource \"nsxt_lb_pool\" \"lb_pool_with_dynamic_membership\" {",
+      "  description              = \"lb_pool provisioned by Terraform\"",
+      "  display_name             = \"dynamic_lb_pool\"",
+      "  algorithm                = \"LEAST_CONNECTION\"",
+      "  min_active_members       = 1",
+      "  tcp_multiplexing_enabled = false",
+      "  tcp_multiplexing_number  = 3",
+      "  active_monitor_id        = \"${nsxt_lb_icmp_monitor.lb_icmp_monitor.id}\"",
+      "  passive_monitor_id       = \"${nsxt_lb_passive_monitor.lb_passive_monitor.id}\"",
+      "",
+      "  snat_translation {",
+      "    type          = \"SNAT_IP_POOL\"",
+      "    ip            = \"1.1.1.1\"",
+      "    port_overload = \"8\"",
+      "  }",
+      "",
+      "  member_group {",
+      "    ip_version_filter = \"IPV4\"",
+      "    max_ip_list_size  = \"4\"",
+      "    port              = \"80\"",
+      "",
+      "    grouping_object {",
+      "      target_type = \"NSGroup\"",
+      "      target_id   = \"${nsxt_ns_group.group1.id}\"",
+      "      }",
+      "    }",
+      "  }",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_server_ssl_profile": {
+    "description": "Defines lb_server_ssl_profile",
+    "prefix": "tf-nsxt-resource-lb_server_ssl_profile",
+    "body": [
+      "resource \"nsxt_lb_server_ssl_profile\" \"lb_server_ssl_profile\" {",
+      "  description           = \"lb_server_ssl_profile provisioned by Terraform\"",
+      "  display_name          = \"lb_server_ssl_profile\"",
+      "  protocols             = [\"TLS_V1_2\"]",
+      "  ciphers               = [\"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256\", \"TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384\"]",
+      "  session_cache_enabled = true",
+      "",
+      "  tag {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_service": {
+    "description": "Defines lb_service",
+    "prefix": "tf-nsxt-resource-lb_service",
+    "body": [
+      "",
+      "data \"nsxt_edge_cluster\" \"EC\" {",
+      "  display_name = \"%s\"",
+      "}",
+      "",
+      "data \"nsxt_logical_tier0_router\" \"test\" {",
+      "  display_name = \"%s\"",
+      "}",
+      "",
+      "resource \"nsxt_logical_router_link_port_on_tier0\" \"test\" {",
+      "  display_name      = \"port_on_tier0\"",
+      "  logical_router_id = \"${data.nsxt_logical_tier0_router.test.id}\"",
+      "}",
+      "",
+      "resource \"nsxt_logical_tier1_router\" \"test\" {",
+      "  display_name    = \"test\"",
+      "  edge_cluster_id = \"${data.nsxt_edge_cluster.EC.id}\"",
+      "}",
+      "",
+      "resource \"nsxt_logical_router_link_port_on_tier1\" \"test\" {",
+      "  logical_router_id             = \"${nsxt_logical_tier1_router.test.id}\"",
+      "  linked_logical_router_port_id = \"${nsxt_logical_router_link_port_on_tier0.test.id}\"",
+      "}`",
+      "",
+      "resource \"nsxt_lb_service\" \"lb_service\" {",
+      "  description  = \"lb_service provisioned by Terraform\"",
+      "  display_name = \"lb_service\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
+      "  enabled           = true",
+      "  logical_router_id = \"${nsxt_logical_tier1_router.test.id}\"",
+      "  error_log_level   = \"INFO\"",
+      "  size              = \"MEDIUM\"",
+      "",
+      "  depends_on        = [\"nsxt_logical_router_link_port_on_tier1.test\"]",
+      "}"
+    ]
+  },
+  "nsxt-resource-lb_source_ip_persistence_profile": {
+    "description": "Defines lb_source_ip_persistence_profile",
+    "prefix": "tf-nsxt-resource-lb_source_ip_persistence_profile",
+    "body": [
+      "resource \"nsxt_lb_source_ip_persistence_profile\" \"lb_source_ip_persistence_profile\" {",
+      "  description = \"lb_source_ip_persistence_profile provisioned by Terraform\"",
+      "  display_name = \"lb_source_ip_persistence_profile\"",
+      "  persistence_shared       = \"true\"",
+      "  ha_persistence_mirroring = \"true\"",
+      "  purge_when_full          = \"true\"",
+      "  timeout                  = \"100\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
+      "",
       "}"
     ]
   },
@@ -25056,17 +27582,16 @@
       "resource \"nsxt_lb_tcp_monitor\" \"lb_tcp_monitor\" {",
       "  description  = \"lb_tcp_monitor provisioned by Terraform\"",
       "  display_name = \"lb_tcp_monitor\"",
-      "",
-      "  tag = {",
-      "    scope = \"color\"",
-      "    tag   = \"red\"",
-      "  }",
-      "",
       "  fall_count   = 3",
       "  interval     = 5",
       "  monitor_port = 7887",
       "  rise_count   = 3",
       "  timeout      = 10",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
       "}"
     ]
   },
@@ -25077,12 +27602,6 @@
       "resource \"nsxt_lb_udp_monitor\" \"lb_udp_monitor\" {",
       "  description  = \"lb_udp_monitor provisioned by Terraform\"",
       "  display_name = \"lb_udp_monitor\"",
-      "",
-      "  tag = {",
-      "    scope = \"color\"",
-      "    tag   = \"red\"",
-      "  }",
-      "",
       "  fall_count   = 3",
       "  interval     = 5",
       "  monitor_port = 7887",
@@ -25090,6 +27609,11 @@
       "  timeout      = 10",
       "  send         = \"hi\"",
       "  receive      = \"hello\"",
+      "",
+      "  tag = {",
+      "    scope = \"color\"",
+      "    tag   = \"red\"",
+      "  }",
       "}"
     ]
   },
@@ -25185,6 +27709,24 @@
       "}"
     ]
   },
+  "nsxt-resource-logical_router_centralized_service_port": {
+    "description": "Defines logical_router_centralized_service_port",
+    "prefix": "tf-nsxt-resource-logical_router_centralized_service_port",
+    "body": [
+      "resource \"nsxt_logical_router_centralized_service_port\" \"cs_port\" {",
+      "  description                   = \"Centralized service port provisioned by Terraform\"",
+      "  display_name                  = \"CSP1\"",
+      "  logical_router_id             = \"${nsxt_logical_tier1_router.rtr1.id}\"",
+      "  linked_logical_switch_port_id = \"${nsxt_logical_port.logical_port1.id}\"",
+      "  ip_address                    = \"1.1.0.1/24\"",
+      "",
+      "  tag {",
+      "    scope = \"color\"",
+      "    tag   = \"blue\"",
+      "  }",
+      "}"
+    ]
+  },
   "nsxt-resource-logical_router_downlink_port": {
     "description": "Defines logical_router_downlink_port",
     "prefix": "tf-nsxt-resource-logical_router_downlink_port",
@@ -25192,7 +27734,7 @@
       "resource \"nsxt_logical_router_downlink_port\" \"downlink_port\" {",
       "  description                   = \"DP1 provisioned by Terraform\"",
       "  display_name                  = \"DP1\"",
-      "  logical_router_id             = \"${nsxt_logical_router.rtr1.id}\"",
+      "  logical_router_id             = \"${nsxt_logical_tier1_router.rtr1.id}\"",
       "  linked_logical_switch_port_id = \"${nsxt_logical_port.logical_port1.id}\"",
       "  ip_address                    = \"1.1.0.1/24\"",
       "",
@@ -25217,11 +27759,6 @@
       "  display_name      = \"TIER0_PORT1\"",
       "  logical_router_id = \"${data.nsxt_logical_tier0_router.rtr1.id}\"",
       "",
-      "  service_binding {",
-      "    target_id   = \"${nsxt_dhcp_relay_service.dr_service.id}\"",
-      "    target_type = \"LogicalService\"",
-      "  }",
-      "",
       "  tag {",
       "    scope = \"color\"",
       "    tag   = \"blue\"",
@@ -25238,11 +27775,6 @@
       "  display_name                  = \"TIER1_PORT1\"",
       "  logical_router_id             = \"${nsxt_logical_tier1_router.rtr1.id}\"",
       "  linked_logical_router_port_id = \"${nsxt_logical_router_link_port_on_tier0.link_port_tier0.id}\"",
-      "",
-      "  service_binding {",
-      "    target_id   = \"${nsxt_dhcp_relay_service.dr_service.id}\"",
-      "    target_type = \"LogicalService\"",
-      "  }",
       "",
       "  tag {",
       "    scope = \"color\"",
@@ -25440,6 +27972,19 @@
       "      \"source_ip\" = \"0.0.0.0\"",
       "    }",
       "  ]",
+      "}"
+    ]
+  },
+  "oneandone-resource-image": {
+    "description": "Defines image",
+    "prefix": "tf-oneandone-resource-image",
+    "body": [
+      "resource \"oneandone_image\" \"example1\" {",
+      "  name = \"example1\"",
+      "  server_id = \"932F8ABA5060571E5D3C2119E0E31360\"",
+      "  description = \"Weekly server snapshot\"",
+      "  frequency = \"WEEKLY\"",
+      "  num_images = 5",
       "}"
     ]
   },
@@ -25720,6 +28265,32 @@
       "}"
     ]
   },
+  "opc-data-opc_compute_ip_address_reservation": {
+    "description": "Defines opc_compute_ip_address_reservation",
+    "prefix": "tf-opc-data-opc_compute_ip_address_reservation",
+    "body": [
+      "data \"opc_compute_ip_address_reservation\" \"example\" {",
+      "  name = \"/Compute-${var.domain}/${var.user}/ipaddressreservation1\"",
+      "}",
+      "",
+      "output \"public_ip_address\" {",
+      "  value = \"${data.opc_compute_ip_address_reservation.example.ip_address}\"",
+      "}"
+    ]
+  },
+  "opc-data-opc_compute_ip_reservation": {
+    "description": "Defines opc_compute_ip_reservation",
+    "prefix": "tf-opc-data-opc_compute_ip_reservation",
+    "body": [
+      "data \"opc_compute_ip_reservation\" \"example\" {",
+      "  name = \"/Compute-${var.domain}/${var.user}/309dd783-552d-4b8a-a3aa-a71109f703df\"",
+      "}`",
+      "",
+      "output \"public_ip_address\" {",
+      "  value = \"${data.opc_compute_ip_reservation.example.ip}\"",
+      "}"
+    ]
+  },
   "opc-data-opc_compute_machine_image": {
     "description": "Defines opc_compute_machine_image",
     "prefix": "tf-opc-data-opc_compute_machine_image",
@@ -25750,6 +28321,19 @@
       "",
       "output \"vnic\" {",
       "  value = \"${data.opc_compute_network_interface.foo.vnic}\"",
+      "}"
+    ]
+  },
+  "opc-data-opc_compute_ssh_key": {
+    "description": "Defines opc_compute_ssh_key",
+    "prefix": "tf-opc-data-opc_compute_ssh_key",
+    "body": [
+      "data \"opc_compute_ssh_key\" \"test\" {",
+      "  name    = \"/Compute-${var.domain}/${var.user}/test-key\"",
+      "}",
+      "",
+      "output \"public_ssh_key\" {",
+      "  value = \"${data.opc_compute_ssh_key.test.key}\"",
       "}"
     ]
   },
@@ -26284,6 +28868,26 @@
       "}"
     ]
   },
+  "openstack-resource-blockstorage_volume_attach_v3": {
+    "description": "Defines blockstorage_volume_attach_v3",
+    "prefix": "tf-openstack-resource-blockstorage_volume_attach_v3",
+    "body": [
+      "resource \"openstack_blockstorage_volume_v3\" \"volume_1\" {",
+      "  name = \"volume_1\"",
+      "  size = 1",
+      "}",
+      "",
+      "resource \"openstack_blockstorage_volume_attach_v3\" \"va_1\" {",
+      "  volume_id = \"${openstack_blockstorage_volume_v3.volume_1.id}\"",
+      "  device = \"auto\"",
+      "  host_name = \"devstack\"",
+      "  ip_address = \"192.168.255.10\"",
+      "  initiator = \"iqn.1993-08.org.debian:01:e9861fb1859\"",
+      "  os_type = \"linux2\"",
+      "  platform = \"x86_64\"",
+      "}"
+    ]
+  },
   "openstack-resource-blockstorage_volume_v1": {
     "description": "Defines blockstorage_volume_v1",
     "prefix": "tf-openstack-resource-blockstorage_volume_v1",
@@ -26301,6 +28905,18 @@
     "prefix": "tf-openstack-resource-blockstorage_volume_v2",
     "body": [
       "resource \"openstack_blockstorage_volume_v2\" \"volume_1\" {",
+      "  region      = \"RegionOne\"",
+      "  name        = \"volume_1\"",
+      "  description = \"first test volume\"",
+      "  size        = 3",
+      "}"
+    ]
+  },
+  "openstack-resource-blockstorage_volume_v3": {
+    "description": "Defines blockstorage_volume_v3",
+    "prefix": "tf-openstack-resource-blockstorage_volume_v3",
+    "body": [
+      "resource \"openstack_blockstorage_volume_v3\" \"volume_1\" {",
       "  region      = \"RegionOne\"",
       "  name        = \"volume_1\"",
       "  description = \"first test volume\"",
@@ -27154,97 +29770,19 @@
       "}"
     ]
   },
-  "opentelekomcloud-data-cesalarm-rule": {
-    "description": "Defines cesalarm-rule",
-    "prefix": "tf-opentelekomcloud-data-cesalarm-rule",
+  "openstack-resource-vpnaas_site_connection_v2": {
+    "description": "Defines vpnaas_site_connection_v2",
+    "prefix": "tf-openstack-resource-vpnaas_site_connection_v2",
     "body": [
-      "resource \"opentelekomcloud_ces_alarmrule\" \"alarm_rule\" {",
-      "  \"alarm_name\" = \"alarm_rule\"",
-      "  \"metric\" {",
-      "    \"namespace\" = \"SYS.ECS\"",
-      "    \"metric_name\" = \"network_outgoing_bytes_rate_inband\"",
-      "    \"dimensions\" {",
-      "        \"name\" = \"instance_id\"",
-      "        \"value\" = \"${opentelekomcloud_compute_instance_v2.webserver.id}\"",
-      "    }",
-      "  }",
-      "  \"condition\"  {",
-      "    \"period\" = 300",
-      "    \"filter\" = \"average\"",
-      "    \"comparison_operator\" = \">\"",
-      "    \"value\" = 6",
-      "    \"unit\" = \"B/s\"",
-      "    \"count\" = 1",
-      "  }",
-      "  \"alarm_actions\" {",
-      "    \"type\" = \"notification\"",
-      "    \"notification_list\" = [",
-      "      \"${opentelekomcloud_smn_topic_v2.topic.id}\"",
-      "    ]",
-      "  }",
-      "}"
-    ]
-  },
-  "opentelekomcloud-data-elb_backend": {
-    "description": "Defines elb_backend",
-    "prefix": "tf-opentelekomcloud-data-elb_backend",
-    "body": [
-      "resource \"opentelekomcloud_elb_backend\" \"backend_1\" {",
-      "  address = \"1.1.1.1s\"",
-      "  listener_id = \"d9415786-5f1a-428b-b35f-2f1523e146d2\"",
-      "  server_id = \"%s\"",
-      "  timeouts {",
-      "    create = \"5m\"",
-      "    delete = \"5m\"",
-      "  }",
-      "}"
-    ]
-  },
-  "opentelekomcloud-data-elb_health": {
-    "description": "Defines elb_health",
-    "prefix": "tf-opentelekomcloud-data-elb_health",
-    "body": [
-      "resource \"opentelekomcloud_elb_health\" \"health_1\" {",
-      "  listener_id = \"}\"",
-      "  healthy_threshold = 3",
-      "",
-      "  timeouts {",
-      "    create = \"5m\"",
-      "    update = \"5m\"",
-      "    delete = \"5m\"",
-      "  }",
-      "}"
-    ]
-  },
-  "opentelekomcloud-data-elb_listener": {
-    "description": "Defines elb_listener",
-    "prefix": "tf-opentelekomcloud-data-elb_listener",
-    "body": [
-      "resource \"opentelekomcloud_elb_listener\" \"listener_1\" {",
-      "  name = \"listener_1\"",
-      "  protocol = \"TCP\"",
-      "  protocol_port = 8080",
-      "  backend_protocol = \"TCP\"",
-      "  backend_port = 8080",
-      "  lb_algorithm = \"roundrobin\"",
-      "  loadbalancer_id = \"d9415786-5f1a-428b-b35f-2f1523e146d2\"",
-      "    timeouts {",
-      "\tcreate = \"5m\"",
-      "\tupdate = \"5m\"",
-      "\tdelete = \"5m\"",
-      "    }",
-      "}"
-    ]
-  },
-  "opentelekomcloud-data-elb_loadbalancer": {
-    "description": "Defines elb_loadbalancer",
-    "prefix": "tf-opentelekomcloud-data-elb_loadbalancer",
-    "body": [
-      "resource \"opentelekomcloud_elb_loadbalancer\" \"loadbalancer_1\" {",
-      "  name = \"loadbalancer_1\"",
-      "  vpc_id = \"d9415786-5f1a-428b-b35f-2f1523e146d2\"",
-      "  type = \"External\"",
-      "  bandwidth = 5",
+      "resource \"openstack_vpnaas_site_connection_v2\" \"conn_1\" {",
+      "  \t\tname = \"connection_1\"",
+      "  \t\tikepolicy_id = \"${openstack_vpnaas_ike_policy_v2.policy_2.id}\"",
+      "  \t\tipsecpolicy_id = \"${openstack_vpnaas_ipsec_policy_v2.policy_1.id}\"",
+      "  \t\tvpnservice_id = \"${openstack_vpnaas_service_v2.service_1.id}\"",
+      "  \t\tpsk = \"secret\"",
+      "  \t\tpeer_address = \"192.168.10.1\"",
+      "  \t\tlocal_ep_group_id = \"${openstack_vpnaas_endpoint_group_v2.group_2.id}\"",
+      "  \t\tpeer_ep_group_id = \"${openstack_vpnaas_endpoint_group_v2.group_1.id}\"",
       "}"
     ]
   },
@@ -27263,14 +29801,14 @@
     "prefix": "tf-opentelekomcloud-data-kms_data_key_v1",
     "body": [
       "",
-      "resource \"huaweicloud_kms_key_v1\" \"key1\" {",
+      "resource \"opentelekomcloud_kms_key_v1\" \"key1\" {",
       "  key_alias       = \"key_1\"",
       "  pending_days    = \"7\"",
       "  key_description = \"first test key\"",
       "}",
       "",
-      "data \"huaweicloud_kms_data_key_v1\" \"kms_datakey1\" {",
-      "  key_id         = \"${huaweicloud_kms_key_v1.key1.id}\"",
+      "data \"opentelekomcloud_kms_data_key_v1\" \"kms_datakey1\" {",
+      "  key_id         = \"${opentelekomcloud_kms_key_v1.key1.id}\"",
       "  datakey_length = \"512\"",
       "}",
       ""
@@ -27281,7 +29819,7 @@
     "prefix": "tf-opentelekomcloud-data-kms_key_v1",
     "body": [
       "",
-      "data \"huaweicloud_kms_key_v1\" \"key_1\" {",
+      "data \"opentelekomcloud_kms_key_v1\" \"key_1\" {",
       "  key_alias        = \"test_key\"",
       "  key_description  = \"test key description\"",
       "  key_state        = \"2\"",
@@ -27375,6 +29913,37 @@
       "  name        = \"volume_1\"",
       "  description = \"first test volume\"",
       "  size        = 3",
+      "}"
+    ]
+  },
+  "opentelekomcloud-resource-ces_alarmrule": {
+    "description": "Defines ces_alarmrule",
+    "prefix": "tf-opentelekomcloud-resource-ces_alarmrule",
+    "body": [
+      "resource \"opentelekomcloud_ces_alarmrule\" \"alarm_rule\" {",
+      "  \"alarm_name\" = \"alarm_rule\"",
+      "  \"metric\" {",
+      "    \"namespace\" = \"SYS.ECS\"",
+      "    \"metric_name\" = \"network_outgoing_bytes_rate_inband\"",
+      "    \"dimensions\" {",
+      "        \"name\" = \"instance_id\"",
+      "        \"value\" = \"${opentelekomcloud_compute_instance_v2.webserver.id}\"",
+      "    }",
+      "  }",
+      "  \"condition\"  {",
+      "    \"period\" = 300",
+      "    \"filter\" = \"average\"",
+      "    \"comparison_operator\" = \">\"",
+      "    \"value\" = 6",
+      "    \"unit\" = \"B/s\"",
+      "    \"count\" = 1",
+      "  }",
+      "  \"alarm_actions\" {",
+      "    \"type\" = \"notification\"",
+      "    \"notification_list\" = [",
+      "      \"${opentelekomcloud_smn_topic_v2.topic.id}\"",
+      "    ]",
+      "  }",
       "}"
     ]
   },
@@ -27752,7 +30321,7 @@
     "description": "Defines kms_key_v1",
     "prefix": "tf-opentelekomcloud-resource-kms_key_v1",
     "body": [
-      "resource \"huaweicloud_kms_key_v1\" \"key_1\" {",
+      "resource \"opentelekomcloud_kms_key_v1\" \"key_1\" {",
       "  key_alias       = \"key_1\"",
       "  pending_days    = \"7\"",
       "  key_description = \"first test key\"",
@@ -27788,6 +30357,8 @@
       "resource \"opentelekomcloud_lb_member_v2\" \"member_1\" {",
       "  address       = \"192.168.199.23\"",
       "  protocol_port = 8080",
+      "  pool_id       = POOL_ID",
+      "  subnet_id     = SUBNET_ID",
       "}"
     ]
   },
@@ -28017,7 +30588,7 @@
       "    region = \"eu-de\"",
       "    datastore_name = \"PostgreSQL\"",
       "    datastore_version = \"9.5.5\"",
-      "    speccode = \"rds.pg.s1.large\"",
+      "    speccode = \"rds.pg.s1.large.ha\"",
       "}",
       "",
       "resource \"opentelekomcloud_compute_secgroup_v2\" \"secgrp_rds\" {",
@@ -28333,7 +30904,7 @@
       "resource \"oraclepaas_java_service_instance\" \"default\" {",
       "  name            = \"java-service-instance\"",
       "  edition         = \"EE\"",
-      "  service_version = \"12cRelease212\"",
+      "  service_version = \"12cRelease213\"",
       "  ssh_public_key  = \"ssh-rsa public_key\"",
       "",
       "  weblogic_server {",
@@ -28356,6 +30927,102 @@
       "}"
     ]
   },
+  "oraclepaas-resource-oraclepaas_mysql_access_rule": {
+    "description": "Defines oraclepaas_mysql_access_rule",
+    "prefix": "tf-oraclepaas-resource-oraclepaas_mysql_access_rule",
+    "body": [
+      "resource \"oraclepaas_mysql_service_instance\" \"default\" {\r",
+      "\t...\r",
+      "}\r",
+      "\r",
+      "resource \"oraclepass_mysql_access_rule\" \"myrule\" {\r",
+      "\tservice_instance_id = \"${oraclepaas_mysql_service_instance.default.id}\"\r",
+      "\tname                = \"My Access Rule\"\r",
+      "\tdescription         = \"My Simple Access Rule\"\r",
+      "\tprotocol            = \"tcp\"\r",
+      "\tports               = \"8000\"\r",
+      "\tsource              = \"0.0.0.0/24\"\r",
+      "\tdestination         = \"mysql_MASTER\"\r",
+      "\tenabled             = true\r",
+      "}\r"
+    ]
+  },
+  "oraclepaas-resource-oraclepaas_mysql_service_instance": {
+    "description": "Defines oraclepaas_mysql_service_instance",
+    "prefix": "tf-oraclepaas-resource-oraclepaas_mysql_service_instance",
+    "body": [
+      "resource \"oraclepaas_mysql_service_instance\" \"default\" {\r",
+      "  name                      = \"SimpleMySQLInstance\"\r",
+      "  description               = \"This is a simple mysql instance\"\r",
+      "  vm_public_key             = \"A SSH public key\"\r",
+      "  backup_destination        = \"NONE\"\r",
+      "  notification_email        = \"myemail@mydomain.com\"\r",
+      "  shape                     = \"oc3\"\r",
+      "  ssh_public_key            = \"ssh-public-key\"\r",
+      "\r",
+      "  backups {\r",
+      "    cloud_storage_container = \"https://uscom-east-1.storage.oraclecloud.com/v1/MyStorageAccount/MyContainer\"\r",
+      "    cloud_storage_username  = \"MyCloudStorageAccount\"\r",
+      "    cloud_storage_password  = \"MyCloudStoragePassword\"\r",
+      "    create_if_missing       = \"true\"\r",
+      "  }\r",
+      "\r",
+      "  mysql_configuration = {\r",
+      "    db_name                 = \"demo_db\"\r",
+      "    db_storage              = 25\r",
+      "    mysql_port              = 3306\r",
+      "    mysql_username          = \"root\"\r",
+      "    mysql_password          = \"MySqlPassword_1\"\r",
+      "\r",
+      "    enterprise_monitor_configuration {\r",
+      "      em_agent_username     = \"MyEmAgentUser\"\r",
+      "      em_agent_password     = \"EmAgentPassw0rd\"\r",
+      "      em_username           = \"EmAdminUser\"\r",
+      "      em_password           = \"EmAdminPassw0rd\"\r",
+      "      em_port               = 18443\r",
+      "    }\r",
+      "  }\r",
+      "}\r"
+    ]
+  },
+  "ovh-data-cloud_region": {
+    "description": "Defines cloud_region",
+    "prefix": "tf-ovh-data-cloud_region",
+    "body": [
+      "data \"ovh_cloud_region\" \"GRA1\" {",
+      "   project_id = \"XXXXXX\"",
+      "   region = \"GRA1\"",
+      "}"
+    ]
+  },
+  "ovh-data-cloud_regions": {
+    "description": "Defines cloud_regions",
+    "prefix": "tf-ovh-data-cloud_regions",
+    "body": [
+      "data \"ovh_cloud_regions\" \"regions\" {",
+      "  project_id = \"XXXXXX\"",
+      "}"
+    ]
+  },
+  "ovh-data-domain_zone": {
+    "description": "Defines domain_zone",
+    "prefix": "tf-ovh-data-domain_zone",
+    "body": [
+      "data \"ovh_domain_zone\" \"rootzone\" {",
+      "    name = \"mysite.ovh\"",
+      "}"
+    ]
+  },
+  "ovh-data-iploadbalancing": {
+    "description": "Defines iploadbalancing",
+    "prefix": "tf-ovh-data-iploadbalancing",
+    "body": [
+      "data \"ovh_iploadbalancing\" \"lb\" {",
+      "   service_name = \"xxx\"",
+      "   state        = \"ok\"",
+      "}"
+    ]
+  },
   "ovh-data-publiccloud_region": {
     "description": "Defines publiccloud_region",
     "prefix": "tf-ovh-data-publiccloud_region",
@@ -28375,6 +31042,77 @@
       "}"
     ]
   },
+  "ovh-resource-cloud_network_private": {
+    "description": "Defines cloud_network_private",
+    "prefix": "tf-ovh-resource-cloud_network_private",
+    "body": [
+      "resource \"ovh_cloud_network_private\" \"net\" {",
+      "   project_id = \"67890\"",
+      "   name       = \"admin_network\"",
+      "   regions    = [\"GRA1\", \"BHS1\"]",
+      "}"
+    ]
+  },
+  "ovh-resource-cloud_network_private_subnet": {
+    "description": "Defines cloud_network_private_subnet",
+    "prefix": "tf-ovh-resource-cloud_network_private_subnet",
+    "body": [
+      "resource \"ovh_cloud_network_private_subnet\" \"subnet\" {",
+      "   project_id = \"67890\"",
+      "   network_id = \"0234543\"",
+      "   region     = \"GRA1\"",
+      "   start      = \"192.168.168.100\"",
+      "   end        = \"192.168.168.200\"",
+      "   network    = \"192.168.168.0/24\"",
+      "   dhcp       = true",
+      "   no_gateway = false",
+      "}"
+    ]
+  },
+  "ovh-resource-cloud_user": {
+    "description": "Defines cloud_user",
+    "prefix": "tf-ovh-resource-cloud_user",
+    "body": [
+      "resource \"ovh_cloud_user\" \"user1\" {",
+      "   project_id = \"67890\"",
+      "}"
+    ]
+  },
+  "ovh-resource-iploadbalancing_tcp_farm": {
+    "description": "Defines iploadbalancing_tcp_farm",
+    "prefix": "tf-ovh-resource-iploadbalancing_tcp_farm",
+    "body": [
+      "resource \"ovh_iploadbalancing_tcp_farm\" \"farm-gra\" {",
+      "   service_name = \"ip-123.123.123.123\"",
+      "   display_name       = \"ingress-8080-gra\"",
+      "   zone = \"GRA\"",
+      "}"
+    ]
+  },
+  "ovh-resource-iploadbalancing_tcp_farm_server": {
+    "description": "Defines iploadbalancing_tcp_farm_server",
+    "prefix": "tf-ovh-resource-iploadbalancing_tcp_farm_server",
+    "body": [
+      "  resource \"ovh_iploadbalancing_tcp_farm\" \"farmname\" {",
+      "\t  service_name = \"ip-1.2.3.4\"",
+      "\t  port = 8080",
+      "\t  zone = \"all\"",
+      "\t}",
+      "",
+      "\tresource \"ovh_iploadbalancing_tcp_farm_server\" \"backend\" {",
+      "\t  service_name = \"ip-1.2.3.4\"",
+      "\t  farm_id = \"${ovh_iploadbalancing_tcp_farm.farmname.id}\"",
+      "    display_name = \"mybackend\"",
+      "\t  address = \"4.5.6.7\"",
+      "\t  status = \"active\"",
+      "\t  port = 80",
+      "\t  proxy_protocol_version = v2",
+      "    weight = 2",
+      "    probe = true",
+      "    ssl = false",
+      "    backup = true"
+    ]
+  },
   "ovh-resource-ovh_domain_zone_record": {
     "description": "Defines ovh_domain_zone_record",
     "prefix": "tf-ovh-resource-ovh_domain_zone_record",
@@ -28386,6 +31124,19 @@
       "    fieldtype = \"A\"",
       "    ttl = \"3600\"",
       "    target = \"0.0.0.0\"",
+      "}"
+    ]
+  },
+  "ovh-resource-ovh_domain_zone_redirection": {
+    "description": "Defines ovh_domain_zone_redirection",
+    "prefix": "tf-ovh-resource-ovh_domain_zone_redirection",
+    "body": [
+      "# Add a redirection to a sub-domain",
+      "resource \"ovh_domain_zone_redirection\" \"test\" {",
+      "    zone = \"testdemo.ovh\"",
+      "    subdomain = \"test\"",
+      "    type = \"visiblePermanent\"",
+      "    target = \"http://www.ovh\"",
       "}"
     ]
   },
@@ -28422,6 +31173,61 @@
     "body": [
       "resource \"ovh_publiccloud_user\" \"user1\" {",
       "   project_id = \"67890\"",
+      "}"
+    ]
+  },
+  "ovh-resource-resource_ovh_iploadbalancing_http_route": {
+    "description": "Defines resource_ovh_iploadbalancing_http_route",
+    "prefix": "tf-ovh-resource-resource_ovh_iploadbalancing_http_route",
+    "body": [
+      "resource \"ovh_iploadbalancing_http_route\" \"httpsredirect\" {",
+      "  service_name = \"loadbalancer-xxxxxxxxxxxxxxxxxx\"",
+      "  display_name = \"Redirect to HTTPS\"",
+      "  weight = 1",
+      "",
+      "  action {",
+      "    status = 302",
+      "    target = \"https://${host}${path}${arguments}\"",
+      "    type = \"redirect\"",
+      "  }",
+      "}"
+    ]
+  },
+  "ovh-resource-resource_ovh_iploadbalancing_http_route_rule": {
+    "description": "Defines resource_ovh_iploadbalancing_http_route_rule",
+    "prefix": "tf-ovh-resource-resource_ovh_iploadbalancing_http_route_rule",
+    "body": [
+      "resource \"ovh_iploadbalancing_http_route\" \"httpsredirect\" {",
+      "  service_name = \"loadbalancer-xxxxxxxxxxxxxxxxxx\"",
+      "  display_name = \"Redirect to HTTPS\"",
+      "  weight = 1",
+      "  frontend_id = 11111",
+      "",
+      "  action {",
+      "    status = 302",
+      "    target = \"https://$${host}$${path}$${arguments}\"",
+      "    type = \"redirect\"",
+      "  }",
+      "}",
+      "",
+      "resource \"ovh_iploadbalancing_http_route_rule\" \"examplerule\" {",
+      "  service_name = \"loadbalancer-xxxxxxxxxxxxxxxxxx\"",
+      "  route_id  = \"${ovh_iploadbalancing_http_route.httpsredirect.id}\"",
+      "  display_name = \"Match example.com host\"",
+      "  field = \"host\"",
+      "  match = \"is\"",
+      "  negate = false",
+      "  pattern = \"example.com\"",
+      "}"
+    ]
+  },
+  "ovh-resource-vrack_cloudproject": {
+    "description": "Defines vrack_cloudproject",
+    "prefix": "tf-ovh-resource-vrack_cloudproject",
+    "body": [
+      "resource \"ovh_vrack_cloudproject\" \"attach\" {",
+      "  vrack_id   = \"12345\"",
+      "  project_id = \"67890\"",
       "}"
     ]
   },
@@ -29207,18 +32013,19 @@
       "}"
     ]
   },
-  "panos-resource-nat_policy": {
-    "description": "Defines nat_policy",
-    "prefix": "tf-panos-resource-nat_policy",
+  "panos-resource-nat_rule": {
+    "description": "Defines nat_rule",
+    "prefix": "tf-panos-resource-nat_rule",
     "body": [
-      "resource \"panos_nat_policy\" \"example\" {",
-      "    name = \"my nat policy\"",
+      "resource \"panos_nat_rule\" \"example\" {",
+      "    name = \"my nat rule\"",
       "    source_zones = [\"zone1\"]",
       "    destination_zone = \"zone2\"",
       "    to_interface = \"ethernet1/3\"",
       "    source_addresses = [\"any\"]",
       "    destination_addresses = [\"any\"]",
       "    sat_type = \"none\"",
+      "    dat_type = \"static\"",
       "    dat_address = \"my dat address object\"",
       "}"
     ]
@@ -29300,18 +32107,19 @@
       "}"
     ]
   },
-  "panos-resource-panorama_nat_policy": {
-    "description": "Defines panorama_nat_policy",
-    "prefix": "tf-panos-resource-panorama_nat_policy",
+  "panos-resource-panorama_nat_rule": {
+    "description": "Defines panorama_nat_rule",
+    "prefix": "tf-panos-resource-panorama_nat_rule",
     "body": [
-      "resource \"panos_panorama_nat_policy\" \"example\" {",
-      "    name = \"my nat policy\"",
+      "resource \"panos_panorama_nat_rule\" \"example\" {",
+      "    name = \"my nat rule\"",
       "    source_zones = [\"zone1\"]",
       "    destination_zone = \"zone2\"",
       "    to_interface = \"ethernet1/3\"",
       "    source_addresses = [\"any\"]",
       "    destination_addresses = [\"any\"]",
       "    sat_type = \"none\"",
+      "    dat_type = \"static\"",
       "    dat_address = \"my dat address object\"",
       "    target {",
       "        serial = \"123456\"",
@@ -29320,11 +32128,54 @@
       "}"
     ]
   },
-  "panos-resource-panorama_security_policies": {
-    "description": "Defines panorama_security_policies",
-    "prefix": "tf-panos-resource-panorama_security_policies",
+  "panos-resource-panorama_security_policy": {
+    "description": "Defines panorama_security_policy",
+    "prefix": "tf-panos-resource-panorama_security_policy",
     "body": [
-      "resource \"panos_panorama_security_policies\" \"example\" {",
+      "resource \"panos_panorama_security_policy\" \"example\" {",
+      "    rule {",
+      "        name = \"allow bizdev to dmz\"",
+      "        source_zones = [\"bizdev\"]",
+      "        source_addresses = [\"any\"]",
+      "        source_users = [\"any\"]",
+      "        hip_profiles = [\"any\"]",
+      "        destination_zones = [\"dmz\"]",
+      "        destination_addresses = [\"any\"]",
+      "        applications = [\"any\"]",
+      "        services = [\"application-default\"]",
+      "        categories = [\"any\"]",
+      "        action = \"allow\"",
+      "    }",
+      "    rule {",
+      "        name = \"deny sales to eng\"",
+      "        source_zones = [\"sales\"]",
+      "        source_addresses = [\"any\"]",
+      "        source_users = [\"any\"]",
+      "        hip_profiles = [\"any\"]",
+      "        destination_zones = [\"eng\"]",
+      "        destination_addresses = [\"any\"]",
+      "        applications = [\"any\"]",
+      "        services = [\"application-default\"]",
+      "        categories = [\"any\"]",
+      "        action = \"deny\"",
+      "        target {",
+      "            serial = \"01234\"",
+      "        }",
+      "        target {",
+      "            serial = \"56789\"",
+      "            vsys_list = [\"vsys1\", \"vsys3\"]",
+      "        }",
+      "    }",
+      "}"
+    ]
+  },
+  "panos-resource-panorama_security_rule_group": {
+    "description": "Defines panorama_security_rule_group",
+    "prefix": "tf-panos-resource-panorama_security_rule_group",
+    "body": [
+      "resource \"panos_panorama_security_rule_group\" \"example\" {",
+      "    position_keyword = \"above\"",
+      "    position_reference = \"deny everything else\"",
       "    rule {",
       "        name = \"allow bizdev to dmz\"",
       "        source_zones = [\"bizdev\"]",
@@ -29385,11 +32236,47 @@
       "}"
     ]
   },
-  "panos-resource-security_policies": {
-    "description": "Defines security_policies",
-    "prefix": "tf-panos-resource-security_policies",
+  "panos-resource-security_policy": {
+    "description": "Defines security_policy",
+    "prefix": "tf-panos-resource-security_policy",
     "body": [
-      "resource \"panos_security_policies\" \"example\" {",
+      "resource \"panos_security_policy\" \"example\" {",
+      "    rule {",
+      "        name = \"allow bizdev to dmz\"",
+      "        source_zones = [\"bizdev\"]",
+      "        source_addresses = [\"any\"]",
+      "        source_users = [\"any\"]",
+      "        hip_profiles = [\"any\"]",
+      "        destination_zones = [\"dmz\"]",
+      "        destination_addresses = [\"any\"]",
+      "        applications = [\"any\"]",
+      "        services = [\"application-default\"]",
+      "        categories = [\"any\"]",
+      "        action = \"allow\"",
+      "    }",
+      "    rule {",
+      "        name = \"deny sales to eng\"",
+      "        source_zones = [\"sales\"]",
+      "        source_addresses = [\"any\"]",
+      "        source_users = [\"any\"]",
+      "        hip_profiles = [\"any\"]",
+      "        destination_zones = [\"eng\"]",
+      "        destination_addresses = [\"any\"]",
+      "        applications = [\"any\"]",
+      "        services = [\"application-default\"]",
+      "        categories = [\"any\"]",
+      "        action = \"deny\"",
+      "    }",
+      "}"
+    ]
+  },
+  "panos-resource-security_rule_group": {
+    "description": "Defines security_rule_group",
+    "prefix": "tf-panos-resource-security_rule_group",
+    "body": [
+      "resource \"panos_security_rule_group\" \"example\" {",
+      "    position_keyword = \"above\"",
+      "    position_reference = \"deny everything else\"",
       "    rule {",
       "        name = \"allow bizdev to dmz\"",
       "        source_zones = [\"bizdev\"]",
@@ -29441,6 +32328,17 @@
       "    source_port = \"2000-2049,2051-2099\"",
       "    destination_port = \"32123\"",
       "    tags = [\"internal\", \"dmz\"]",
+      "}"
+    ]
+  },
+  "panos-resource-telemetry": {
+    "description": "Defines telemetry",
+    "prefix": "tf-panos-resource-telemetry",
+    "body": [
+      "resource \"panos_telemetry\" \"example\" {",
+      "    threat_prevention_reports = true",
+      "    threat_prevention_data = true",
+      "    threat_prevention_packet_captures = true",
       "}"
     ]
   },
@@ -30529,124 +33427,106 @@
       "}"
     ]
   },
-  "spotinst-resource-aws_group": {
-    "description": "Defines aws_group",
-    "prefix": "tf-spotinst-resource-aws_group",
+  "spotinst-resource-elastigroup_aws": {
+    "description": "Defines elastigroup_aws",
+    "prefix": "tf-spotinst-resource-elastigroup_aws",
     "body": [
-      "# Create an AWS group",
-      "resource \"spotinst_aws_group\" \"workers\" {",
-      "  name = \"workers-group\"",
+      "# Create an Elastigroup",
+      "resource \"spotinst_elastigroup_aws\" \"default-elastigroup\" {",
+      "",
+      "  name        = \"default-elastigroup\"",
       "  description = \"created by Terraform\"",
-      "  product = \"Linux/UNIX\"",
+      "  product     = \"Linux/UNIX\"",
       "",
-      "  capacity {",
-      "    target = 50",
-      "    minimum = 25",
-      "    maximum = 100",
-      "  }",
+      "  max_size          = 0",
+      "  min_size          = 0",
+      "  desired_capacity  = 0",
+      "  capacity_unit     = \"weight\"",
       "",
-      "  strategy {",
-      "    risk = 100",
-      "  }",
+      "  region      = \"us-west-2\"",
+      "  subnet_ids  = [\"sb-123456\", \"sb-456789\"]",
+      "  ",
+      "  image_id              = \"ami-a27d8fda\"",
+      "  iam_instance_profile  = \"iam-profile\"",
+      "  key_name              = \"my-key.ssh\"",
+      "  security_groups       = [\"sg-123456\"]",
+      "  user_data             = \"echo hello world\"",
+      "  enable_monitoring     = false",
+      "  ebs_optimized         = false",
+      "  placement_tenancy     = \"default\"",
       "",
-      "  scheduled_task {",
-      "    task_type = \"scale\"",
-      "    cron_expression = \"0 5 * * 0-4\"",
-      "    scale_target_capacity = 80",
-      "  }",
+      "  instance_types_ondemand = \"m3.2xlarge\"",
+      "  instance_types_spot     = [\"m3.xlarge\", \"m3.2xlarge\"]",
       "",
-      "  scheduled_task {",
-      "    task_type = \"backup_ami\"",
-      "    frequency = \"hourly\"",
-      "  }",
+      "  instance_types_weights = [",
+      "    {",
+      "      instance_type = \"c3.large\"",
+      "      weight        = 10",
+      "    },",
+      "    {",
+      "      instance_type = \"c4.xlarge\"",
+      "      weight        = 16",
+      "    }]",
       "",
-      "  instance_types {",
-      "    ondemand = \"c3.large\"",
-      "    spot = [\"m3.large\", \"m4.large\", \"c3.large\", \"c4.large\"]",
-      "  }",
+      "  orientation           = \"balanced\"",
+      "  fallback_to_ondemand  = false",
       "",
-      "  availability_zone {",
-      "    name = \"us-west-2b\"",
-      "    subnet_id = \"subnet-7bbbf51e\"",
-      "  }",
-      "",
-      "  launch_specification {",
-      "    monitoring = false",
-      "    image_id = \"ami-f0091d91\"",
-      "    key_pair = \"pemfile\"",
-      "    security_group_ids = [\"default\", \"allow-ssh\"]",
-      "  }",
-      "",
-      "  tags {",
-      "    foo = \"bar\"",
-      "    bar = \"baz\"",
+      "  ebs_block_device {",
+      "    device_name           = \"/dev/sdb\"",
+      "    snapshot_id           = \"\"",
+      "    volume_type           = \"gp2\"",
+      "    volume_size           = 8",
+      "    iops                  = 1",
+      "    delete_on_termination = true",
+      "    encrypted             = false",
       "  }",
       "",
       "  scaling_up_policy {",
-      "    policy_name = \"Scaling Policy 1\"",
-      "    metric_name = \"CPUUtilization\"",
-      "    statistic = \"average\"",
-      "    unit = \"percent\"",
-      "    threshold = 80",
-      "    adjustment = 1",
-      "    namespace = \"AWS/EC2\"",
-      "    period = 300",
-      "    evaluation_periods = 2",
-      "    cooldown = 300",
+      "    policy_name        = \"Default Scaling Up Policy\"",
+      "    metric_name        = \"DefaultQueuesDepth\"",
+      "    statistic          = \"average\"",
+      "    unit               = \"none\"",
+      "    adjustment         = 1",
+      "    namespace          = \"custom\"",
+      "    threshold          = 100",
+      "    period             = 60",
+      "    evaluation_periods = 5",
+      "    cooldown           = 300",
       "  }",
       "",
       "  scaling_down_policy {",
-      "    policy_name = \"Scaling Policy 2\"",
-      "    metric_name = \"CPUUtilization\"",
-      "    statistic = \"average\"",
-      "    unit = \"percent\"",
-      "    threshold = 40",
-      "    adjustment = 1",
-      "    namespace = \"AWS/EC2\"",
-      "    period = 300",
-      "    evaluation_periods = 2",
-      "    cooldown = 300",
-      "  }"
-    ]
-  },
-  "spotinst-resource-healthcheck": {
-    "description": "Defines healthcheck",
-    "prefix": "tf-spotinst-resource-healthcheck",
-    "body": [
-      "resource \"spotinst_healthcheck\" \"foo\" {",
-      "\tname = \"hc-foo\"",
-      "\tresource_id = \"sig-foo\"",
-      "\tcheck {",
-      "\t\tprotocol = \"http\"",
-      "\t\tendpoint = \"http://endpoint.com\"",
-      "\t\tport = 1337",
-      "\t\tinterval = 10",
-      "\t\ttimeout = 10",
-      "\t}",
-      "\tthreshold {",
-      "\t\thealthy = 1",
-      "\t\tunhealthy = 1",
-      "\t}",
-      "\tproxy {",
-      "\t\taddr = \"http://proxy.com\"",
-      "\t\tport = 80",
-      "\t}",
-      "}"
-    ]
-  },
-  "spotinst-resource-subscription": {
-    "description": "Defines subscription",
-    "prefix": "tf-spotinst-resource-subscription",
-    "body": [
-      "resource \"spotinst_subscription\" \"foo\" {",
-      "\tresource_id = \"sig-foo\"",
-      "\tevent_type = \"aws_ec2_instance_launch\"",
-      "\tprotocol = \"http\"",
-      "\tendpoint = \"http://endpoint.com\"",
-      "\tformat = {",
-      "\t\tinstance_id = \"%instance-id%\"",
-      "\t\ttags = \"foo,baz,baz\"",
-      "\t}",
+      "    policy_name        = \"Default Scaling Down Policy\"",
+      "    metric_name        = \"Default QueuesDepth\"",
+      "    statistic          = \"average\"",
+      "    unit               = \"none\"",
+      "    adjustment         = 1",
+      "    namespace          = \"custom\"",
+      "    threshold          = 10",
+      "    period             = 60",
+      "    evaluation_periods = 10",
+      "    cooldown           = 300",
+      "  }",
+      "",
+      "  tags = [",
+      "  {",
+      "     key = \"Env\"",
+      "     value = \"production\"",
+      "  }, ",
+      "  {",
+      "     key = \"Name\"",
+      "     value = \"default-production\"",
+      "  },",
+      "  {",
+      "     key = \"Project\"",
+      "     value = \"app_v2\"",
+      "  }",
+      " ]",
+      "",
+      "  lifecycle {",
+      "    ignore_changes = [",
+      "      \"desired_capacity\",",
+      "    ]",
+      "  }",
       "}"
     ]
   },
@@ -30660,6 +33540,785 @@
       "  test_type    = \"HTTP\"",
       "  check_rate   = 300",
       "  contact_id   = 12345",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-data-dns_zone_v2": {
+    "description": "Defines dns_zone_v2",
+    "prefix": "tf-telefonicaopencloud-data-dns_zone_v2",
+    "body": [
+      "data \"telefonicaopencloud_dns_zone_v2\" \"zone_1\" {",
+      "  name = \"example.com\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-data-networking_network_v2": {
+    "description": "Defines networking_network_v2",
+    "prefix": "tf-telefonicaopencloud-data-networking_network_v2",
+    "body": [
+      "data \"telefonicaopencloud_networking_network_v2\" \"network\" {",
+      "  name = \"tf_test_network\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-data-networking_secgroup_v2": {
+    "description": "Defines networking_secgroup_v2",
+    "prefix": "tf-telefonicaopencloud-data-networking_secgroup_v2",
+    "body": [
+      "data \"telefonicaopencloud_networking_secgroup_v2\" \"secgroup\" {",
+      "  name = \"tf_test_secgroup\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-data-networking_subnet_v2": {
+    "description": "Defines networking_subnet_v2",
+    "prefix": "tf-telefonicaopencloud-data-networking_subnet_v2",
+    "body": [
+      "data \"telefonicaopencloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  name = \"subnet_1\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-data-rds_flavors_v1": {
+    "description": "Defines rds_flavors_v1",
+    "prefix": "tf-telefonicaopencloud-data-rds_flavors_v1",
+    "body": [
+      "data \"telefonicaopencloud_rds_flavors_v1\" \"flavor\" {",
+      "    region = \"eu-de\"",
+      "    datastore_name = \"PostgreSQL\"",
+      "    datastore_version = \"9.5.5\"",
+      "    speccode = \"rds.pg.s1.medium\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-data-s3_bucket_object": {
+    "description": "Defines s3_bucket_object",
+    "prefix": "tf-telefonicaopencloud-data-s3_bucket_object",
+    "body": [
+      "#XXX empty snippet",
+      ""
+    ]
+  },
+  "telefonicaopencloud-resource-as_configuration_v1": {
+    "description": "Defines as_configuration_v1",
+    "prefix": "tf-telefonicaopencloud-resource-as_configuration_v1",
+    "body": [
+      "resource \"telefonicaopencloud_as_configuration_v1\" \"my_as_config\" {",
+      "  scaling_configuration_name = \"my_as_config\"",
+      "  instance_config = {",
+      "    flavor = \"${var.flavor}\"",
+      "    image = \"${var.image_id}\"",
+      "    disk = [",
+      "      {size = 40",
+      "      volume_type = \"SATA\"",
+      "      disk_type = \"SYS\"}",
+      "    ]",
+      "    key_name = \"${var.keyname}\"",
+      "    user_data = \"${file(\"userdata.txt\")}\"",
+      "  }",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-as_group_v1": {
+    "description": "Defines as_group_v1",
+    "prefix": "tf-telefonicaopencloud-resource-as_group_v1",
+    "body": [
+      "resource \"telefonicaopencloud_as_group_v1\" \"my_as_group\" {",
+      "  scaling_group_name = \"my_as_group\"",
+      "  scaling_configuration_id = \"37e310f5-db9d-446e-9135-c625f9c2bbfc\"",
+      "  desire_instance_number = 2",
+      "  min_instance_number = 0",
+      "  max_instance_number = 10",
+      "  networks = [{id = \"ad091b52-742f-469e-8f3c-fd81cadf0743\"}]",
+      "  security_groups = [{id = \"45e4c6de-6bf0-4843-8953-2babde3d4810\"}]",
+      "  vpc_id = \"1d8f7e7c-fe04-4cf5-85ac-08b478c290e9\"",
+      "  delete_publicip = true",
+      "  delete_instances = \"yes\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-as_policy_v1": {
+    "description": "Defines as_policy_v1",
+    "prefix": "tf-telefonicaopencloud-resource-as_policy_v1",
+    "body": [
+      "resource \"telefonicaopencloud_as_policy_v1\" \"hth_aspolicy\"{",
+      "  scaling_policy_name = \"hth_aspolicy\"",
+      "  scaling_group_id = \"4579f2f5-cbe8-425a-8f32-53dcb9d9053a\"",
+      "  cool_down_time = 900",
+      "  scaling_policy_type = \"RECURRENCE\"",
+      "  scaling_policy_action = {",
+      "    operation = \"ADD\"",
+      "    instance_number = 1",
+      "  }",
+      "  scheduled_policy = {",
+      "    launch_time = \"07:00\"",
+      "    recurrence_type = \"Daily\"",
+      "    start_time = \"2017-11-30T12:00Z\"",
+      "    end_time = \"2017-12-30T12:00Z\"",
+      "  }",
+      "}",
+      ""
+    ]
+  },
+  "telefonicaopencloud-resource-blockstorage_volume_v2": {
+    "description": "Defines blockstorage_volume_v2",
+    "prefix": "tf-telefonicaopencloud-resource-blockstorage_volume_v2",
+    "body": [
+      "resource \"telefonicaopencloud_blockstorage_volume_v2\" \"volume_1\" {",
+      "  region      = \"RegionOne\"",
+      "  name        = \"volume_1\"",
+      "  description = \"first test volume\"",
+      "  size        = 3",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-ces_alarm_rule": {
+    "description": "Defines ces_alarm_rule",
+    "prefix": "tf-telefonicaopencloud-resource-ces_alarm_rule",
+    "body": [
+      "resource \"telefonicaopencloud_ces_alarmrule\" \"alarm_rule\" {",
+      "  \"alarm_name\" = \"alarm_rule\"",
+      "  \"metric\" {",
+      "    \"namespace\" = \"SYS.ECS\"",
+      "    \"metric_name\" = \"network_outgoing_bytes_rate_inband\"",
+      "    \"dimensions\" {",
+      "        \"name\" = \"instance_id\"",
+      "        \"value\" = \"12232415-6cc9-4c80-83ff-55a6613d14c3\"",
+      "    }",
+      "  }",
+      "  \"condition\"  {",
+      "    \"period\" = 300",
+      "    \"filter\" = \"average\"",
+      "    \"comparison_operator\" = \">\"",
+      "    \"value\" = 6",
+      "    \"unit\" = \"B/s\"",
+      "    \"count\" = 1",
+      "  }",
+      "  \"alarm_actions\" {",
+      "    \"type\" = \"notification\"",
+      "    \"notification_list\" = [",
+      "      \"urn:smn:southchina:68438a86d98e427e907e0097b7e35d47:sd\"",
+      "    ]",
+      "  }",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-compute_floatingip_associate_v2": {
+    "description": "Defines compute_floatingip_associate_v2",
+    "prefix": "tf-telefonicaopencloud-resource-compute_floatingip_associate_v2",
+    "body": [
+      "resource \"telefonicaopencloud_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  image_id        = \"ad091b52-742f-469e-8f3c-fd81cadf0743\"",
+      "  flavor_id       = 3",
+      "  key_pair        = \"my_key_pair_name\"",
+      "  security_groups = [\"default\"]",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_floatingip_v2\" \"fip_1\" {",
+      "  pool = \"my_pool\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_compute_floatingip_associate_v2\" \"fip_1\" {",
+      "  floating_ip = \"${telefonicaopencloud_networking_floatingip_v2.fip_1.address}\"",
+      "  instance_id = \"${telefonicaopencloud_compute_instance_v2.instance_1.id}\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-compute_floatingip_v2": {
+    "description": "Defines compute_floatingip_v2",
+    "prefix": "tf-telefonicaopencloud-resource-compute_floatingip_v2",
+    "body": [
+      "resource \"telefonicaopencloud_compute_floatingip_v2\" \"floatip_1\" {",
+      "  pool = \"public\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-compute_instance_v2": {
+    "description": "Defines compute_instance_v2",
+    "prefix": "tf-telefonicaopencloud-resource-compute_instance_v2",
+    "body": [
+      "resource \"telefonicaopencloud_compute_instance_v2\" \"basic\" {",
+      "  name            = \"basic\"",
+      "  image_id        = \"ad091b52-742f-469e-8f3c-fd81cadf0743\"",
+      "  flavor_id       = \"3\"",
+      "  key_pair        = \"my_key_pair_name\"",
+      "  security_groups = [\"default\"]",
+      "",
+      "  metadata {",
+      "    this = \"that\"",
+      "  }",
+      "",
+      "  network {",
+      "    name = \"my_network\"",
+      "  }",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-compute_keypair_v2": {
+    "description": "Defines compute_keypair_v2",
+    "prefix": "tf-telefonicaopencloud-resource-compute_keypair_v2",
+    "body": [
+      "resource \"telefonicaopencloud_compute_keypair_v2\" \"test-keypair\" {",
+      "  name       = \"my-keypair\"",
+      "  public_key = \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLotBCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAnOfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZqd9LvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TaIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIF61p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-compute_secgroup_v2": {
+    "description": "Defines compute_secgroup_v2",
+    "prefix": "tf-telefonicaopencloud-resource-compute_secgroup_v2",
+    "body": [
+      "resource \"telefonicaopencloud_compute_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"my_secgroup\"",
+      "  description = \"my security group\"",
+      "",
+      "  rule {",
+      "    from_port   = 22",
+      "    to_port     = 22",
+      "    ip_protocol = \"tcp\"",
+      "    cidr        = \"0.0.0.0/0\"",
+      "  }",
+      "",
+      "  rule {",
+      "    from_port   = 80",
+      "    to_port     = 80",
+      "    ip_protocol = \"tcp\"",
+      "    cidr        = \"0.0.0.0/0\"",
+      "  }",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-compute_servergroup_v2": {
+    "description": "Defines compute_servergroup_v2",
+    "prefix": "tf-telefonicaopencloud-resource-compute_servergroup_v2",
+    "body": [
+      "resource \"telefonicaopencloud_compute_servergroup_v2\" \"test-sg\" {",
+      "  name     = \"my-sg\"",
+      "  policies = [\"anti-affinity\"]",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-compute_volume_attach_v2": {
+    "description": "Defines compute_volume_attach_v2",
+    "prefix": "tf-telefonicaopencloud-resource-compute_volume_attach_v2",
+    "body": [
+      "resource \"telefonicaopencloud_blockstorage_volume_v2\" \"volume_1\" {",
+      "  name = \"volume_1\"",
+      "  size = 1",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  security_groups = [\"default\"]",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_compute_volume_attach_v2\" \"va_1\" {",
+      "  instance_id = \"${telefonicaopencloud_compute_instance_v2.instance_1.id}\"",
+      "  volume_id   = \"${telefonicaopencloud_blockstorage_volume_v2.volume_1.id}\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-dns_recordset_v2": {
+    "description": "Defines dns_recordset_v2",
+    "prefix": "tf-telefonicaopencloud-resource-dns_recordset_v2",
+    "body": [
+      "resource \"telefonicaopencloud_dns_zone_v2\" \"example_zone\" {",
+      "  name = \"example.com.\"",
+      "  email = \"email2@example.com\"",
+      "  description = \"a zone\"",
+      "  ttl = 6000",
+      "  type = \"PRIMARY\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_dns_recordset_v2\" \"rs_example_com\" {",
+      "  zone_id = \"${telefonicaopencloud_dns_zone_v2.example_zone.id}\"",
+      "  name = \"rs.example.com.\"",
+      "  description = \"An example record set\"",
+      "  ttl = 3000",
+      "  type = \"A\"",
+      "  records = [\"10.0.0.1\"]",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-dns_zone_v2": {
+    "description": "Defines dns_zone_v2",
+    "prefix": "tf-telefonicaopencloud-resource-dns_zone_v2",
+    "body": [
+      "resource \"telefonicaopencloud_dns_zone_v2\" \"example.com\" {",
+      "  name = \"example.com.\"",
+      "  email = \"jdoe@example.com\"",
+      "  description = \"An example zone\"",
+      "  ttl = 3000",
+      "  type = \"PRIMARY\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-elb_backendecs": {
+    "description": "Defines elb_backendecs",
+    "prefix": "tf-telefonicaopencloud-resource-elb_backendecs",
+    "body": [
+      "resource \"telefonicaopencloud_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${telefonicaopencloud_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_elb_backendecs\" \"backend\" {",
+      "  private_address = \"192.168.0.211\"",
+      "  listener_id = \"${telefonicaopencloud_elb_listener.listener.id}\"",
+      "  server_id = \"8f7a32f1-f66c-4d13-9b17-3a13f9f0bb8d\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-elb_healthcheck": {
+    "description": "Defines elb_healthcheck",
+    "prefix": "tf-telefonicaopencloud-resource-elb_healthcheck",
+    "body": [
+      "resource \"telefonicaopencloud_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${telefonicaopencloud_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_elb_healthcheck\" \"healthcheck\" {",
+      "  listener_id = \"${telefonicaopencloud_elb_listener.listener.id}\"",
+      "  healthcheck_protocol = \"TCP\"",
+      "  healthcheck_connect_porta = 22",
+      "  healthy_threshold = 5",
+      "  healthcheck_timeout = 25",
+      "  healthcheck_interval = 3",
+      "  timeouts {",
+      "    create = \"5m\"",
+      "    update = \"5m\"",
+      "    delete = \"5m\"",
+      "  }",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-elb_listener": {
+    "description": "Defines elb_listener",
+    "prefix": "tf-telefonicaopencloud-resource-elb_listener",
+    "body": [
+      "resource \"telefonicaopencloud_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_elb_listener\" \"listener\" {",
+      "  name = \"test-elb-listener\"",
+      "  description = \"great listener\"",
+      "  protocol = \"TCP\"",
+      "  backend_protocol = \"TCP\"",
+      "  port = 12345",
+      "  backend_port = 8080",
+      "  lb_algorithm = \"roundrobin\"",
+      "  loadbalancer_id = \"${telefonicaopencloud_elb_loadbalancer.elb.id}\"",
+      "  timeouts {",
+      "\tcreate = \"5m\"",
+      "\tupdate = \"5m\"",
+      "\tdelete = \"5m\"",
+      "  }",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-elb_loadbalancer": {
+    "description": "Defines elb_loadbalancer",
+    "prefix": "tf-telefonicaopencloud-resource-elb_loadbalancer",
+    "body": [
+      "resource \"telefonicaopencloud_elb_loadbalancer\" \"elb\" {",
+      "  name = \"elb\"",
+      "  type = \"External\"",
+      "  description = \"test elb\"",
+      "  vpc_id = \"e346dc4a-d9a6-46f4-90df-10153626076e\"",
+      "  admin_state_up = 1",
+      "  bandwidth = 5",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_floatingip_v2": {
+    "description": "Defines networking_floatingip_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_floatingip_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_floatingip_v2\" \"floatip_1\" {",
+      "  pool = \"public\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_network_v2": {
+    "description": "Defines networking_network_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_network_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  name       = \"subnet_1\"",
+      "  network_id = \"${telefonicaopencloud_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_compute_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"a security group\"",
+      "",
+      "  rule {",
+      "    from_port   = 22",
+      "    to_port     = 22",
+      "    ip_protocol = \"tcp\"",
+      "    cidr        = \"0.0.0.0/0\"",
+      "  }",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_port_v2\" \"port_1\" {",
+      "  name               = \"port_1\"",
+      "  network_id         = \"${telefonicaopencloud_networking_network_v2.network_1.id}\"",
+      "  admin_state_up     = \"true\"",
+      "  security_group_ids = [\"${telefonicaopencloud_compute_secgroup_v2.secgroup_1.id}\"]",
+      "",
+      "  fixed_ip {",
+      "    \"subnet_id\"  = \"${telefonicaopencloud_networking_subnet_v2.subnet_1.id}\"",
+      "    \"ip_address\" = \"192.168.199.10\"",
+      "  }",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_compute_instance_v2\" \"instance_1\" {",
+      "  name            = \"instance_1\"",
+      "  security_groups = [\"${telefonicaopencloud_compute_secgroup_v2.secgroup_1.name}\"]",
+      "",
+      "  network {",
+      "    port = \"${telefonicaopencloud_networking_port_v2.port_1.id}\"",
+      "  }",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_port_v2": {
+    "description": "Defines networking_port_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_port_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_port_v2\" \"port_1\" {",
+      "  name           = \"port_1\"",
+      "  network_id     = \"${telefonicaopencloud_networking_network_v2.network_1.id}\"",
+      "  admin_state_up = \"true\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_router_interface_v2": {
+    "description": "Defines networking_router_interface_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_router_interface_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"tf_test_network\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${telefonicaopencloud_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_router_v2\" \"router_1\" {",
+      "  name             = \"my_router\"",
+      "  external_gateway = \"f67f0d72-0ddf-11e4-9d95-e1f29f417e2f\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_router_interface_v2\" \"router_interface_1\" {",
+      "  router_id = \"${telefonicaopencloud_networking_router_v2.router_1.id}\"",
+      "  subnet_id = \"${telefonicaopencloud_networking_subnet_v2.subnet_1.id}\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_router_route_v2": {
+    "description": "Defines networking_router_route_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_router_route_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_router_v2\" \"router_1\" {",
+      "  name           = \"router_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"network_1\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${telefonicaopencloud_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "  ip_version = 4",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_router_interface_v2\" \"int_1\" {",
+      "  router_id = \"${telefonicaopencloud_networking_router_v2.router_1.id}\"",
+      "  subnet_id = \"${telefonicaopencloud_networking_subnet_v2.subnet_1.id}\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_router_route_v2\" \"router_route_1\" {",
+      "  depends_on       = [\"telefonicaopencloud_networking_router_interface_v2.int_1\"]",
+      "  router_id        = \"${telefonicaopencloud_networking_router_v2.router_1.id}\"",
+      "  destination_cidr = \"10.0.1.0/24\"",
+      "  next_hop         = \"192.168.199.254\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_router_v2": {
+    "description": "Defines networking_router_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_router_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_router_v2\" \"router_1\" {",
+      "  name                = \"my_router\"",
+      "  admin_state_up      = true",
+      "  external_network_id = \"f67f0d72-0ddf-11e4-9d95-e1f29f417e2f\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_secgroup_rule_v2": {
+    "description": "Defines networking_secgroup_rule_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_secgroup_rule_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"My neutron security group\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_secgroup_rule_v2\" \"secgroup_rule_1\" {",
+      "  direction         = \"ingress\"",
+      "  ethertype         = \"IPv4\"",
+      "  protocol          = \"tcp\"",
+      "  port_range_min    = 22",
+      "  port_range_max    = 22",
+      "  remote_ip_prefix  = \"0.0.0.0/0\"",
+      "  security_group_id = \"${telefonicaopencloud_networking_secgroup_v2.secgroup_1.id}\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_secgroup_v2": {
+    "description": "Defines networking_secgroup_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_secgroup_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_secgroup_v2\" \"secgroup_1\" {",
+      "  name        = \"secgroup_1\"",
+      "  description = \"My neutron security group\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-networking_subnet_v2": {
+    "description": "Defines networking_subnet_v2",
+    "prefix": "tf-telefonicaopencloud-resource-networking_subnet_v2",
+    "body": [
+      "resource \"telefonicaopencloud_networking_network_v2\" \"network_1\" {",
+      "  name           = \"tf_test_network\"",
+      "  admin_state_up = \"true\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_networking_subnet_v2\" \"subnet_1\" {",
+      "  network_id = \"${telefonicaopencloud_networking_network_v2.network_1.id}\"",
+      "  cidr       = \"192.168.199.0/24\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-rds_instance_v1": {
+    "description": "Defines rds_instance_v1",
+    "prefix": "tf-telefonicaopencloud-resource-rds_instance_v1",
+    "body": [
+      "data \"telefonicaopencloud_rds_flavors_v1\" \"flavor\" {",
+      "    region = \"eu-de\"",
+      "    datastore_name = \"PostgreSQL\"",
+      "    datastore_version = \"9.5.5\"",
+      "    speccode = \"rds.pg.s1.large\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_compute_secgroup_v2\" \"secgrp_rds\" {",
+      "  name        = \"secgrp-rds-instance\"",
+      "  description = \"Rds Security Group\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_rds_instance_v1\" \"instance\" {",
+      "  name = \"rds-instance\"",
+      "  datastore {",
+      "    type = \"PostgreSQL\"",
+      "    version = \"9.5.5\"",
+      "  }",
+      "  flavorref = \"${data.telefonicaopencloud_rds_flavors_v1.flavor.id}\"",
+      "  volume {",
+      "    type = \"COMMON\"",
+      "    size = 200",
+      "  }",
+      "  region = \"eu-de\"",
+      "  availabilityzone = \"eu-de-01\"",
+      "  vpc = \"c1095fe7-03df-4205-ad2d-6f4c181d436e\"",
+      "  nics {",
+      "    subnetid = \"b65f8d25-c533-47e2-8601-cfaa265a3e3e\"",
+      "  }",
+      "  securitygroup {",
+      "    id = \"${telefonicaopencloud_compute_secgroup_v2.secgrp_rds.id}\"",
+      "  }",
+      "  dbport = \"8635\"",
+      "  backupstrategy = {",
+      "    starttime = \"04:00:00\"",
+      "    keepdays = 4",
+      "  }",
+      "  dbrtpd = \"Huangwei!120521\"",
+      "  ha = {",
+      "    enable = true",
+      "    replicationmode = \"async\"",
+      "  }",
+      "  depends_on = [\"telefonicaopencloud_compute_secgroup_v2.secgrp_rds\"]",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-s3_bucket": {
+    "description": "Defines s3_bucket",
+    "prefix": "tf-telefonicaopencloud-resource-s3_bucket",
+    "body": [
+      "resource \"telefonicaopencloud_s3_bucket\" \"b\" {",
+      "  bucket = \"my-tf-test-bucket\"",
+      "  acl    = \"private\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-s3_bucket_object": {
+    "description": "Defines s3_bucket_object",
+    "prefix": "tf-telefonicaopencloud-resource-s3_bucket_object",
+    "body": [
+      "resource \"telefonicaopencloud_s3_bucket_object\" \"object\" {",
+      "  bucket = \"your_bucket_name\"",
+      "  key    = \"new_object_key\"",
+      "  source = \"path/to/file\"",
+      "  etag   = \"${md5(file(\"path/to/file\"))}\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-s3_bucket_policy": {
+    "description": "Defines s3_bucket_policy",
+    "prefix": "tf-telefonicaopencloud-resource-s3_bucket_policy",
+    "body": [
+      "resource \"telefonicaopencloud_s3_bucket\" \"b\" {",
+      "  bucket = \"my_tf_test_bucket\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_s3_bucket_policy\" \"b\" {",
+      "  bucket = \"${telefonicaopencloud_s3_bucket.b.id}\"",
+      "  policy =<<POLICY",
+      "{",
+      "  \"Version\": \"2012-10-17\",",
+      "  \"Id\": \"MYBUCKETPOLICY\",",
+      "  \"Statement\": [",
+      "    {",
+      "      \"Sid\": \"IPAllow\",",
+      "      \"Effect\": \"Deny\",",
+      "      \"Principal\": \"*\",",
+      "      \"Action\": \"s3:*\",",
+      "      \"Resource\": \"arn:aws:s3:::my_tf_test_bucket/*\",",
+      "      \"Condition\": {",
+      "         \"IpAddress\": {\"aws:SourceIp\": \"8.8.8.8/32\"}",
+      "      } ",
+      "    } ",
+      "  ]",
+      "}",
+      "POLICY",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-smn_subscription_v2": {
+    "description": "Defines smn_subscription_v2",
+    "prefix": "tf-telefonicaopencloud-resource-smn_subscription_v2",
+    "body": [
+      "resource \"telefonicaopencloud_smn_topic_v2\" \"topic_1\" {",
+      "  name\t\t  = \"topic_1\"",
+      "  display_name    = \"The display name of topic_1\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_smn_subscription_v2\" \"subscription_1\" {",
+      "  topic_urn       = \"${telefonicaopencloud_smn_topic_v2.topic_1.id}\"",
+      "  endpoint        = \"mailtest@gmail.com\"",
+      "  protocol        = \"email\"",
+      "  remark          = \"O&M\"",
+      "}",
+      "",
+      "resource \"telefonicaopencloud_smn_subscription_v2\" \"subscription_2\" {",
+      "  topic_urn       = \"${telefonicaopencloud_smn_topic_v2.topic_1.id}\"",
+      "  endpoint        = \"13600000000\"",
+      "  protocol        = \"sms\"",
+      "  remark          = \"O&M\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-smn_topic_v2": {
+    "description": "Defines smn_topic_v2",
+    "prefix": "tf-telefonicaopencloud-resource-smn_topic_v2",
+    "body": [
+      "resource \"telefonicaopencloud_smn_topic_v2\" \"topic_1\" {",
+      "  name            = \"topic_1\"",
+      "  display_name    = \"The display name of topic_1\"",
+      "}"
+    ]
+  },
+  "telefonicaopencloud-resource-vpc_eip_v1": {
+    "description": "Defines vpc_eip_v1",
+    "prefix": "tf-telefonicaopencloud-resource-vpc_eip_v1",
+    "body": [
+      "resource \"telefonicaopencloud_vpc_eip_v1\" \"eip_1\" {",
+      "  publicip {",
+      "    type = \"5_bgp\"",
+      "  }",
+      "  bandwidth {",
+      "    name = \"test\"",
+      "    size = 8",
+      "    share_type = \"PER\"",
+      "    charge_mode = \"traffic\"",
+      "  }",
       "}"
     ]
   },
@@ -33031,6 +36690,33 @@
       "  type         = \"NFS\"",
       "  remote_hosts = [\"nfs\"]",
       "  remote_path  = \"/export/terraform-test\"",
+      "}"
+    ]
+  },
+  "vsphere-resource-resource_pool": {
+    "description": "Defines resource_pool",
+    "prefix": "tf-vsphere-resource-resource_pool",
+    "body": [
+      "variable \"datacenter\" {",
+      "  default = \"dc1\"",
+      "}",
+      "",
+      "variable \"cluster\" {",
+      "  default = \"cluster1\"",
+      "}",
+      "",
+      "data \"vsphere_datacenter\" \"dc\" {",
+      "  name = \"${var.datacenter}\"",
+      "}",
+      "",
+      "data \"vsphere_compute_cluster\" \"compute_cluster\" {",
+      "  name          = \"${var.cluster}\"",
+      "  datacenter_id = \"${data.vsphere_datacenter.dc.id}\"",
+      "}",
+      "",
+      "resource \"vsphere_resource_pool\" \"resource_pool\" {",
+      "  name                    = \"terraform-resource-pool-test\"",
+      "  parent_resource_pool_id = \"${data.vsphere_compute_cluster.compute_cluster.resource_pool_id}\"",
       "}"
     ]
   },
