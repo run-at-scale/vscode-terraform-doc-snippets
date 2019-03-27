@@ -1,69 +1,70 @@
 {
-  "name": "terraform-doc-snippets",
-  "displayName": "Terraform doc snippets",
-  "description": "Terraform code snippets (>1600) straight from documentation for all provider resources and data sources. All providers in the terraform-providers org covered.",
-  "version": "0.3.0",
-  "icon": "assets/terraform_logo.png",
-  "publisher": "run-at-scale",
-  "license": "MIT",
-  "engines": {
-    "vscode": "^1.19.0"
-  },
-  "author": {
-    "name": "Brandon O'Connor",
-    "email": "brandon@atscale.run",
-    "url": "https://github.com/run-at-scale"
-  },
-  "categories": [
-    "Snippets"
-  ],
-  "keywords": [
-    "Terraform",
-    "devops",
-    "infrastructure as code",
-    "automation",
-    "orchestration"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/run-at-scale/vscode-terraform-doc-snippets"
-  },
-  "contributes": {
-    "snippets": [
-      {
-        "language": "terraform",
-        "path": "./snippets/terraform.json"
-      }
-    ]
-  },
-  "scripts": {
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "build:snippets": "ts-node ./src/main.ts",
-    "publish:vsce": "vsce publish",
-    "release": "standard-version"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^5.0.2",
-    "@types/tmp": "0.0.33",
-    "@types/underscore": "^1.8.8",
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^7.0.43",
-    "eslint": "^4.19.1",
-    "standard-version": "^4.3.0",
-    "tslint": "^5.9.1",
-    "typescript": "^2.6.1",
-    "vsce": "^1.39.0",
-    "vscode": "^1.1.6"
-  },
-  "dependencies": {
-    "@octokit/rest": "^15.2.7",
-    "async": "^2.6.0",
-    "gfm-code-blocks": "^1.0.0",
-    "nodegit": "^0.20.3",
-    "tmp": "0.0.33",
-    "underscore": "^1.9.0"
-  }
+    "name": "terraform-doc-snippets",
+    "displayName": "Terraform doc snippets",
+    "description": "Terraform code snippets (>3400) straight from documentation for all provider resources and data sources. All providers in the terraform-providers org covered.",
+    "version": "0.4.0",
+    "icon": "assets/terraform_logo.png",
+    "publisher": "run-at-scale",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.19.0"
+    },
+    "author": {
+        "name": "Brandon O'Connor",
+        "email": "brandon@atscale.run",
+        "url": "https://github.com/run-at-scale"
+    },
+    "categories": [
+        "Snippets"
+    ],
+    "keywords": [
+        "Terraform",
+        "devops",
+        "infrastructure as code",
+        "automation",
+        "orchestration"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/run-at-scale/vscode-terraform-doc-snippets"
+    },
+    "contributes": {
+        "snippets": [
+            {
+                "language": "terraform",
+                "path": "./snippets/terraform.json"
+            }
+        ]
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "build:snippets": "ts-node ./src/main.ts",
+        "publish:vsce": "vsce publish",
+        "release": "standard-version"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^5.0.2",
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^7.0.43",
+        "@types/tmp": "0.0.33",
+        "@types/underscore": "^1.8.8",
+        "eslint": "^4.19.1",
+        "standard-version": "^4.3.0",
+        "tslint": "^5.9.1",
+        "typescript": "^2.9.2",
+        "vsce": "^1.59.0",
+        "vscode": "^1.1.33",
+        "ts-node": "^8.0.3"
+    },
+    "dependencies": {
+        "@octokit/rest": "^15.2.7",
+        "async": "^2.6.0",
+        "gfm-code-blocks": "^1.0.0",
+        "nodegit": "^0.24.1",
+        "tmp": "0.0.33",
+        "underscore": "^1.9.0"
+    }
 }

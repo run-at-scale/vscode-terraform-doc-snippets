@@ -6,7 +6,7 @@
 
 ![Terraform](https://github.com/run-at-scale/vscode-terraform-doc-snippets/raw/master/assets/terraform_logo.png "Terraform doc snippets")
 
-A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured VS Code snippets. Over 1600 snippets in total.
+A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured VS Code snippets. Over 3400 snippets in total.
 
 ## Demo
 
@@ -21,6 +21,16 @@ to build a snippet extension that pulls snippets directly from documentation cod
 way to continuously provide up to date resource and data source snippets. The examples in documentation often give
 excellent context which is important for understanding how infrastructure primitives fit together.
 
+## Getting started
+
+The following commands are used to build the snippets file:
+
+```bash
+nvm use lts/dubnium
+npm install ---dev
+npm run build:snippets
+```
+
 ## Features
 
 - All resources and data source snippets gathered from documentation. As docs improve, so do the snippets.
@@ -32,6 +42,7 @@ excellent context which is important for understanding how infrastructure primit
 ## Known Issues
 
 - Issue #1 is probably that this is my first node project and I'm not to be trusted with the language. Help and review wanted! Tests needed.
+- The async nature of node means we need to provide a hard stop at the number of snippets collected before cleanup can happen. The stop-gap implementation has this count specified by hand in `config.json`. If a run of `build:snippets` produces more than the value of `total_snippets`, adjust the number up to match.
 
 ## Contributing
 
