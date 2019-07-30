@@ -7,6 +7,17 @@ All notable changes to this project will be documented in this file. See [standa
 - tests added
 - types added
 - placeholders for tabbing through snippet names added to each snippet
+- break snippets file into file per provider - improve performance, reduce memory consumption by excluding unneeded providers
+
+## [0.5.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.4.0...v0.5.0) (2019-07-29)
+
+### Changed
+
+- Bugfix: added missing paging to terraform provider fetch (was only fetching first page (100) Providers)
+- refactored provider fetch workflow to remove the need for the hard-coded number of total snippets
+  (complimentary change to paging bug fix so snippets not truncated when hitting configured total_snippets amount)
+- Snippets updated to match latest documentation. Now up to 4296 snippets over 112 providers
+- updated npm dependencies, audit fixes
 
 ## [0.4.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.3.0...v0.4.0) (2019-03-27)
 

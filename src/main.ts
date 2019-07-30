@@ -2,30 +2,39 @@ import { writeFileSync } from "fs";
 import { cleanup } from "./cleanup";
 import { downloadGitRepo } from "./downloadGitRepo";
 import { getAvailableProviders } from "./getAvailableProviders";
+import { iterateOnDocFiles } from "./iterateOnDocFiles";
 import { setOverrides } from "./setOverrides";
 import setup = require("./setup");
 import { sortObject } from "./sortObject";
+
 const configuration = require("./config.json");
 
 async function main() {
-  const cap = configuration.total_snippets;
   const tmpDir = setup.setupWorkspace();
   const snips = {};
-  getAvailableProviders(tmpDir, snips, downloadGitRepo);
-  // TODO: find a better way to count up front the number of processed markdown files OR providers
-  await sleep(600);
-  while (Object.keys(snips).length < cap) {
-    console.log(`${Object.keys(snips).length} of ${cap}`);
-    await sleep(20);
+  const list = await getAvailableProviders();
+
+  for(let i = 0; i < list.length; i++) {
+    const name = list[i];
+    let subtotal = Object.keys(snips).length;
+
+    await downloadGitRepo(tmpDir, name, snips, iterateOnDocFiles);
+
+    subtotal = Object.keys(snips).length - subtotal;
+    console.log(`provider ${i + 1} of ${list.length}: ${subtotal} snips\n`)
   }
-  console.log(Object.keys(snips).length);
+
+  console.log(`${Object.keys(snips).length} total snips`);
+
   const overrideSnipsIncluded = setOverrides(snips);
   const sortedSnips = sortObject(overrideSnipsIncluded);
+
   writeFileSync(
     "snippets/terraform.json",
     JSON.stringify(sortedSnips, null, 2),
     "utf-8",
   );
+
   cleanup(tmpDir);
 }
 

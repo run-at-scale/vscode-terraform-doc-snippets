@@ -1,8 +1,8 @@
 {
     "name": "terraform-doc-snippets",
     "displayName": "Terraform doc snippets",
-    "description": "Terraform code snippets (>3400) straight from documentation for all provider resources and data sources. All providers in the terraform-providers org covered.",
-    "version": "0.4.0",
+    "description": "Terraform code snippets straight from documentation for all provider resources and data sources. All providers in the terraform-providers org covered.  Last count at 4296 snippets across 112 providers.",
+    "version": "0.5.0",
     "icon": "assets/terraform_logo.png",
     "publisher": "run-at-scale",
     "license": "MIT",
