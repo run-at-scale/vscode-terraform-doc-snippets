@@ -44416,6 +44416,31 @@
       "}"
     ]
   },
+  "helm-data-helm-repository": {
+    "description": "Describes a helm repository.",
+    "prefix": "tf-helm-data-helm-repository",
+    "body": [
+      "data \"helm_repository\" \"${1:incubator}\" {",
+      "  name = \"${2:incubator}\"",
+      "  url  = \"${3:https://kubernetes-charts-incubator.storage.googleapis.com}\""
+      "}"
+    ]
+  },
+  "helm-resource-helm-release": {
+    "description": "A Release is an instance of a chart running in a Kubernetes cluster.",
+    "prefix": "tf-helm-resource-helm-release",
+    "body": [
+      "resource \"helm_release\" \"${1:example}\" {",
+      "  name = \"${2:my-redis-release}\"",
+      "  repository = \"${3:${data.helm_repository.stable.metadata.0.name}}\"",
+      "  chart      = \"${4:redis}\"",
+      "  version    = \"${5:6.0.1}\""
+      "  values = [ ",
+      "    templatefile(\"${path.module}/values.yaml\", {${6}})",
+      "  ]"
+      "}"
+    ]
+  },
   "hcloud-data-datacenter": {
     "description": "Defines datacenter",
     "prefix": "tf-hcloud-data-datacenter",
