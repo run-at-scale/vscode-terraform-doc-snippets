@@ -1,150 +1,44 @@
 {
-    "total_snippets": 3485,
-    "override_snippets": [
-        {
-            "alicloud-data-dns_domain_groups": {
-                "description": "Defines alicloud_dns_groups data source",
-                "prefix": "tf-alicloud-data-alicloud_dns_groups",
-                "body": [
-                    "data \"alicloud_dns_groups\" \"group\" {",
-                    "  name_regex = \"^y[A-Za-z]+\"",
-                    "  output_file = \"groups.txt\"",
-                    "}",
-                    ""
-                ]
-            }
-        },
-        {
-            "alicloud-data-dns_domain_records": {
-                "description": "Defines dns_domain_records",
-                "prefix": "tf-alicloud-data-dns_domain_records",
-                "body": [
-                    "data \"alicloud_dns_records\" \"record\" {",
-                    "  domain_name = \"xiaozhu.top\"",
-                    "  is_locked = false",
-                    "  type = \"A\"",
-                    "  host_record_regex = \"^@\"",
-                    "  output_file = \"records.txt\"",
-                    "}",
-                    ""
-                ]
-            }
-        },
-        {
-            "alicloud-data-ram_alias": {
-                "description": "Defines ram_alias data source",
-                "prefix": "tf-alicloud-data-ram_alias",
-                "body": [
-                    "resource \"alicloud_ram_account_alias\" \"alias\" {",
-                    "  account_alias = \"hallo\"",
-                    "}",
-                    ""
-                ]
-            }
-        },
-        {
-            "alicloud-resource-container_cluster": {
-                "description": "Defines container_cluster",
-                "prefix": "tf-alicloud-resource-container_cluster",
-                "body": [
-                    "resource \"alicloud_cs_swarm\" \"my_cluster\" {",
-                    "  password = \"Test12345\"",
-                    "  instance_type = \"ecs.n4.small\"",
-                    "  name = \"ClusterFromAlicloud\"",
-                    "  node_number = 2",
-                    "  disk_category = \"cloud_efficiency\"",
-                    "  disk_size = 20",
-                    "  cidr_block = \"172.18.0.0/24\"",
-                    "  image_id = \"${var.image_id}\"",
-                    "  vswitch_id = \"${var.vswitch_id}\"",
-                    "}",
-                    ""
-                ]
-            }
-        },
-        {
-            "alicloud-resource-ram_alias": {
-                "description": "Defines ram_alias",
-                "prefix": "tf-alicloud-resource-ram_alias",
-                "body": [
-                    "# Create a alias for cloud account.",
-                    "resource \"alicloud_ram_account_alias\" \"alias\" {",
-                    "  account_alias = \"hallo\"",
-                    "}",
-                    ""
-                ]
-            }
-        },
-        {
-            "opentelekomcloud-data-s3_bucket_object": {
-                "description": "Defines s3_bucket_object data source",
-                "prefix": "tf-opentelekomcloud-data-s3_bucket_object",
-                "body": [
-                    "data \"opentelekomcloud_s3_bucket_object\" \"${1:object_name}\" {",
-                    "  bucket = \"my-test-bucket\"",
-                    "  key    = \"hello-world.zip\"",
-                    "}",
-                    ""
-                ]
-            }
-        },
-        {
-            "tf-aws": {
-                "prefix": "tf-aws",
-                "body": [
-                    "/*",
-                    "# tf_aws_${1:module_name}",
-                    "",
-                    "A terraform module to ${2:describe a thing}",
-                    "*/",
-                    "",
-                    "provider \"aws\" {",
-                    "  version = \">~ ${3:1.6.0}\"",
-                    "}",
-                    ""
-                ],
-                "description": "The beginnings of a main.tf"
-            }
-        },
-        {
-            "tf-conditional": {
-                "prefix": "tf-conditional",
-                "body": [
-                    "${var.${1:if_this} == \"${2:equals}\" ? ${3:then} : ${4:else}}"
-                ],
-                "description": "A terraform conditional."
-            }
-        },
-        {
-            "tf-out": {
-                "prefix": "tf-out",
-                "body": [
-                    "output \"${1:output}\" {",
-                    "  description = \"${2:description}\"",
-                    "  value       = \"${${3:value}}\"",
-                    "}",
-                    ""
-                ],
-                "description": "A terraform output with a description."
-            },
-            "tf-locals": {
-                "prefix": "tf-locals",
-                "body": ["locals {", "  ${1:key}  = \"${2:value}\"", "}", ""],
-                "description": "An empty definition of locals."
-            }
-        },
-        {
-            "tf-var": {
-                "prefix": "tf-var",
-                "body": [
-                    "variable \"${1:variable_name}\" {",
-                    "  description = \"${2:description}\"",
-                    "  default     = \"${3:default}\"",
-                    "}",
-                    ""
-                ],
-                "description": "A terraform variable with a default and description."
-            }
-        }
-    ]
+  "total_snippets": 5385,
+  "override_snippets": [
+    {
+      "tf-conditional": {
+        "prefix": "tf-conditional",
+        "body": ["var.${1:if_this} == ${2:equals} ? ${3:then} : ${4:else}"],
+        "description": "A terraform conditional."
+      }
+    },
+    {
+      "tf-out": {
+        "prefix": "tf-out",
+        "body": [
+          "output \"${1:output}\" {",
+          "  description = \"${2:description}\"",
+          "  value       = ${3:value}",
+          "}",
+          ""
+        ],
+        "description": "A terraform output with a description."
+      },
+      "tf-locals": {
+        "prefix": "tf-locals",
+        "body": ["locals {", "  ${1:key}  = ${2:value}", "}", ""],
+        "description": "An empty definition of locals."
+      }
+    },
+    {
+      "tf-var": {
+        "prefix": "tf-var",
+        "body": [
+          "variable \"${1:variable_name}\" {",
+          "  type        = \"${3:type}\"",
+          "  description = \"${2:description}\"",
+          "  default     = \"${3:default}\"",
+          "}",
+          ""
+        ],
+        "description": "A terraform variable with a default and description."
+      }
+    }
+  ]
 }

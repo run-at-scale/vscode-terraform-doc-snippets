@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file. See [standa
 - types added
 - placeholders for tabbing through snippet names added to each snippet
 
+## [0.5.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.4.0...v0.5.0) (2021-03-01)
+
+### Changed
+
+- Snippets updated to match latest documentation. Created snippets 5385 from 111 providers
+
 ## [0.4.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.3.0...v0.4.0) (2019-03-27)
 
 ### Changed
