@@ -1,7 +1,7 @@
 {
   "name": "terraform-doc-snippets",
   "displayName": "Terraform doc snippets",
-  "description": "Terraform code snippets (>3400) straight from documentation for all provider resources and data sources. All providers in the terraform-providers org covered.",
+  "description": "Terraform code snippets (>5000) straight from documentation for all provider resources and data sources. All providers in the public terraform registry covered.",
   "version": "0.5.0",
   "icon": "assets/terraform_logo.png",
   "publisher": "run-at-scale",
