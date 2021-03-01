@@ -22,7 +22,7 @@ class SnippetClass {
   }
 }
 
-export function downloadGitRepo(
+export async function downloadGitRepo(
   workspace,
   providerRepo,
   providerName,
@@ -31,7 +31,7 @@ export function downloadGitRepo(
 ) {
   console.log(`Downloading git repo for ${providerName} at ${providerRepo}`);
   const providerDir = `${workspace}/${providerName}`;
-  git.Clone.clone(providerRepo, providerDir).then(() => {
+  await git.Clone.clone(providerRepo, providerDir).then(() => {
     async.each(Object.keys(tfTypesMap), (tfType) => {
       const providerTypeDir = `${providerDir}/website/docs/${tfType}`;
       const resourceType = tfTypesMap[tfType];

@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Snippets updated to match latest documentation. Created snippets 5385 from 111 providers.
 - providers now sourced from the public registry
 - upgraded all libaries
+- refactored provider fetch workflow to remove the need for the hard-coded number of total snippets
 
 ## [0.4.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.3.0...v0.4.0) (2019-03-27)
 
