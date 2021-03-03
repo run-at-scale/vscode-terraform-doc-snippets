@@ -8,6 +8,6 @@ export function getCodeBlock(docPath, codeBlockIndex = 0) {
   if (blocks.length + 1 >= codeBlockIndex && blocks.length > 0) {
     return blocks[codeBlockIndex].code.slice(1, -1);
   } else {
-    return "#XXX empty snippet\n";
+    return "# XXX: no example found in the provider docs\n";
   }
 }

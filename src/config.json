@@ -1,4 +1,9 @@
 {
+  "_what_is_excluded_provider_sources": "not implemented but would give a way to exclude some providers (i.e. outdated forks) by git repo",
+  "excluded_provider_sources": [],
+  "doc_root_path_overrides": {
+    "rancher2": { "d": "docs/data-sources", "r": "docs/resources" }
+  },
   "override_snippets": [
     {
       "tf-conditional": {

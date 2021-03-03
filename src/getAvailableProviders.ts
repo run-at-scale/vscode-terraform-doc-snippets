@@ -1,40 +1,38 @@
-import request = require('request');
-
+const fetch = require('node-fetch');
 const urlBase = 'https://registry.terraform.io'
 
 export async function getAvailableProviders() {
-  const urlSuffix = '/v1/providers?offset=0'
-  let result;
+  const urlSuffix = '/v1/providers?tier=partner%2Cofficial&offset=0'
+  const sourceSet = new Set()
   let url;
-  const list = [];
+  let nextUrl;
 
   do {
     // API paging
-    if (result.hasOwnProperty('meta')) {
-      //repeat API call for page 2+
-      url = urlBase + result.meta.next_url;
-      result = await request(url, { json: true }, (err, _, body) => {
-        if (err) {
-            return console.log(err);
-        }
-        return body
+    if (sourceSet.size == 0) {
+      //first API call - get page 1
+      url = urlBase + urlSuffix;
+      await fetch(url)
+        .then(res => res.json())
+        .then(function(json) {
+          nextUrl = urlBase + json.meta.next_url;
+          json.providers.forEach((element) => {
+            sourceSet.add(element.source);
+          });
       });
     }
     else {
-      //first API call - get page 1
-      url = urlBase + urlSuffix;
-      result = await request(url, { json: true }, (err, _, body) => {
-        if (err) {
-            return console.log(err);
-        }
-        return body
+      //repeat API call for page 2+
+      url = nextUrl;
+      await fetch(url)
+      .then(res => res.json())
+      .then(function(json) {
+        nextUrl = urlBase + json.meta.next_url;
+        json.providers.forEach((element) => {
+          sourceSet.add(element.source);
+        });
       });
     }
-    console.log(result)
-    result.providers.forEach((element) => {
-      list.push(element.source);
-    });
-  } while (urlBase + result.meta.next_url != url);
-
-  return list;
+  } while (nextUrl != url );
+  return sourceSet;
 }

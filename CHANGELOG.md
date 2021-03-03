@@ -4,9 +4,18 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## Future
 
-- tests added
-- types added
-- placeholders for tabbing through snippet names added to each snippet
+- tests
+- ts types
+- auto-tabbing through common parts of snippets (name of core resource, etc.)
+- configurable override of doc paths per provider repo (see: doc_root_path_overrides).
+
+## [0.6.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.5.0...v0.6.0) (2021-03-03)
+
+### Changed
+
+- pulling 115 providers (all official or partner tier) from the registry and shipping 8362 snippets
+- refactored the core workflow to remove the need for the hard-coded number of total snippets (thanks, @orrin!)
+- regression: dropped async checkout/download of repos, making the snippet generation process a lot longer. Will fix in subsequent releases - this doesn't affect extension users, only snippet generators (devs on this project).
 
 ## [0.5.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.4.0...v0.5.0) (2021-03-01)
 
@@ -15,13 +24,12 @@ All notable changes to this project will be documented in this file. See [standa
 - Snippets updated to match latest documentation. Created snippets 5385 from 111 providers.
 - providers now sourced from the public registry
 - upgraded all libaries
-- refactored provider fetch workflow to remove the need for the hard-coded number of total snippets
 
 ## [0.4.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.3.0...v0.4.0) (2019-03-27)
 
 ### Changed
 
-- Snippets updated to match latest documentation. Now up to snippets 1719 over 81 providers
+- Snippets updated to match latest documentation. Now up to snippets 1719 over 81 providers.
 
 ## [0.3.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.2.0...v0.3.0) (2018-06-26)
 
@@ -31,9 +39,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [0.2.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.5...v0.2.0) (2018-05-10)
 
-- override and extra snippets now added through config
-- deprecated resources and data sources manually added for their successor
-- snippets file rebuilt and now has 1491 pulled from docs + a few custom snippets
+- override and extra/common snippets now added through config.
+- deprecated resources and data sources manually added for their successor.
+- snippets file rebuilt totalling 1491.
 
 ## [0.1.5](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.4...v0.1.5) (2018-05-04)
 
@@ -42,7 +50,7 @@ All notable changes to this project will be documented in this file. See [standa
 ## [0.1.4](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.1.3...v0.1.4) (2018-05-04)
 
 - provider repos now scanned from the terraform-providers organization.
-- snippets added to 1452.
+- snippets total 1452.
 - formatting and beautifying ✨
 - added error handling for missing absent examples.
 

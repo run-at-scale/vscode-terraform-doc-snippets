@@ -3,12 +3,13 @@ import fs = require("fs");
 import git = require("nodegit");
 import { generateSnippet } from "./generateSnippet";
 
+const configuration = require("./config.json");
+
 const tfTypesMap = {
   d: "data",
   r: "resource",
 };
 
-// XXX is this the right place to instantiate?
 class SnippetClass {
   public provider: string;
   public resourceType: string;
@@ -30,13 +31,16 @@ export async function downloadGitRepo(
   iterateOnFilesFunc,
 ) {
   console.log(`Downloading git repo for ${providerName} at ${providerRepo}`);
-  const providerDir = `${workspace}/${providerName}`;
+  const shortProviderName = providerName.split("terraform-provider-")[1]
+  const providerOrg = providerRepo.split("/")[providerRepo.split("/").length - 2]
+  const providerDir = `${workspace}/${providerOrg}/${providerName}`;
+  const path_overrides = configuration.doc_root_path_overrides
   await git.Clone.clone(providerRepo, providerDir).then(() => {
     async.each(Object.keys(tfTypesMap), (tfType) => {
-      const providerTypeDir = `${providerDir}/website/docs/${tfType}`;
+      const providerTypeDir = path_overrides.hasOwnProperty(shortProviderName) ? path_overrides[shortProviderName][tfType] : `${providerDir}/website/docs/${tfType}`;
       const resourceType = tfTypesMap[tfType];
       const snippetObject = new SnippetClass(
-        providerName,
+        shortProviderName,
         resourceType,
         providerTypeDir,
       );
