@@ -1,14 +1,13 @@
-import async = require("async");
+// import async = require("async");
 import { writeFileSync } from "fs";
 import { cleanup } from "./cleanup";
 import { downloadGitRepo } from "./downloadGitRepo";
 import { iterateOnDocFiles } from "./iterateOnDocFiles";
 import { getAvailableProviders } from "./getAvailableProviders";
 import { setOverrides } from "./setOverrides";
-import setup = require("./setup");
 import { sortObject } from "./sortObject";
+import setup = require("./setup");
 
-const configuration = require("./config.json");
 
 async function main() {
   const tmpDir = setup.setupWorkspace();
