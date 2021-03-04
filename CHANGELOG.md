@@ -9,13 +9,14 @@ All notable changes to this project will be documented in this file. See [standa
 - auto-tabbing through common parts of snippets (name of core resource, etc.)
 - configurable override of doc paths per provider repo (see: doc_root_path_overrides).
 
-## [0.6.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.5.0...v0.6.0) (2021-03-03)
+## [0.6.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.5.0...v0.6.0) (2021-03-04)
 
 ### Changed
 
-- pulling 115 providers (all official or partner tier) from the registry and shipping 8362 snippets
+- pulling 125 providers (all official or partner tier) from the registry and shipping 9341 snippets
 - refactored the core workflow to remove the need for the hard-coded number of total snippets (thanks, @orrin!)
-- regression: dropped async checkout/download of repos, making the snippet generation process a lot longer. Will fix in subsequent releases - this doesn't affect extension users, only snippet generators (devs on this project).
+- regression: dropped async checkout/download of repos, making the snippet generation process a lot longer. Will fix in subsequent releases - this doesn't affect extension users, only snippet generators (devs working on this project).
+- created to specify docs in non-standard paths.
 
 ## [0.5.0](https://github.com/run-at-scale/vscode-terraform-doc-snippets/compare/v0.4.0...v0.5.0) (2021-03-01)
 

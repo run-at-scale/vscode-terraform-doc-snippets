@@ -41,7 +41,7 @@ async function main() {
     console.log('encountered an error')
   }
   finally {
-    // cleanup(tmpDir);
+    cleanup(tmpDir);
   }
 }
 

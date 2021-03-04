@@ -37,7 +37,7 @@ export async function downloadGitRepo(
   const path_overrides = configuration.doc_root_path_overrides
   await git.Clone.clone(providerRepo, providerDir).then(() => {
     async.each(Object.keys(tfTypesMap), (tfType) => {
-      const providerTypeDir = path_overrides.hasOwnProperty(shortProviderName) ? path_overrides[shortProviderName][tfType] : `${providerDir}/website/docs/${tfType}`;
+      const providerTypeDir = path_overrides.hasOwnProperty(shortProviderName) ? `${providerDir}/${path_overrides[shortProviderName][tfType]}` : `${providerDir}/website/docs/${tfType}`;
       const resourceType = tfTypesMap[tfType];
       const snippetObject = new SnippetClass(
         shortProviderName,
