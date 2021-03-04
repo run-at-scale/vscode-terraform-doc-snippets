@@ -1,5 +1,35 @@
 {
-  "total_snippets": 5385,
+  "_what_is_excluded_provider_sources": "not implemented but would give a way to exclude some providers (i.e. outdated forks) by git repo",
+  "excluded_provider_sources": [],
+  "doc_root_path_overrides": {
+    "aiven": { "d": "docs/data-sources", "r": "docs/resources" },
+    "akamai": { "d": "docs/data-sources", "r": "docs/resources" },
+    "artifactory": { "d": "docs/data-sources", "r": "docs/resources" },
+    "aviatrix": { "d": "docs/data-sources", "r": "docs/resources" },
+    "azurecaf": { "d": "docs/data-sources", "r": "docs/resources" },
+    "boundary": { "d": "docs/data-sources", "r": "docs/resources" },
+    "checkly": { "d": "docs/data-sources", "r": "docs/resources" },
+    "civo": { "d": "docs/data-sources", "r": "docs/resources" },
+    "cloudeos": { "d": "docs/data-sources", "r": "docs/resources" },
+    "cloudsmith": { "d": "docs/data-sources", "r": "docs/resources" },
+    "configcat": { "d": "docs/data-sources", "r": "docs/resources" },
+    "digitalocean": { "d": "docs/data-sources", "r": "docs/resources" },
+    "fastly": { "d": "docs/data-sources", "r": "docs/resources" },
+    "heroku": { "d": "docs/data-sources", "r": "docs/resources" },
+    "icinga2": { "d": "docs/data-sources", "r": "docs/resources" },
+    "kubernetes-alpha": { "d": "docs/data-sources", "r": "docs/resources" },
+    "onelogin": { "d": "docs/data-sources", "r": "docs/resources" },
+    "panos": { "d": "docs/data-sources", "r": "docs/resources" },
+    "pnap": { "d": "docs/data-sources", "r": "docs/resources" },
+    "prismacloud": { "d": "docs/data-sources", "r": "docs/resources" },
+    "rancher2": { "d": "docs/data-sources", "r": "docs/resources" },
+    "scaleway": { "d": "docs/data-sources", "r": "docs/resources" },
+    "sdm": { "d": "docs/data-sources", "r": "docs/resources" },
+    "sematext": { "d": "docs/data-sources", "r": "docs/resources" },
+    "sigsci": { "d": "docs/data-sources", "r": "docs/resources" },
+    "transloadit": { "d": "docs/data-sources", "r": "docs/resources" },
+    "wavefront": { "d": "docs/data-sources", "r": "docs/resources" }
+  },
   "override_snippets": [
     {
       "tf-conditional": {

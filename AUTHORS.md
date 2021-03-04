@@ -7,6 +7,7 @@ If you are submitting a change, please add your name or the name of the organiza
 ## Humans
 
 * [Brandon Bjelland](https://github.com/brandonjbjelland) \<brandon at atscale.run\>
+* [Orrin Fiandaca](https://github.com/orrin) \<ofiandaca at gmail.com\>
 
 ## Organizations
 

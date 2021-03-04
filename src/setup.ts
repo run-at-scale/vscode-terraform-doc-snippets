@@ -1,4 +1,3 @@
-import fs = require("fs");
 import tmp = require("tmp");
 
 export function setupWorkspace() {

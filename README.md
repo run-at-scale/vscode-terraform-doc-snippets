@@ -6,7 +6,7 @@
 
 ![Terraform](https://github.com/run-at-scale/vscode-terraform-doc-snippets/raw/master/assets/terraform_logo.png "Terraform doc snippets")
 
-A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured VS Code snippets. Over 8000 snippets in total.
+A vscode extension that yanks resource and data source documentation from Terraform provider repos and transforms them into structured VS Code snippets. Over 9000 snippets included.
 
 ## Demo
 
@@ -42,7 +42,6 @@ npm run build:snippets
 ## Known Issues
 
 - Issue #1 is probably that this is my first node project and I'm not to be trusted with the language. Help and review wanted! Tests needed.
-- The async nature of node means we need to provide a hard stop at the number of snippets collected before cleanup can happen. The stop-gap implementation has this count specified by hand in `config.json`. If a run of `build:snippets` produces more than the value of `total_snippets`, adjust the number up to match.
 
 ## Contributing
 

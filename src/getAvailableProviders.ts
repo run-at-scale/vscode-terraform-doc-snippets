@@ -1,26 +1,38 @@
-import request = require('request');
-import async = require("async");
-import { iterateOnDocFiles } from "./iterateOnDocFiles";
+const fetch = require('node-fetch');
 const urlBase = 'https://registry.terraform.io'
 
-// handle errors and do pagination
-export function getAvailableProviders(tmpDir, snips, downloadGitRepo) {
-  const urlSuffix = '/v1/providers?offset=0'
-  fetchProviderBatch(urlBase + urlSuffix, snips, tmpDir, downloadGitRepo)
-}
+export async function getAvailableProviders() {
+  const urlSuffix = '/v1/providers?tier=partner%2Cofficial&offset=0'
+  const sourceSet = new Set()
+  let url;
+  let nextUrl;
 
-function fetchProviderBatch(url, snips, tmpDir, downloadGitRepo) {
-  console.log(url)
-  request(url, { json: true }, (err, _, body) => {
-    if (err) {
-        return console.log(err);
+  do {
+    // API paging
+    if (sourceSet.size == 0) {
+      //first API call - get page 1
+      url = urlBase + urlSuffix;
+      await fetch(url)
+        .then(res => res.json())
+        .then(function(json) {
+          nextUrl = urlBase + json.meta.next_url;
+          json.providers.forEach((element) => {
+            sourceSet.add(element.source);
+          });
+      });
     }
-    let nextUrl = urlBase + body.meta.next_url
-    if (nextUrl != url) {
-      fetchProviderBatch(nextUrl, snips, tmpDir, downloadGitRepo)
+    else {
+      //repeat API call for page 2+
+      url = nextUrl;
+      await fetch(url)
+      .then(res => res.json())
+      .then(function(json) {
+        nextUrl = urlBase + json.meta.next_url;
+        json.providers.forEach((element) => {
+          sourceSet.add(element.source);
+        });
+      });
     }
-    async.forEach(body.providers, (element) => {
-      downloadGitRepo(tmpDir, element.source, element.name, snips, iterateOnDocFiles)
-    });
-  });
+  } while (nextUrl != url );
+  return sourceSet;
 }
